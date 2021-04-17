@@ -1,0 +1,16 @@
+{
+  "version": "1.0.0",
+  "name": "@stanislawbartkowski/reactrestapi",
+  "description": "React Framework for JavaRestAPI",
+  "author": {
+    "name": "Stanislaw Bartkowski",
+    "email": "stanislawbartkowski@gmail.com"
+  },
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/stanislawbartkowski/reactrestapi.git"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/stanislawbartkowski"
+  }
+}
