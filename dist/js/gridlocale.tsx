@@ -80,8 +80,13 @@ const gridstrings: GridLocaleText = {
     toolbarExport : "Eksport",
     toolbarExportLabel : "dddd",
     toolbarExportCSV : "Eksport CSV",
-    filterOperatorAfter: "cccc"
-
+    filterOperatorAfter: "cccc",
+    filterValueAny : "xxxx",
+    filterValueTrue: "yyyyy",
+    filterValueFalse: "zzzz",
+    checkboxSelectionHeaderName : "aaaaaa",
+    booleanCellTrueLabel : "bbbbbb",
+    booleanCellFalseLabel : "eeeee"
 
     // Pagination footer text
     //footerPaginationRowsPerPage: 'Rows per page:',

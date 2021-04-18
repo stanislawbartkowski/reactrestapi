@@ -1,7 +1,7 @@
 {
   "version": "1.0.0",
   "name": "@stanislawbartkowski/reactrestapi",
-  "description": "React Framework for JavaRestAPI",
+  "description": "React Framework for my humble JavaRestAPI",
   "author": {
     "name": "Stanislaw Bartkowski",
     "email": "stanislawbartkowski@gmail.com"

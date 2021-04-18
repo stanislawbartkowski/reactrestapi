@@ -20,7 +20,8 @@ export interface IResourceResult {
 
 export interface ITableCol extends GridColDef {
     coltitle?: string,
-    onCellClick?: (param: GridCellParams) => void
+    onCellClick?: (param: GridCellParams) => void,
+    cellTitle? : (param: GridCellParams) => string
 }
 
 export interface ITableSpec {
@@ -33,12 +34,23 @@ export type TMenuElem = {
     restid: string
 }
 
+export type TRowAction = {
+    field : string,
+    jsaction : string
+}
+
 export const TDISPATCHLISTELEM : string = "LISTSPEC"
+
+export type TTitleParam = {
+    messid: string,
+    params?: string[]
+}
 
 export type TDispatchRes = {
     action : string,
     restid : string,
-    pars : Object
+    pars : Object,   
+    title?: TTitleParam
 }
 
 // ----------------

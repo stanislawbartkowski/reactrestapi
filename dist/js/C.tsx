@@ -1,8 +1,6 @@
 import * as I from './I'
-import persstring from './locale'
+import reststring from './locale'
 import { GRID_STRING_COLUMN_TYPE, GRID_NUMBER_COLUMN_TYPE, GRID_DATE_COLUMN_TYPE, GRID_DATETIME_COLUMN_TYPE } from '@material-ui/data-grid';
-import { ContactSupportOutlined } from '@material-ui/icons';
-import { type } from 'node:os';
 
 
 export { }
@@ -28,10 +26,10 @@ export function tstoDate(ts: number): string {
     return date.toLocaleString()
 }
 
-export function internalerrorlog(mess: string) {
+export function internalerrorlog(mess: string, alert: boolean = true) {
     const emess: string = "Internal error :" + mess;
     log(emess);
-    erralert(emess);
+    if (alert) erralert(emess);
 }
 
 
@@ -57,11 +55,11 @@ var confirm: any = null
 
 export function setConfirm(pconfirm: any) { confirm = pconfirm }
 
-export function confirmAlert(question: string, title: string = persstring('areyousure')) {
+export function confirmAlert(question: string, title: string = reststring('areyousure')) {
     return confirm({
         description: question,
-        confirmationText: persstring('ok'),
-        cancellationText: persstring('cancel'),
+        confirmationText: reststring('ok'),
+        cancellationText: reststring('cancel'),
         title: title
     })
 }
@@ -69,7 +67,7 @@ export function confirmAlert(question: string, title: string = persstring('areyo
 export function infoAlert(mess: string, title: string = "") {
     return confirm({
         description: mess,
-        confirmationText: persstring('ok'),
+        confirmationText: reststring('ok'),
         cancellationText: null,
         title: title
     })
@@ -127,4 +125,26 @@ export function verifyDispatcher(t: I.TDispatchRes) {
         internalerrorlog("pars cannot be null");
         return;
     }
+    if (t.title != null) {
+        if (t.title.messid == null) {
+            internalerrorlog("title.messid cannot be null");
+            return;
+        }
+    }
+}
+
+// ==========================
+// expand title
+// ==========================
+
+export function verifyTitle(p: I.TTitleParam) {
+    if (p.messid == null) {
+        internalerrorlog("p.messid cannot be null", false);
+        return;
+    }
+}
+
+export function titleString(p: I.TTitleParam): string {
+    const pars: string[] = (p.params == null) ? [] : p.params;
+    return reststring(p.messid, ...pars)
 }

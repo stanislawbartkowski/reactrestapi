@@ -1,7 +1,11 @@
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, ReactElement } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { DataGrid, GridToolbar, GridBaseComponentProps, GridCellParams, GridToolbarContainer, GridDensitySelector } from '@material-ui/data-grid';
+import { DataGrid, GridToolbar, GridCellParams, useGridSlotComponentProps, GridDensityTypes, GridColDef } from '@material-ui/data-grid';
 import Pagination from '@material-ui/lab/Pagination';
+import DetailsIcon from '@material-ui/icons/Details';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
+import Tooltip from '@material-ui/core/Tooltip'
 
 import * as C from '../js/C'
 import * as I from '../js/I'
@@ -15,6 +19,13 @@ const useStyles = makeStyles(theme => ({
     table: {
         minWidth: 650,
         height: 750, width: '100%'
+    },
+    rendercell: {
+        width: '100%',
+    },
+    downicon: {
+        float: 'right',
+        paddingBottom: '0px'
     }
 }
 ));
@@ -34,21 +45,18 @@ export interface IGridTable {
 
 //}
 
-function CustomPagination(props: GridBaseComponentProps) {
-    const { state, api } = props;
+function CustomPagination() {
+    const { state, apiRef } = useGridSlotComponentProps();
 
     return (
         <Pagination
             color="primary"
-            page={state.pagination.page + 1}
             count={state.pagination.pageCount}
-            onChange={(event, value) =>
-                api.current.setPage(value - 1)
-            }
+            page={state.pagination.page + 1}
+            onChange={(event, value) => apiRef.current.setPage(value - 1)}
         />
     );
 }
-
 
 const GridTable: FunctionComponent<IGridTable> = ({ list, coldef, spec }) => {
 
@@ -60,10 +68,35 @@ const GridTable: FunctionComponent<IGridTable> = ({ list, coldef, spec }) => {
         return lstring(e.coltitle == null ? e.field + "_col" : e.coltitle);
     };
 
+    const getCellTitle = (params: GridCellParams): null | string => {
+        const col: I.ITableCol | undefined = coldef.find(e => e.field == params.field);
+        if (col == undefined || col.cellTitle == null) return null;
+        return col.cellTitle(params);
+    };
+
+    const renderTitleCell = (params: GridCellParams) => {
+        const title = getCellTitle(params) as string;
+        return <Tooltip title={title}>
+            <div>{params.value}</div>
+        </Tooltip>
+    }
+
+    const renderCell = (params: GridCellParams): ReactElement => {
+        const cell: ReactElement = <div className={classes.rendercell}>
+            {params.value}
+            <ArrowDownwardIcon className={classes.downicon} fontSize="small" color="action" />
+        </div>
+        const title = getCellTitle(params)
+        if (title == null) return <React.Fragment> {cell} </React.Fragment>
+        else
+            return <Tooltip title={title}>{cell}</Tooltip>
+    }
+
+
     const dlist: any[] =
         C.range(list.length).map(i => ({ id: i, ...list[i] }))
 
-    const columns: any[] = coldef.map(
+    const columns: GridColDef[] = coldef.map(
         e => ({ headerName: getHeader(e), ...e })
     );
 
@@ -72,6 +105,22 @@ const GridTable: FunctionComponent<IGridTable> = ({ list, coldef, spec }) => {
             if (e.onCellClick != null && e.field == param.field) e.onCellClick(param);
         })
     }
+
+
+    columns.forEach(ele => {
+        coldef.forEach(e => {
+            if (e.onCellClick != null && e.field == ele.field) ele.renderCell = renderCell;
+            if (e.onCellClick == null && e.cellTitle != null && e.field == ele.field) ele.renderCell = renderTitleCell;
+        })
+    })
+
+
+    //    const onCellOver = (param: GridCellParams,event: React.MouseEvent) => {
+    //        coldef.forEach(e => {
+    //            if (e.onCellClick != null && e.field == param.field) C.log("over")
+    //        })
+
+    //    }
 
 
     //    export function setCellClick(listc: I.ITableCol[], field: string, onCellClick: (param: GridCellParams) => void) {
@@ -87,7 +136,9 @@ const GridTable: FunctionComponent<IGridTable> = ({ list, coldef, spec }) => {
     return <div className={classes.table + ' ' + (spec != null ? spec.className : "")} >
         <DataGrid rows={dlist} columns={columns} autoPageSize disableSelectionOnClick
             onCellClick={onCellClick}
+            //            onCellOver={onCellOver}
             localeText={gridstrings}
+            density={GridDensityTypes.Compact}
             pagination
             page={0}
             components={{
