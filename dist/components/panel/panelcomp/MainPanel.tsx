@@ -4,6 +4,7 @@ import * as I from '../../../js/I';
 import { useSelector } from "react-redux";
 import ListGrid from './ListGrid'
 import * as pactions from '../../../store/pushstring/actions'
+import { addRouter, routermenu } from './MenuConfig';
 
 
 const ListComponent: FunctionComponent = () => {
@@ -19,12 +20,17 @@ const ListComponent: FunctionComponent = () => {
     return <ListGrid listdata={listdata} menuaction={menuaction} listdefdata={listdefdata} />
 }
 
+addRouter({ path: "/list", comp: ListComponent, restid: null });
+
 const MainPanel: FunctionComponent = () => {
 
     return (
         <Switch>
             {
-                <Route exact path="/list" component={ListComponent} />
+                routermenu.map(e => (
+                    <Route exact path={e.path} component={e.comp} />
+                )
+                )
             }
         </Switch>
     );

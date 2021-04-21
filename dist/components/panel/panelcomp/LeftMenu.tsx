@@ -8,6 +8,7 @@ import * as pactions from '../../../store/pushstring/actions';
 import * as I from '../../../js/I';
 import * as lactions from '../../../store/getdata/actions'
 import * as dactions from '../../../store/getlistres/actions'
+import { getPath } from './MenuConfig';
 
 import { setStrings } from '../../../js/locale'
 import lstring from '../../../js/locale'
@@ -33,9 +34,10 @@ const LeftMenu: FunctionComponent = () => {
     const clickAction = (e: I.TMenuElem) => {
         dispatch(pactions.pushstring(pactions.STRINGTYPE.MENUACTIONNAME, menustring(e)));
         dispatch(pactions.pushstring(pactions.STRINGTYPE.LISTACTIONID, e.restid));
-        dispatch(lactions.resourceRead(I.RESOURCE.LISTRES,e.restid,null));
-        dispatch(dactions.resourceListDefRead(I.RESOURCE.LISTRESDEF,e.restid, e.restid));
-        history.replace("/list");
+        dispatch(lactions.resourceRead(I.RESOURCE.LISTRES, e.restid, null));
+        dispatch(dactions.resourceListDefRead(I.RESOURCE.LISTRESDEF, e.restid, e.restid));
+        const path: string = getPath(e.restid);
+        history.replace(path);
     }
 
     return (
