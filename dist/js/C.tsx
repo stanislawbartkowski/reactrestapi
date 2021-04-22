@@ -107,6 +107,11 @@ export function partoQuery(pars: Object): string {
     return res;
 }
 
+export function addQuery(url: string, query: string): string {
+    if (url.indexOf('?')) return url + '&' + query;
+    return url + '?' + query;
+}
+
 // =======================
 // verify dispatcher
 // =======================
@@ -147,4 +152,37 @@ export function verifyTitle(p: I.TTitleParam) {
 export function titleString(p: I.TTitleParam): string {
     const pars: string[] = (p.params == null) ? [] : p.params;
     return reststring(p.messid, ...pars)
+}
+
+// ====================================
+// custom function regarding menu
+// ====================================
+
+export type CanMenu = ((id: string) => boolean) | undefined;
+
+let canfun: CanMenu = undefined;
+
+export function setCanMenu(fun: CanMenu) {
+    canfun = fun;
+}
+
+export function CanCallMenu(id: string): boolean {
+    if (canfun == undefined) return true;
+    return canfun(id);
+}
+
+// ====================================
+// customer modifiers for getting data
+// ====================================
+
+export type ModifDataUrl = (id: string, restid: string) => string;
+
+let modifurlfun: ModifDataUrl = (id: string, restid: string) => { return restid; }
+
+export function modifDataUrl(id: string, restid: string): string {
+    return modifurlfun(id, restid);
+}
+
+export function setModifUrl(fun: ModifDataUrl) {
+    modifurlfun = fun;
 }

@@ -49,7 +49,7 @@ const ListGrid: FunctionComponent<IListGrid> = ({ listdata, menuaction, listdefd
         const res: I.TDispatchRes = jsAction(click, param);
         C.verifyDispatcher(res)
         dispatch(pactions.pushstring(pactions.STRINGTYPE.LISTACTIONSPECID, res.restid));
-        dispatch(lactions.resourceRead(I.RESOURCE.LISTRESSPEC, res.restid, res.pars));
+        dispatch(lactions.resourceRead(I.RESOURCE.LISTRESSPEC, res.restid, res.restid, res.pars));
         dispatch(dactions.resourceListDefRead(I.RESOURCE.LISTRESDEFSPEC, res.restid, res.restid));
     }
 

@@ -11,7 +11,7 @@ const ActionLabel: FunctionComponent = () => {
 
     if (menuaction.type != actions.STRINGTYPE.MENUACTIONNAME) return null;
 
-    var menuname: string|null = menuaction.vals;
+    const menuname: string|null = menuaction.vals;
 
     C.log("Menu action name " + menuname);
 

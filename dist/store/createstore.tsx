@@ -18,6 +18,8 @@ const reducerGetListDefSpec: Reducer = createReducer(I.RESOURCE.LISTRESDEFSPEC)
 const reducerActionName: Reducer = createPushReducer(actions.STRINGTYPE.MENUACTIONNAME);
 const reducerActionList: Reducer = createPushReducer(actions.STRINGTYPE.LISTACTIONID);
 const reducerActionListSpec: Reducer = createPushReducer(actions.STRINGTYPE.LISTACTIONSPECID);
+const reducerForceMenu: Reducer = createPushReducer(actions.STRINGTYPE.FORCEMENU);
+const reducerDBName: Reducer = createPushReducer(actions.STRINGTYPE.DBNAME);
 
 var store: Store;
 
@@ -29,12 +31,14 @@ export function makeStore() {
         leftmenu: reducerLeftMenu,
         strings: reducerStrings,
         menuactionname: reducerActionName,
+        forcemenu : reducerForceMenu,
+        dbname : reducerDBName,
         listactionid: reducerActionList,
         listactionspecid : reducerActionListSpec,
         readlistdata: reducerGetList,
         readlistdef: reducerGetListDef,
         readlistspec: reducerGetListSpec,
-        readlistdefspec: reducerGetListDefSpec,
+        readlistdefspec: reducerGetListDefSpec,        
     })
 
     store = createStore(rootStore, composeEnhancer(applyMiddleware(thunk)));

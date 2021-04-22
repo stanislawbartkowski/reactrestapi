@@ -20,7 +20,7 @@ const ListComponent: FunctionComponent = () => {
     return <ListGrid listdata={listdata} menuaction={menuaction} listdefdata={listdefdata} />
 }
 
-addRouter({ path: "/list", comp: ListComponent, restid: null });
+addRouter({ path: "/list", comp: ListComponent, id: null });
 
 const MainPanel: FunctionComponent = () => {
 

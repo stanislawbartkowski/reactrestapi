@@ -2,8 +2,6 @@ import React, { FunctionComponent, ReactElement } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { DataGrid, GridToolbar, GridCellParams, useGridSlotComponentProps, GridDensityTypes, GridColDef } from '@material-ui/data-grid';
 import Pagination from '@material-ui/lab/Pagination';
-import DetailsIcon from '@material-ui/icons/Details';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 import Tooltip from '@material-ui/core/Tooltip'
 

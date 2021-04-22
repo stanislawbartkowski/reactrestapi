@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 
 import LeftButton from '../../../UI/LeftMenu';
 import * as pactions from '../../../store/pushstring/actions';
+import * as C from '../../../js/C';
 import * as I from '../../../js/I';
 import * as lactions from '../../../store/getdata/actions'
 import * as dactions from '../../../store/getlistres/actions'
@@ -13,31 +14,41 @@ import { getPath } from './MenuConfig';
 import { setStrings } from '../../../js/locale'
 import lstring from '../../../js/locale'
 
+
 const LeftMenu: FunctionComponent = () => {
 
     const leftmenu: I.IResourceResult = useSelector((state: any) => state.leftmenu);
     const strings: I.IResourceResult = useSelector((state: any) => state.strings);
+    const forcemenu: pactions.IPushString = useSelector((state: any) => state.forcemenu);
+
     const dispatch = useDispatch();
     const history = useHistory();
 
     if (leftmenu.type != I.RESOURCE.LEFTMENU) return null;
     if (strings.type != I.RESOURCE.STRINGS) return null;
 
-    const menustring = (e: I.TMenuElem): string => {
-        return lstring("button_" + e.id);
-    }
-
     setStrings(strings.data);
 
     const menu: I.TMenuElem[] = leftmenu.data['menu']
 
+    const menustring = (e: I.TMenuElem): string => {
+        return lstring("button_" + e.id);
+    }
+
     const clickAction = (e: I.TMenuElem) => {
+        if (!C.CanCallMenu(e.id)) return;
         dispatch(pactions.pushstring(pactions.STRINGTYPE.MENUACTIONNAME, menustring(e)));
         dispatch(pactions.pushstring(pactions.STRINGTYPE.LISTACTIONID, e.restid));
-        dispatch(lactions.resourceRead(I.RESOURCE.LISTRES, e.restid, null));
+        dispatch(lactions.resourceRead(I.RESOURCE.LISTRES, e.id, e.restid, null));
         dispatch(dactions.resourceListDefRead(I.RESOURCE.LISTRESDEF, e.restid, e.restid));
-        const path: string = getPath(e.restid);
+        const path: string = getPath(e.id);
         history.replace(path);
+    }
+
+    if (forcemenu.type == pactions.STRINGTYPE.FORCEMENU) {
+        const menuid: string = forcemenu.vals as string;
+        const m: I.TMenuElem = menu.find(e => e.id == menuid) as I.TMenuElem;
+        clickAction(m);
     }
 
     return (
