@@ -47,6 +47,11 @@ export function randomString(): string {
     return "" + Math.random();
 }
 
+export function callJSRowFunction(jsAction: string, row: any): any {
+    const clickaction = new Function('p', "return " + jsAction + "(p)");
+    return clickaction(row);
+}
+
 // ================================
 // confirm dialog
 // ================================
@@ -141,6 +146,17 @@ export function verifyDispatcher(t: I.TDispatchRes) {
 // ==========================
 // expand title
 // ==========================
+
+export function verifyTRow(p: I.TRowAction) {
+    if (p.field == null) {
+        internalerrorlog("ident p.field cannot be null");
+        return;
+    }
+    if (p.jsaction == null) {
+        internalerrorlog("ident p.json cannot be null");
+        return;
+    }
+}
 
 export function verifyTitle(p: I.TTitleParam) {
     if (p.messid == null) {

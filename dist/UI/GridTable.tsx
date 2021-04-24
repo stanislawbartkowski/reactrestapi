@@ -16,7 +16,12 @@ import gridstrings from '../js/gridlocale';
 const useStyles = makeStyles(theme => ({
     table: {
         minWidth: 650,
-        height: 750, width: '100%'
+        height: 750, width: '100%',
+        '& .stylebold': {
+            fontSize: theme.typography.fontSize * 1.3,
+            fontWeight: theme.typography.fontWeightBold,
+        },
+
     },
     rendercell: {
         width: '100%',
@@ -91,6 +96,14 @@ const GridTable: FunctionComponent<IGridTable> = ({ list, coldef, spec }) => {
     }
 
 
+    function createidentRenderCell(fun: (param: GridCellParams) => number): (params: GridCellParams) => ReactElement {
+
+        return (params: GridCellParams): ReactElement => {
+            const ident: number = fun(params);
+            return <span style={{ paddingLeft: 12 * ident }}>{params.value}</span>
+        }
+    }
+
     const dlist: any[] =
         C.range(list.length).map(i => ({ id: i, ...list[i] }))
 
@@ -109,6 +122,7 @@ const GridTable: FunctionComponent<IGridTable> = ({ list, coldef, spec }) => {
         coldef.forEach(e => {
             if (e.onCellClick != null && e.field == ele.field) ele.renderCell = renderCell;
             if (e.onCellClick == null && e.cellTitle != null && e.field == ele.field) ele.renderCell = renderTitleCell;
+            if (e.identCol != null && e.field == ele.field) ele.renderCell = createidentRenderCell(e.identCol);
         })
     })
 

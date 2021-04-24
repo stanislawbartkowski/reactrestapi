@@ -21,7 +21,8 @@ export interface IResourceResult {
 export interface ITableCol extends GridColDef {
     coltitle?: string,
     onCellClick?: (param: GridCellParams) => void,
-    cellTitle? : (param: GridCellParams) => string
+    cellTitle? : (param: GridCellParams) => string,
+    identCol? : (param: GridCellParams) => number
 }
 
 export interface ITableSpec {
