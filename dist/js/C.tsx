@@ -49,7 +49,8 @@ export function randomString(): string {
 
 export function callJSRowFunction(jsAction: string, row: any): any {
     const clickaction = new Function('p', "return " + jsAction + "(p)");
-    return clickaction(row);
+    const res = clickaction(row);
+    return res;
 }
 
 // ================================
@@ -117,30 +118,42 @@ export function addQuery(url: string, query: string): string {
     return url + '?' + query;
 }
 
+function notObjectProps(mess: string, alert: boolean, o: object, ...args: string[]) {
+    let errmess: string | null = null;
+    args.forEach(s => {
+        if (!o.hasOwnProperty(s)) {
+            if (errmess == null) errmess = mess + " properties cannot be null: " + s;
+            else errmess = errmess + "," + s;
+        }
+    })
+    if (errmess != null) {
+        internalerrorlog(errmess, alert);
+        return false;
+    }
+    return true;
+}
+
 // =======================
 // verify dispatcher
 // =======================
 
+const actionlist: string[] = [I.TDISPATCHLISTSLOT1, I.TDISPATCHLISTSLOT2, I.TDISPATCHWARNING]
+
 export function verifyDispatcher(t: I.TDispatchRes) {
 
-    if (t.action != I.TDISPATCHLISTELEM) {
-        internalerrorlog("action:" + t.action + " " + I.TDISPATCHLISTELEM + " expected")
-        return
+    if (!(actionlist.includes(t.action))) {
+        let listmess: string | null = null;
+        actionlist.forEach(s => { listmess = (listmess == null) ? s : listmess + "," + s });
+        internalerrorlog("action:" + t.action + " " + listmess + " expected")
+        return false;
     }
-    if (t.restid == null) {
-        internalerrorlog("restid cannot be null");
-        return;
+    if (t.action == I.TDISPATCHWARNING) {
+        if (notObjectProps(t.action, true, t, "title")) return false;
+    } else {
+        if (notObjectProps(t.action, true, t, "restid", "pars")) return false;
     }
-    if (t.pars == null) {
-        internalerrorlog("pars cannot be null");
-        return;
-    }
-    if (t.title != null) {
-        if (t.title.messid == null) {
-            internalerrorlog("title.messid cannot be null");
-            return;
-        }
-    }
+    if (t.title != null) return verifyString(t.title as I.TMess);
+    return true;
 }
 
 // ==========================
@@ -148,24 +161,38 @@ export function verifyDispatcher(t: I.TDispatchRes) {
 // ==========================
 
 export function verifyTRow(p: I.TRowAction) {
-    if (p.field == null) {
-        internalerrorlog("ident p.field cannot be null");
-        return;
-    }
-    if (p.jsaction == null) {
-        internalerrorlog("ident p.json cannot be null");
-        return;
-    }
+    return !notObjectProps("TRowAction", false, p, "field", "jsaction");
 }
 
-export function verifyTitle(p: I.TTitleParam) {
-    if (p.messid == null) {
+function isString(p: any): boolean {
+    return typeof p === "string";
+}
+
+export function verifyString(p: I.TMess): boolean {
+    if (p == null) return true;
+    if (isString(p)) return true;
+    const pp: I.TStringParam = p as I.TStringParam;
+    if (pp.messid == null) {
         internalerrorlog("p.messid cannot be null", false);
-        return;
+        return false;
     }
+    if (pp.params == null) return true;
+    // check not null
+    const s: string | undefined = pp.params.find(s => s == null);
+    var isnull: boolean = false;
+    pp.params.forEach(s => { if (s == null) isnull = true; });
+    if (isnull) {
+        internalerrorlog("p.params element cannot be null", false);
+        return false;
+    }
+    return true;
 }
 
-export function titleString(p: I.TTitleParam): string {
+export function getString(pp: I.TMess): string | null {
+    if (pp == null) return null;
+    if (isString(pp)) return reststring(pp as string);
+    const p: I.TStringParam = pp as I.TStringParam;
+    if (p.localize != undefined && !p.localize) return p.messid;
     const pars: string[] = (p.params == null) ? [] : p.params;
     return reststring(p.messid, ...pars)
 }

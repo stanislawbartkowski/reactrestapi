@@ -2,11 +2,13 @@ import React from 'react';
 
 import Portal from '@material-ui/core/Portal';
 
-import ListGridSpec from './panel/panelcomp/ListGridSpec'
+import ListGridSlot1 from './panel/panelcomp/listcomp/ListGridSlot1'
+import ListGridSlot2 from './panel/panelcomp/listcomp/ListGridSlot2'
 
 const PopUps: React.FC = () =>
     <Portal>
-        <ListGridSpec />
+        <ListGridSlot1 />
+        <ListGridSlot2 />
     </Portal>
 
 export default PopUps;

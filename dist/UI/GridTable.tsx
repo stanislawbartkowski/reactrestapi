@@ -1,13 +1,12 @@
 import React, { FunctionComponent, ReactElement } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { DataGrid, GridToolbar, GridCellParams, useGridSlotComponentProps, GridDensityTypes, GridColDef } from '@material-ui/data-grid';
+import { GridCellValue, DataGrid, GridToolbar, GridCellParams, useGridSlotComponentProps, GridDensityTypes, GridColDef } from '@material-ui/data-grid';
 import Pagination from '@material-ui/lab/Pagination';
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 import Tooltip from '@material-ui/core/Tooltip'
 
 import * as C from '../js/C'
 import * as I from '../js/I'
-import lstring from '../js/locale'
 
 import gridstrings from '../js/gridlocale';
 
@@ -67,83 +66,59 @@ const GridTable: FunctionComponent<IGridTable> = ({ list, coldef, spec }) => {
 
     C.verifyColumns(coldef);
 
-    const getHeader = (e: I.ITableCol): string => {
-        return lstring(e.coltitle == null ? e.field + "_col" : e.coltitle);
-    };
-
-    const getCellTitle = (params: GridCellParams): null | string => {
-        const col: I.ITableCol | undefined = coldef.find(e => e.field == params.field);
+    const getCellTitle = (col: I.ITableCol, params: GridCellParams): null | string => {
         if (col == undefined || col.cellTitle == null) return null;
         return col.cellTitle(params);
     };
 
-    const renderTitleCell = (params: GridCellParams) => {
-        const title = getCellTitle(params) as string;
-        return <Tooltip title={title}>
-            <div>{params.value}</div>
-        </Tooltip>
+    const getCellValue = (col: I.ITableCol, params: GridCellParams): GridCellValue => {
+        if (col.valueCol == null) return params.value;
+        return col.valueCol(params);
     }
 
-    const renderCell = (params: GridCellParams): ReactElement => {
-        const cell: ReactElement = <div className={classes.rendercell}>
-            {params.value}
-            <ArrowDownwardIcon className={classes.downicon} fontSize="small" color="action" />
-        </div>
-        const title = getCellTitle(params)
-        if (title == null) return <React.Fragment> {cell} </React.Fragment>
-        else
-            return <Tooltip title={title}>{cell}</Tooltip>
-    }
+    //    const isCellClickable = (col: I.ITableCol, params: GridCellParams): boolean {
+    //        if (col.onCellClick == undefined) return false;
+    //
+    //    }
 
-
-    function createidentRenderCell(fun: (param: GridCellParams) => number): (params: GridCellParams) => ReactElement {
-
+    const constructRenderCell = (col: I.ITableCol) => {
         return (params: GridCellParams): ReactElement => {
-            const ident: number = fun(params);
-            return <span style={{ paddingLeft: 12 * ident }}>{params.value}</span>
+
+            const cells: ReactElement = (!col.isCellClickable(params)) ? <div>{getCellValue(col, params)}</div> :
+                <div className={classes.rendercell}>
+                    {getCellValue(col, params)}
+                    <ArrowDownwardIcon className={classes.downicon} fontSize="small" color="action" />
+                </div>
+
+            const ident: number = col.identCol == null ? 0 : col.identCol(params);
+            const cell: ReactElement = col.identCol == null ? cells :
+                <span style={{ paddingLeft: 12 * ident }}>{cells}</span>
+
+
+            const title = getCellTitle(col, params);
+            if (title == undefined) return <React.Fragment> {cell} </React.Fragment>
+            else
+                return <Tooltip title={title}>{cell}</Tooltip>
+
         }
     }
 
     const dlist: any[] =
         C.range(list.length).map(i => ({ id: i, ...list[i] }))
 
-    const columns: GridColDef[] = coldef.map(
-        e => ({ headerName: getHeader(e), ...e })
-    );
-
     const onCellClick = (param: GridCellParams) => {
-        coldef.forEach(e => {
-            if (e.onCellClick != null && e.field == param.field) e.onCellClick(param);
-        })
+        const e: I.ITableCol = coldef.find(e => e.field == param.field) as I.ITableCol;
+        if (!e.isCellClickable(param)) return;
+        if (e.onCellClick != null) e.onCellClick(param);
     }
 
+    // should be a copy of coldef
+    const columns: GridColDef[] = coldef;
 
     columns.forEach(ele => {
-        coldef.forEach(e => {
-            if (e.onCellClick != null && e.field == ele.field) ele.renderCell = renderCell;
-            if (e.onCellClick == null && e.cellTitle != null && e.field == ele.field) ele.renderCell = renderTitleCell;
-            if (e.identCol != null && e.field == ele.field) ele.renderCell = createidentRenderCell(e.identCol);
-        })
+        const e: I.ITableCol = coldef.find(e => e.field == ele.field) as I.ITableCol;
+        if (e.onCellClick != null || e.valueCol != null || e.cellTitle != null || e.identCol != null) ele.renderCell = constructRenderCell(e);
     })
-
-
-    //    const onCellOver = (param: GridCellParams,event: React.MouseEvent) => {
-    //        coldef.forEach(e => {
-    //            if (e.onCellClick != null && e.field == param.field) C.log("over")
-    //        })
-
-    //    }
-
-
-    //    export function setCellClick(listc: I.ITableCol[], field: string, onCellClick: (param: GridCellParams) => void) {
-    //        const c: I.ITableCol | undefined = listc.find(e => e.field == field);
-    //        if (c == undefined) {
-    //            cannotfindError(setCellClick.name, field);
-    //            return;
-    //        }
-    //        c.onCellClick = onCellClick;
-    //    }
-
 
     return <div className={classes.table + ' ' + (spec != null ? spec.className : "")} >
         <DataGrid rows={dlist} columns={columns} autoPageSize disableSelectionOnClick

@@ -2,7 +2,7 @@ import { FunctionComponent } from 'react';
 import { Route, Switch } from 'react-router-dom';
 import * as I from '../../../js/I';
 import { useSelector } from "react-redux";
-import ListGrid from './ListGrid'
+import ListGrid from './listcomp//ListGrid'
 import * as pactions from '../../../store/pushstring/actions'
 import { addRouter, routermenu } from './MenuConfig';
 
