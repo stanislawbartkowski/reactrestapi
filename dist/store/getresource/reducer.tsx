@@ -2,11 +2,12 @@ import { Reducer } from 'redux';
 
 import * as I from '../../js/I'
 
-export const startAction: I.IResourceResult = {
+const startAction: I.IResourceResult = {
     type: I.RESOURCE.NOTHING,
     data: null,
     restid: null,
-    js: null
+    js: null,
+    vars: null
 };
 
 function createReducer(act: I.RESOURCE): Reducer {
@@ -17,13 +18,15 @@ function createReducer(act: I.RESOURCE): Reducer {
                     type: action.type,
                     data: action.data,
                     restid: action.restid,
-                    js: action.js
+                    js: action.js,
+                    vars: action.vars
                 };
             case I.RESOURCE.NOTHING: return {
                 type: action.type,
                 data: null,
                 restid: null,
-                js: null
+                js: null,
+                vars: null
             };
 
             default: return state;

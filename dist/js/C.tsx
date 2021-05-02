@@ -47,9 +47,9 @@ export function randomString(): string {
     return "" + Math.random();
 }
 
-export function callJSRowFunction(jsAction: string, row: any): any {
-    const clickaction = new Function('p', "return " + jsAction + "(p)");
-    const res = clickaction(row);
+export function callJSRowFunction(jsAction: string, row: object, vars : object|null): any {
+    const clickaction = new Function('p,vars', "return " + jsAction + "(p,vars)");
+    const res = clickaction(row,vars);
     return res;
 }
 
@@ -137,7 +137,7 @@ function notObjectProps(mess: string, alert: boolean, o: object, ...args: string
 // verify dispatcher
 // =======================
 
-const actionlist: string[] = [I.TDISPATCHLISTSLOT1, I.TDISPATCHLISTSLOT2, I.TDISPATCHWARNING]
+const actionlist: string[] = [I.TDISPATCHPOPUP, I.TDISPATCHWARNING]
 
 export function verifyDispatcher(t: I.TDispatchRes) {
 
@@ -152,7 +152,7 @@ export function verifyDispatcher(t: I.TDispatchRes) {
     } else {
         if (notObjectProps(t.action, true, t, "restid", "pars")) return false;
     }
-    if (t.title != null) return verifyString(t.title as I.TMess);
+    if (t.messid != null) return verifyString(t.messid as I.TMess);
     return true;
 }
 

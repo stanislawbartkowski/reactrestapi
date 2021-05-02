@@ -8,7 +8,7 @@ export interface IPushString {
 }
 
 
-export const pushstring = (type : STRINGTYPE, vals: string) : IPushString => {
+export const pushstring = (type : STRINGTYPE, vals: string|null) : IPushString => {
     return {
         type: type,
         vals: vals

@@ -10,8 +10,6 @@ import * as I from '../js/I'
 
 import gridstrings from '../js/gridlocale';
 
-//super-app-theme--cell
-
 const useStyles = makeStyles(theme => ({
     table: {
         minWidth: 650,
@@ -31,13 +29,6 @@ const useStyles = makeStyles(theme => ({
     }
 }
 ));
-
-
-export interface IGridTable {
-    list: any[],
-    coldef: I.ITableCol[],
-    spec?: I.ITableSpec,
-}
 
 
 //const ToolBar: FunctionComponent<BaseComponentProps> = (props: BaseComponentProps) => {
@@ -60,7 +51,7 @@ function CustomPagination() {
     );
 }
 
-const GridTable: FunctionComponent<IGridTable> = ({ list, coldef, spec }) => {
+const GridTable: FunctionComponent<I.IGridTable> = ({ list, coldef, spec }) => {
 
     const classes = useStyles();
 

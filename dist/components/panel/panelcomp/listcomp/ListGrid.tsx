@@ -7,8 +7,6 @@ import ListDokDialog from '../../../../UI/ListDokDialog'
 import { useDispatch } from 'react-redux';
 import InLine from '../../../../UI/InLine'
 import { GridCellParams, GridCellClassParams } from '@material-ui/data-grid';
-import * as lactions from '../../../../store/getdata/actions'
-import * as dactions from '../../../../store/getlistres/actions'
 import lstring from '../../../../js/locale';
 import * as D from './D'
 
@@ -17,6 +15,8 @@ interface IListGrid {
     listdata: I.IResourceResult;
     menuaction: pactions.IPushString;
     listdefdata: I.IResourceResult;
+    slotid: I.SLOT,
+    vars: object | null
 }
 
 function findElem(click: I.TRowAction[] | undefined, field: string): I.TRowAction | undefined {
@@ -28,11 +28,13 @@ function findElem(click: I.TRowAction[] | undefined, field: string): I.TRowActio
 }
 
 
-const ListGrid: FunctionComponent<IListGrid> = ({ listdata, menuaction, listdefdata }) => {
+const ListGrid: FunctionComponent<IListGrid> = ({ listdata, menuaction, listdefdata, slotid, vars }) => {
 
     const dispatch = useDispatch();
 
     var actionid: string | null = menuaction.vals;
+
+    if (actionid == null) return null;
 
     if (listdata.restid != actionid) return null;
 
@@ -40,20 +42,26 @@ const ListGrid: FunctionComponent<IListGrid> = ({ listdata, menuaction, listdefd
 
     C.log("Menu action name " + actionid);
 
-    const datalist: any[] = listdata.data.res;
-    const listres: I.IRestTable = listdefdata.data;
+    const datalist: any[] = (listdata.data as I.IResourceListData).res;
+    const listres: I.IRestTable = listdefdata.data as I.IRestTable;
     const cols: I.ITableCol[] = listres.columns;
     const ident: I.TRowAction | undefined = listres.ident;
+    const jstitle: string | undefined = listres.jstitle
 
-    const getRow = (param: GridCellParams): any => {
+    const getRow = (param: GridCellParams): object => {
         const i = param.rowIndex;
-        return datalist[i];
+//        const row: object = datalist[i];
+        const row: object = param.row;
+        if (row == null) {
+            C.internalerrorlog("row:" + i + " cannot be null");
+        }
+        return row;
     }
 
     const jsColAction = (a: I.TRowAction, param: GridCellParams): any => {
         const row = getRow(param);
         const jsAction: string = a.jsaction;
-        return C.callJSRowFunction(jsAction, row);
+        return C.callJSRowFunction(jsAction, row, vars);
     }
 
     // is cell clickable
@@ -64,7 +72,7 @@ const ListGrid: FunctionComponent<IListGrid> = ({ listdata, menuaction, listdefd
             if (a.jsaction == undefined) return false;
             if (a.isaction == undefined) return true;
             const row = getRow(param);
-            const res = C.callJSRowFunction(a.isaction, row);
+            const res = C.callJSRowFunction(a.isaction, row, vars);
             return res as boolean;
         }
     }
@@ -75,7 +83,7 @@ const ListGrid: FunctionComponent<IListGrid> = ({ listdata, menuaction, listdefd
         if (a == undefined) return undefined;
         return (param: GridCellParams) => {
             const res: I.TDispatchRes = jsColAction(a, param);
-            D.dAction(dispatch, res);
+            D.dAction(dispatch, slotid, res);
         }
     }
 
@@ -94,7 +102,7 @@ const ListGrid: FunctionComponent<IListGrid> = ({ listdata, menuaction, listdefd
     // ident
     const getIdent = (param: GridCellParams): number => {
         const row = getRow(param);
-        return C.callJSRowFunction((ident as I.TRowAction).jsaction, row);
+        return C.callJSRowFunction((ident as I.TRowAction).jsaction, row, vars);
     }
 
     // cellStyle
@@ -125,10 +133,21 @@ const ListGrid: FunctionComponent<IListGrid> = ({ listdata, menuaction, listdefd
 
     const js = listdefdata.js;
 
-    const listtype = listdata.type
+    var dialtitle: string | undefined = undefined;
 
-    const component = (listtype == I.RESOURCE.LISTRES) ? <GridTable list={datalist} coldef={cols} />
-        : <ListDokDialog list={datalist} coldef={cols} />
+    if (jstitle != undefined) {
+        const mtitle: I.TMess = C.callJSRowFunction(jstitle, vars as object, null);
+        C.verifyString(mtitle);
+        dialtitle = C.getString(mtitle) as string
+    }
+
+    const onClose = () => {
+    }
+
+    const spec: I.IGridTableSpec = { title: dialtitle, onClose: onClose };
+
+    const component = (slotid == I.SLOT.SLOTBASE) ? <GridTable list={datalist} coldef={cols} />
+        : <ListDokDialog list={datalist} coldef={cols} spec={spec} />
 
     if (js == null)
         return component;

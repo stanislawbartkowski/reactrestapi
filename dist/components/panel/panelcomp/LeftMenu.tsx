@@ -29,7 +29,7 @@ const LeftMenu: FunctionComponent = () => {
 
     setStrings(strings.data);
 
-    const menu: I.TMenuElem[] = leftmenu.data['menu']
+    const menu: I.TMenuElem[] = (leftmenu.data as I.IResourceListMenu).menu;
 
     const menustring = (e: I.TMenuElem): string => {
         return lstring("button_" + e.id);
@@ -40,7 +40,7 @@ const LeftMenu: FunctionComponent = () => {
         dispatch(pactions.pushstring(pactions.STRINGTYPE.MENUACTIONNAME, menustring(e)));
         dispatch(pactions.pushstring(pactions.STRINGTYPE.LISTACTIONID, e.restid));
         dispatch(lactions.resourceRead(I.RESOURCE.LISTRES, e.id, e.restid, null));
-        dispatch(dactions.resourceListDefRead(I.RESOURCE.LISTRESDEF, e.restid, e.restid));
+        dispatch(dactions.resourceListDefRead(I.RESOURCE.LISTRESDEF, e.restid, e.restid, null));
         const path: string = getPath(e.id);
         history.replace(path);
     }

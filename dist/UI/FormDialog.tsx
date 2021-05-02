@@ -58,20 +58,21 @@ const FormDialog: FunctionComponent<FunctionComponentParam> = ({ spec, value }) 
 
     function createChangeValue(id: string): (event: React.ChangeEvent<HTMLInputElement>) => void {
         return (event: React.ChangeEvent<HTMLInputElement>) => {
-            const nvalues = {...values};
+            const nvalues = { ...values };
             nvalues[id] = event.target.value;
             setName(nvalues);
         }
 
     }
 
-
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setName(values);
     };
 
+    const onClose  = () => {}
+
     return (
-        <ModalDialog title={persstring(spec.title)}>
+        <ModalDialog title={persstring(spec.title)} onClose={onClose}>
 
             <form className={classes.root} noValidate autoComplete="off">
                 {spec.fields.map(e => (

@@ -17,7 +17,7 @@ const ListComponent: FunctionComponent = () => {
     if (menuaction.type != pactions.STRINGTYPE.LISTACTIONID) return null;
     if (listdefdata.type != I.RESOURCE.LISTRESDEF) return null;
 
-    return <ListGrid listdata={listdata} menuaction={menuaction} listdefdata={listdefdata} />
+    return <ListGrid listdata={listdata} menuaction={menuaction} listdefdata={listdefdata} slotid={I.SLOT.SLOTBASE} vars={null}/>
 }
 
 addRouter({ path: "/list", comp: ListComponent, id: null });

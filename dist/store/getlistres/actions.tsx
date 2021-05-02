@@ -3,7 +3,7 @@ import * as C from '../../js/C'
 import * as I from '../../js/I'
 import { resourceresult } from '../getresource/actions'
 
-export const resourceListDefRead = (id: I.RESOURCE, listresource: string, restid: string) => {
+export const resourceListDefRead = (id: I.RESOURCE, listresource: string, restid: string, vars: object | null) => {
 
     return (dispatch: any) => {
 
@@ -15,11 +15,11 @@ export const resourceListDefRead = (id: I.RESOURCE, listresource: string, restid
             if (js != null) {
                 const urljs = "getjs?resource=" + js;
                 axios.get(urljs).then(jres => {
-                    dispatch(resourceresult(id, res.data, restid, jres.data));
+                    dispatch(resourceresult(id, res.data, restid, jres.data, vars));
                 })
             }
             else
-                dispatch(resourceresult(id, res.data, restid, null));
+                dispatch(resourceresult(id, res.data, restid, null, vars));
         });
     }
 }

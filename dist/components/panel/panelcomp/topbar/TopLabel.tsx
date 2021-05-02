@@ -11,7 +11,7 @@ const TopLabel: FunctionComponent = () => {
 
     if (appdata.type != I.RESOURCE.APPDATA ) return null;
 
-    const label : string = appdata.data['appname']
+    const label : string = (appdata.data as I.IResourceAppData).appname;
 
     C.log(label);
 

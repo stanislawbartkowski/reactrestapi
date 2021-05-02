@@ -60,8 +60,8 @@ const gridstrings: GridLocaleText = {
     columnMenuFilter: 'Filtr',
     columnMenuHideColumn: 'Schowaj kolumny',
     columnMenuUnsort: 'Usuń uporządkowanie',
-    columnMenuSortAsc: 'Sortuj w górę',
-    columnMenuSortDesc: 'Sortuj w dół',
+    columnMenuSortAsc: 'Sortuj rosnąco',
+    columnMenuSortDesc: 'Sortuj malejąco',
 
     // Column header text
     columnHeaderFiltersTooltipActive: (count) => `liczba aktywnyhch filtrów : ${count} `,

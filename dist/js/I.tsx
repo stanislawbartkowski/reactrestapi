@@ -14,11 +14,25 @@ export enum RESOURCE {
 
 // general data returned by REST/API resource call
 
+export interface IResourceAppData {
+    logo: string;
+    appname: string;
+}
+
+export interface IResourceListData {
+    res: any[];
+}
+
+export interface IResourceListMenu {
+    menu: TMenuElem[];
+}
+
 export interface IResourceResult {
     type: RESOURCE,
-    data: IRestTable | object | null | any,
+    data: IRestTable | IResourceListData | IResourceListMenu | IResourceAppData | null,
     restid: string | null,
-    js: string | null
+    js: string | null,
+    vars: object | null
 }
 
 // column/cell definition passed to GridTable
@@ -62,12 +76,8 @@ export interface IRestTable {
     style?: TRowAction[],
     value?: TRowAction[],
     celltitle?: TRowAction[],
-    click?: TRowAction[]
-}
-
-export interface ITableSpec {
-    className?: string,
-    title?: string
+    click?: TRowAction[],
+    jstitle?: string
 }
 
 export type TMenuElem = {
@@ -76,9 +86,13 @@ export type TMenuElem = {
 }
 
 
-export const TDISPATCHLISTSLOT1: string = "LISTSLOT1"
-export const TDISPATCHLISTSLOT2: string = "LISTSLOT2"
+export const TDISPATCHPOPUP: string = "POPUP"
 export const TDISPATCHWARNING: string = "WARNING"
+
+// popup dialog identifier to generate next
+export enum SLOT {
+    SLOTBASE, SLOT1, SLOT2
+};
 
 
 // string: either string only which means localize id or object
@@ -91,11 +105,27 @@ export type TStringParam = {
     params?: string[]
 }
 
+// dispatcher dat
+
 export type TDispatchRes = {
     action: string,
     restid: string,
-    pars: Object,
-    title?: TMess
+    pars: object,
+    messid?: TMess,
+    vars: object | null
+}
+
+// GridTable attributes
+export interface IGridTableSpec {
+    className?: string,
+    title?: string,
+    onClose? : () => void;
+}
+
+export interface IGridTable {
+    list: any[],
+    coldef: ITableCol[],
+    spec?: IGridTableSpec
 }
 
 // ----------------

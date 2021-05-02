@@ -8,7 +8,7 @@ const AppLogo: FunctionComponent = () => {
 
     if (appdata.type != I.RESOURCE.APPDATA) return null;
 
-    const logo: string = appdata.data['logo']
+    const logo: string = (appdata.data as I.IResourceAppData).logo
 
     return <div>
         <img src={logo} alt="logo" />
