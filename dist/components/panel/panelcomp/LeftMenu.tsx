@@ -14,6 +14,16 @@ import { getPath } from './MenuConfig';
 import { setStrings } from '../../../js/locale'
 import lstring from '../../../js/locale'
 
+var menu: I.TMenuElem[] = []
+
+export const getRestId = (menuid : string) : string | undefined => {
+    const emenu : I.TMenuElem | undefined = menu.find( e => e.id == menuid);
+    if (emenu == undefined) {
+        C.erralert(menuid + " : cannot find such menu id");
+        return undefined;
+    }
+    return emenu.restid;
+}
 
 const LeftMenu: FunctionComponent = () => {
 
@@ -29,7 +39,7 @@ const LeftMenu: FunctionComponent = () => {
 
     setStrings(strings.data);
 
-    const menu: I.TMenuElem[] = (leftmenu.data as I.IResourceListMenu).menu;
+    menu = (leftmenu.data as I.IResourceListMenu).menu;
 
     const menustring = (e: I.TMenuElem): string => {
         return lstring("button_" + e.id);
