@@ -16,11 +16,11 @@ import lstring from '../../../js/locale'
 
 var menu: I.TMenuElem[] = []
 
-export const getRestId = (menuid : string) : string | undefined => {
+export const getRestId = (menuid : string) : string | null => {
     const emenu : I.TMenuElem | undefined = menu.find( e => e.id == menuid);
     if (emenu == undefined) {
         C.erralert(menuid + " : cannot find such menu id");
-        return undefined;
+        return null;
     }
     return emenu.restid;
 }

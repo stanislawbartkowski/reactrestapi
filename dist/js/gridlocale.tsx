@@ -2,7 +2,7 @@ import { GridLocaleText, GridToolbarExport } from '@material-ui/data-grid';
 
 const gridstrings: GridLocaleText = {
     // Root
-    rootGridLabel: 'grid',
+//    rootGridLabel: 'grid',
     noRowsLabel: 'Nie ma nic do wyświetlenia',
     errorOverlayDefaultLabel: 'Coś jest źle.',
 
@@ -39,7 +39,7 @@ const gridstrings: GridLocaleText = {
     filterPanelOperatorAnd: 'oraz',
     filterPanelOperatorOr: 'lub',
     filterPanelColumns: 'Kolumny',
-    filterPanelInputLabel: 'wartość',
+    filterPanelInputLabel: 'Wartość',
     filterPanelInputPlaceholder: 'Filtruj według wartości',
 
     // Filter operators text
@@ -86,7 +86,13 @@ const gridstrings: GridLocaleText = {
     filterValueFalse: "zzzz",
     checkboxSelectionHeaderName : "aaaaaa",
     booleanCellTrueLabel : "bbbbbb",
-    booleanCellFalseLabel : "eeeee"
+    booleanCellFalseLabel : "eeeee",
+
+    noResultsOverlayLabel : "Wyszukiwanie puste",
+    filterOperatorIsEmpty : "Pole puste" , 
+    filterOperatorIsNotEmpty : "Pole z wartością",
+    footerTotalVisibleRows :  (visibleCount: number, totalCount: number) => <div>XXX</div>,
+    MuiTablePagination: {}
 
     // Pagination footer text
     //footerPaginationRowsPerPage: 'Rows per page:',

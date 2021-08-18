@@ -3,6 +3,16 @@ import { GridColDef, GridCellParams } from '@material-ui/data-grid';
 
 export { }
 
+// string: either string only which means localize id or object
+
+export type TMess = string | TStringParam | null;
+
+export type TStringParam = {
+    readonly localize?: boolean,
+    readonly messid: string,
+    readonly params?: string[]
+}
+
 // important: enum different than any other enums
 export enum RESOURCE {
     NOTHING, APPDATA, LEFTMENU, STRINGS,
@@ -15,24 +25,24 @@ export enum RESOURCE {
 // general data returned by REST/API resource call
 
 export interface IResourceAppData {
-    logo: string;
-    appname: string;
+    readonly logo: string;
+    readonly appname: string;
 }
 
 export interface IResourceListData {
-    res: any[];
+    readonly res: any[];
 }
 
 export interface IResourceListMenu {
-    menu: TMenuElem[];
+    readonly menu: TMenuElem[];
 }
 
 export interface IResourceResult {
-    type: RESOURCE,
-    data: IRestTable | IResourceListData | IResourceListMenu | IResourceAppData | null,
-    restid: string | null,
-    js: string | null,
-    vars: object | null
+    readonly type: RESOURCE,
+    readonly data: IRestTable | IResourceListData | IResourceListMenu | IResourceAppData | null,
+    readonly restid: string | null,
+    readonly js: string | null,
+    readonly vars: object | null
 }
 
 // column/cell definition passed to GridTable
@@ -42,12 +52,13 @@ export interface IResourceResult {
 //   valueCol : custom cell value
 
 export interface ITableCol extends GridColDef {
-    coltitle?: string,
-    onCellClick?: (param: GridCellParams) => void,
+    coltitle: string,
+    clickTRow: TRowAction | null,
+    onCellClick: ((jsaction: string, param: GridCellParams) => void) | null,
     isCellClickable: (param: GridCellParams) => boolean,
-    cellTitle?: (param: GridCellParams) => string | null,
-    identCol?: (param: GridCellParams) => number,
-    valueCol?: (param: GridCellParams) => string | null
+    cellTitle: ((param: GridCellParams) => string | null) | null,
+    identCol: ((param: GridCellParams) => number) | null,
+    valueCol: ((param: GridCellParams) => string | null) | null
 }
 
 // action related to a single column/cell
@@ -55,10 +66,15 @@ export interface ITableCol extends GridColDef {
 //   jsaction : js function to call
 //   isaction: actions is available for that cell
 
+export type TRowClickChoice = {
+    readonly messid: TMess,
+    readonly jsaction: string
+}
+
 export type TRowAction = {
-    field: string,
-    jsaction: string,
-    isaction?: string
+    readonly field: string,
+    readonly jsaction: string | TRowClickChoice[]
+    readonly isaction?: string
 }
 
 
@@ -70,19 +86,19 @@ export type TRowAction = {
 //   value: custom get value
 
 export interface IRestTable {
-    columns: ITableCol[],
-    js?: TRowAction,
-    ident?: TRowAction,
-    style?: TRowAction[],
-    value?: TRowAction[],
-    celltitle?: TRowAction[],
-    click?: TRowAction[],
-    jstitle?: string
+    readonly columns: ITableCol[],
+    readonly js?: TRowAction,
+    readonly ident?: TRowAction,
+    readonly style?: TRowAction[],
+    readonly value?: TRowAction[],
+    readonly celltitle?: TRowAction[],
+    readonly click?: TRowAction[],
+    readonly jstitle?: string
 }
 
 export type TMenuElem = {
-    id: string
-    restid: string
+    readonly id: string
+    readonly restid: string
 }
 
 
@@ -95,37 +111,27 @@ export enum SLOT {
 };
 
 
-// string: either string only which means localize id or object
-
-export type TMess = string | TStringParam | null;
-
-export type TStringParam = {
-    localize?: boolean,
-    messid: string,
-    params?: string[]
-}
-
 // dispatcher dat
 
 export type TDispatchRes = {
-    action: string,
-    restid: string,
-    pars: object,
-    messid?: TMess,
-    vars: object | null
+    readonly action: string,
+    readonly restid: string,
+    readonly pars: object,
+    readonly messid?: TMess,
+    readonly vars: object | null
 }
 
 // GridTable attributes
 export interface IGridTableSpec {
-    className?: string,
-    title?: string,
-    onClose? : () => void;
+    readonly className: string | null,
+    readonly title?: string,
+    readonly onClose: () => void;
 }
 
 export interface IGridTable {
-    list: any[],
-    coldef: ITableCol[],
-    spec?: IGridTableSpec
+    readonly list: any[],
+    readonly coldef: ITableCol[],
+    readonly spec?: IGridTableSpec
 }
 
 // ----------------
@@ -135,14 +141,14 @@ export enum FieldType {
 }
 
 export interface IFieldItem {
-    fieldid: string,
-    fieldname: string,
-    fieldnamehelper?: string,
-    fieldtype?: FieldType,
-    fieldrequired?: boolean
+    readonly fieldid: string,
+    readonly fieldname: string,
+    readonly fieldnamehelper?: string,
+    readonly fieldtype?: FieldType,
+    readonly fieldrequired?: boolean
 }
 
 export interface IFieldForm {
-    title: string,
-    fields: IFieldItem[],
+    readonly title: string,
+    readonly fields: IFieldItem[],
 }

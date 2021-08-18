@@ -114,7 +114,7 @@ export function partoQuery(pars: Object): string {
 }
 
 export function addQuery(url: string, query: string): string {
-    if (url.indexOf('?')) return url + '&' + query;
+    if (url.indexOf('?') >= 0) return url + '&' + query;
     return url + '?' + query;
 }
 
@@ -160,12 +160,29 @@ export function verifyDispatcher(t: I.TDispatchRes) {
 // expand title
 // ==========================
 
-export function verifyTRow(p: I.TRowAction) {
-    return !notObjectProps("TRowAction", false, p, "field", "jsaction");
-}
-
 function isString(p: any): boolean {
     return typeof p === "string";
+}
+
+export function isArray(p : any) : boolean {
+    return Array.isArray(p);
+}
+
+function checkArray(mess: string,p : any, alert: boolean) : boolean {
+    if (isArray(p)) return true;
+    internalerrorlog(mess, alert)
+    return false;
+}
+
+export function verifyTRow(p: I.TRowAction) {
+    if (!notObjectProps("TRowAction", false, p, "field", "jsaction")) return false;
+    if (isString(p.jsaction)) return true;
+    if (!checkArray("TRowAction, attribute jsaction, array or string is expected",p.jsaction,false)) return false;
+    return true;
+}
+
+export function isSingleCallTRow(p: I.TRowAction) : boolean {
+    return isString(p.jsaction);
 }
 
 export function verifyString(p: I.TMess): boolean {
@@ -177,8 +194,6 @@ export function verifyString(p: I.TMess): boolean {
         return false;
     }
     if (pp.params == null) return true;
-    // check not null
-    const s: string | undefined = pp.params.find(s => s == null);
     var isnull: boolean = false;
     pp.params.forEach(s => { if (s == null) isnull = true; });
     if (isnull) {
@@ -192,7 +207,7 @@ export function getString(pp: I.TMess): string | null {
     if (pp == null) return null;
     if (isString(pp)) return reststring(pp as string);
     const p: I.TStringParam = pp as I.TStringParam;
-    if (p.localize != undefined && !p.localize) return p.messid;
+    if (p.localize != null && !p.localize) return p.messid;
     const pars: string[] = (p.params == null) ? [] : p.params;
     return reststring(p.messid, ...pars)
 }
@@ -201,16 +216,16 @@ export function getString(pp: I.TMess): string | null {
 // custom function regarding menu
 // ====================================
 
-export type CanMenu = ((id: string) => boolean) | undefined;
+export type CanMenu = ((id: string) => boolean) | null;
 
-let canfun: CanMenu = undefined;
+let canfun: CanMenu = null;
 
 export function setCanMenu(fun: CanMenu) {
     canfun = fun;
 }
 
 export function CanCallMenu(id: string): boolean {
-    if (canfun == undefined) return true;
+    if (canfun == null) return true;
     return canfun(id);
 }
 

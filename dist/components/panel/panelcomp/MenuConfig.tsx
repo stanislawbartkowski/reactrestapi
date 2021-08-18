@@ -19,6 +19,6 @@ export function getPath(id: string) : string {
 
     if (res != undefined) return res.path;
 
-    const defa: TRouterElem | undefined = routermenu.find(e => e.id == null) as TRouterElem;
+    const defa: TRouterElem | null = routermenu.find(e => e.id == null) as TRouterElem;
     return defa.path;
 }
