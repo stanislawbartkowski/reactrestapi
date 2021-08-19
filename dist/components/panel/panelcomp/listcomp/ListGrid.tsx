@@ -150,7 +150,7 @@ const ListGrid: FunctionComponent<IListGrid> = ({ listdata, menuaction, listdefd
 
     const spec: I.IGridTableSpec = { title: dialtitle, onClose: onClose, className: null };
 
-    const component = (slotid == I.SLOT.SLOTBASE) ? <GridTable list={datalist} coldef={cols} />
+    const component = (slotid == I.SLOT.SLOTBASE) ? <GridTable list={datalist} coldef={cols} spec={spec} />
         : <ListDokDialog list={datalist} coldef={cols} spec={spec} />
 
     if (js == null)

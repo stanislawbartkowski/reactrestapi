@@ -1,8 +1,8 @@
-import { GridLocaleText, GridToolbarExport } from '@material-ui/data-grid';
+import { GridLocaleText } from '@material-ui/data-grid';
 
 const gridstrings: GridLocaleText = {
     // Root
-//    rootGridLabel: 'grid',
+    //    rootGridLabel: 'grid',
     noRowsLabel: 'Nie ma nic do wyświetlenia',
     errorOverlayDefaultLabel: 'Coś jest źle.',
 
@@ -77,25 +77,25 @@ const gridstrings: GridLocaleText = {
     // Total rows footer text
     footerTotalRows: 'Total Rows:',
 
-    toolbarExport : "Eksport",
-    toolbarExportLabel : "dddd",
-    toolbarExportCSV : "Eksport CSV",
+    toolbarExport: "Eksport",
+    toolbarExportLabel: "dddd",
+    toolbarExportCSV: "Eksport CSV",
     filterOperatorAfter: "cccc",
-    filterValueAny : "xxxx",
+    filterValueAny: "xxxx",
     filterValueTrue: "yyyyy",
     filterValueFalse: "zzzz",
-    checkboxSelectionHeaderName : "aaaaaa",
-    booleanCellTrueLabel : "bbbbbb",
-    booleanCellFalseLabel : "eeeee",
+    checkboxSelectionHeaderName: "aaaaaa",
+    booleanCellTrueLabel: "bbbbbb",
+    booleanCellFalseLabel: "eeeee",
 
-    noResultsOverlayLabel : "Wyszukiwanie puste",
-    filterOperatorIsEmpty : "Pole puste" , 
-    filterOperatorIsNotEmpty : "Pole z wartością",
-    footerTotalVisibleRows :  (visibleCount: number, totalCount: number) => <div>XXX</div>,
+    noResultsOverlayLabel: "Wyszukiwanie puste",
+    filterOperatorIsEmpty: "Pole puste",
+    filterOperatorIsNotEmpty: "Pole z wartością",
+    footerTotalVisibleRows: (visibleCount: number, totalCount: number) => <div>XXX</div>,
     MuiTablePagination: {}
 
     // Pagination footer text
     //footerPaginationRowsPerPage: 'Rows per page:',
 }
 
-export default  gridstrings;
+export default gridstrings;

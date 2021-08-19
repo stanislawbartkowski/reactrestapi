@@ -1,11 +1,12 @@
 import React, { FunctionComponent, ReactElement } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { GridCellValue, DataGrid, GridToolbar, GridCellParams, useGridSlotComponentProps, GridDensityTypes, GridColDef } from '@material-ui/data-grid';
+import { GridToolbarContainer, GridToolbarDensitySelector, GridComponentProps, GridToolbarColumnsButton, GridToolbarFilterButton, GridToolbarExport } from '@material-ui/data-grid';
+import { MuiEvent } from '@material-ui/data-grid';
 import Pagination from '@material-ui/lab/Pagination';
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 import Tooltip from '@material-ui/core/Tooltip'
 import Popover from '@material-ui/core/Popover';
-import Button from '@material-ui/core/Button'
 import Typography from '@material-ui/core/Typography'
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -13,9 +14,11 @@ import FolderIcon from '@material-ui/icons/Folder';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import DetailsIcon from '@material-ui/icons/Details';
+import Button from '@material-ui/core/Button';
 
 import * as C from '../js/C'
 import * as I from '../js/I'
+import lstring from '../js/locale'
 
 import gridstrings from '../js/gridlocale';
 
@@ -39,13 +42,42 @@ const useStyles = makeStyles(theme => ({
 }
 ));
 
+interface ICellClickable {
+    readonly col: I.ITableCol,
+    readonly params: GridCellParams
+}
 
-//const ToolBar: FunctionComponent<BaseComponentProps> = (props: BaseComponentProps) => {
-//    return <GridToolbarContainer>
-//        <DensitySelector />
-//    </GridToolbarContainer>
+interface IToolParams {
+    row?: object;
+    readonly spec: I.IGridTableSpec
+}
 
-//}
+const ToolBar: FunctionComponent<GridComponentProps> = (props: GridComponentProps) => {
+    const { state, apiRef } = useGridSlotComponentProps();
+    const t: IToolParams = (props as any).specprop;
+
+    const onCellClick = (t: IToolParams ) => {
+        const a = 0;
+    };
+
+    return (
+        <GridToolbarContainer>
+            <GridToolbarColumnsButton />
+            <GridToolbarFilterButton />
+            <GridToolbarDensitySelector />
+            <GridToolbarExport />
+
+            <Button onClick={() => onCellClick(t)}
+                variant="outlined"
+                color="primary"
+                startIcon={<DetailsIcon />}
+            >
+                {lstring("showdatabutton")}
+            </Button>
+
+        </GridToolbarContainer>
+    )
+}
 
 function CustomPagination() {
     const { state, apiRef } = useGridSlotComponentProps();
@@ -58,11 +90,6 @@ function CustomPagination() {
             onChange={(event, value) => apiRef.current.setPage(value - 1)}
         />
     );
-}
-
-interface ICellClickable {
-    readonly col: I.ITableCol,
-    readonly params: GridCellParams
 }
 
 const getCellValue = (col: I.ITableCol, params: GridCellParams): GridCellValue => {
@@ -142,6 +169,11 @@ const GridTable: FunctionComponent<I.IGridTable> = ({ list, coldef, spec }) => {
         return col.cellTitle(params);
     };
 
+    const onCellClick = (params: GridCellParams, event: MuiEvent<React.MouseEvent>) => {
+        const a = 0;
+    }
+
+
     const constructRenderCell = (col: I.ITableCol) => {
         return (params: GridCellParams): ReactElement => {
 
@@ -172,16 +204,20 @@ const GridTable: FunctionComponent<I.IGridTable> = ({ list, coldef, spec }) => {
         if (e.onCellClick != null || e.valueCol != null || e.cellTitle != null || e.identCol != null) ele.renderCell = constructRenderCell(e);
     })
 
+    const toolprop: IToolParams = { spec: spec };
+
     return <div className={classes.table + ' ' + (spec != null ? spec.className : "")} >
         <DataGrid rows={dlist} columns={columns} autoPageSize disableSelectionOnClick
-            // onCellClick={onCellClick}
+
+            onCellClick={(params: GridCellParams, event: MuiEvent<React.MouseEvent>) => { toolprop.row = params.row }}
             // onCellOver={onCellOver}
             localeText={gridstrings}
             density={GridDensityTypes.Compact}
             pagination
             //            page={1}
+            componentsProps={{ toolbar:  { specprop : toolprop}  }}
             components={{
-                Toolbar: GridToolbar,
+                Toolbar: ToolBar,
                 Pagination: CustomPagination
             }} />
     </div>

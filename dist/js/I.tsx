@@ -131,7 +131,7 @@ export interface IGridTableSpec {
 export interface IGridTable {
     readonly list: any[],
     readonly coldef: ITableCol[],
-    readonly spec?: IGridTableSpec
+    readonly spec: IGridTableSpec
 }
 
 // ----------------
