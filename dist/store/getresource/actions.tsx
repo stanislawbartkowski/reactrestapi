@@ -2,13 +2,13 @@ import axios from '../../axios';
 import * as C from '../../js/C'
 import * as I from '../../js/I'
 
-export const resourceresult = (command: I.RESOURCE, data: any, restid: string | null, js: string | null, vars:object|null): I.IResourceResult => {
+export const resourceresult = (command: I.RESOURCE, data: any, restid: string | null, js: string | null, vars: object | null): I.IResourceResult => {
     return {
         type: command,
         data: data,
         restid: restid,
         js: js,
-        vars: vars
+        vars: vars,
     }
 }
 
@@ -26,7 +26,7 @@ export const resourceRead = (command: I.RESOURCE) => {
         C.log("REST API call " + url);
 
         axios.get(url).then(res => {
-            dispatch(resourceresult(command, res.data, null, null,null));
+            dispatch(resourceresult(command, res.data, null, null, null));
         });
     }
 }

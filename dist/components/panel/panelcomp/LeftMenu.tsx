@@ -8,7 +8,7 @@ import * as pactions from '../../../store/pushstring/actions';
 import * as C from '../../../js/C';
 import * as I from '../../../js/I';
 import * as lactions from '../../../store/getdata/actions'
-import * as dactions from '../../../store/getlistres/actions'
+import * as dactions from '../../../store/getcompres/actions'
 import { getPath } from './MenuConfig';
 
 import { setStrings } from '../../../js/locale'
@@ -16,8 +16,8 @@ import lstring from '../../../js/locale'
 
 var menu: I.TMenuElem[] = []
 
-export const getRestId = (menuid : string) : string | null => {
-    const emenu : I.TMenuElem | undefined = menu.find( e => e.id == menuid);
+export const getRestId = (menuid: string): string | null => {
+    const emenu: I.TMenuElem | undefined = menu.find(e => e.id == menuid);
     if (emenu == undefined) {
         C.erralert(menuid + " : cannot find such menu id");
         return null;
@@ -48,9 +48,9 @@ const LeftMenu: FunctionComponent = () => {
     const clickAction = (e: I.TMenuElem) => {
         if (!C.CanCallMenu(e.id)) return;
         dispatch(pactions.pushstring(pactions.STRINGTYPE.MENUACTIONNAME, menustring(e)));
-        dispatch(pactions.pushstring(pactions.STRINGTYPE.LISTACTIONID, e.restid));
-        dispatch(lactions.resourceRead(I.RESOURCE.LISTRES, e.id, e.restid, null));
-        dispatch(dactions.resourceListDefRead(I.RESOURCE.LISTRESDEF, e.restid, e.restid, null));
+        dispatch(pactions.pushstring(pactions.STRINGTYPE.COMPACTIONID, e.restid));
+        dispatch(lactions.resourceRead(I.RESOURCE.COMPRES, e.id, e.restid, null));
+        dispatch(dactions.resourceCompDefRead(I.RESOURCE.COMPRESDEF, e.restid, e.restid, null));
         const path: string = getPath(e.id);
         history.replace(path);
     }

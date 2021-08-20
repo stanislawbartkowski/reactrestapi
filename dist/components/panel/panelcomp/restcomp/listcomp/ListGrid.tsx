@@ -1,15 +1,14 @@
-import React, { Dispatch, FunctionComponent } from 'react';
-import * as C from '../../../../js/C';
-import * as I from '../../../../js/I';
-import * as pactions from '../../../../store/pushstring/actions'
-import GridTable from '../../../../UI/GridTable'
-import ListDokDialog from '../../../../UI/ListDokDialog'
+import React, { FunctionComponent } from 'react';
+import * as C from '../../../../../js/C';
+import * as I from '../../../../../js/I';
+import * as pactions from '../../../../../store/pushstring/actions'
+import GridTable from '../../../../../UI/GridTable'
+import ListDokDialog from '../../../../../UI/ListDokDialog'
 import { useDispatch } from 'react-redux';
-import InLine from '../../../../UI/InLine'
-//import { GridCellParams, GridCellClassParams } from '@material-ui/data-grid';
+import InLine from '../../../../../UI/InLine'
 import { GridCellParams } from '@material-ui/data-grid';
-import lstring from '../../../../js/locale';
-import * as D from './D'
+import lstring from '../../../../../js/locale';
+import * as D from '../D'
 
 
 interface IListGrid {
@@ -47,7 +46,8 @@ const ListGrid: FunctionComponent<IListGrid> = ({ listdata, menuaction, listdefd
     const listres: I.IRestTable = listdefdata.data as I.IRestTable;
     const cols: I.ITableCol[] = listres.columns;
     const ident: I.TRowAction | undefined = listres.ident;
-    const jstitle: string | undefined = listres.jstitle
+    const jstitle: string | undefined = listres.jstitle;
+    const tools: I.TClickButtonAction[] | null = listres.tools;
 
     const getRow = (param: GridCellParams): object => {
         const i = param.row.rowIndex;
@@ -148,7 +148,11 @@ const ListGrid: FunctionComponent<IListGrid> = ({ listdata, menuaction, listdefd
     const onClose = () => {
     }
 
-    const spec: I.IGridTableSpec = { title: dialtitle, onClose: onClose, className: null };
+    const toolOnRowAction = (action: I.TClickButtonAction, row: any) => {
+        C.infoAlert("Hello");
+    }
+
+    const spec: I.IGridTableSpec = { title: dialtitle, onClose: onClose, className: null, clickToolRow: toolOnRowAction, tools: tools };
 
     const component = (slotid == I.SLOT.SLOTBASE) ? <GridTable list={datalist} coldef={cols} spec={spec} />
         : <ListDokDialog list={datalist} coldef={cols} spec={spec} />

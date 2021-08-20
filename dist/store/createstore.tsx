@@ -10,17 +10,17 @@ import * as actions from './pushstring/actions'
 const reducerAppData: Reducer = createReducer(I.RESOURCE.APPDATA)
 const reducerLeftMenu: Reducer = createReducer(I.RESOURCE.LEFTMENU)
 const reducerStrings: Reducer = createReducer(I.RESOURCE.STRINGS)
-const reducerGetList: Reducer = createReducer(I.RESOURCE.LISTRES)
-const reducerGetListDef: Reducer = createReducer(I.RESOURCE.LISTRESDEF)
-const reducerGetListSlot1: Reducer = createReducer(I.RESOURCE.LISTRESSLOT1)
-const reducerGetListDefSlot1: Reducer = createReducer(I.RESOURCE.LISTRESDEFSLOT1)
-const reducerGetListSlot2: Reducer = createReducer(I.RESOURCE.LISTRESSLOT2)
-const reducerGetListDefSlot2: Reducer = createReducer(I.RESOURCE.LISTRESDEFSLOT2)
+const reducerGetList: Reducer = createReducer(I.RESOURCE.COMPRES)
+const reducerGetListDef: Reducer = createReducer(I.RESOURCE.COMPRESDEF)
+const reducerGetListSlot1: Reducer = createReducer(I.RESOURCE.COMPRESSLOT1)
+const reducerGetListDefSlot1: Reducer = createReducer(I.RESOURCE.COMPRESDEFSLOT1)
+const reducerGetListSlot2: Reducer = createReducer(I.RESOURCE.COMPRESSLOT2)
+const reducerGetListDefSlot2: Reducer = createReducer(I.RESOURCE.COMPRESDEFSLOT2)
 
 const reducerActionName: Reducer = createPushReducer(actions.STRINGTYPE.MENUACTIONNAME);
-const reducerActionList: Reducer = createPushReducer(actions.STRINGTYPE.LISTACTIONID);
-const reducerActionListSlot1: Reducer = createPushReducer(actions.STRINGTYPE.LISTSLOT1ID);
-const reducerActionListSlot2: Reducer = createPushReducer(actions.STRINGTYPE.LISTSLOT2ID);
+const reducerActionList: Reducer = createPushReducer(actions.STRINGTYPE.COMPACTIONID);
+const reducerActionListSlot1: Reducer = createPushReducer(actions.STRINGTYPE.COMPSLOT1ID);
+const reducerActionListSlot2: Reducer = createPushReducer(actions.STRINGTYPE.COMPSLOT2ID);
 const reducerForceMenu: Reducer = createPushReducer(actions.STRINGTYPE.FORCEMENU);
 const reducerDBName: Reducer = createPushReducer(actions.STRINGTYPE.DBNAME);
 

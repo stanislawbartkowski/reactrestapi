@@ -3,11 +3,11 @@ import * as C from '../../js/C'
 import * as I from '../../js/I'
 import { resourceresult } from '../getresource/actions'
 
-export const resourceListDefRead = (id: I.RESOURCE, listresource: string, restid: string, vars: object | null) => {
+export const resourceCompDefRead = (id: I.RESOURCE, compresource: string, restid: string, vars: object | null) => {
 
     return (dispatch: any) => {
 
-        const url = "listdef?resource=" + listresource
+        const url = "compdef?resource=" + compresource
         C.log("REST API call " + url);
 
         axios.get(url).then(res => {

@@ -49,16 +49,37 @@ interface ICellClickable {
 
 interface IToolParams {
     row?: object;
-    readonly spec: I.IGridTableSpec
+    readonly spec: I.IGridTableSpec,
+}
+
+
+interface ICustomTool {
+    readonly toolparams: IToolParams,
+    readonly toolspec: I.TClickButtonAction
+}
+
+const CustomTool: FunctionComponent<ICustomTool> = (props: ICustomTool) => {
+
+    const onCellClick = (p: ICustomTool) => {
+        p.toolparams.spec.clickToolRow(props.toolspec, p.toolparams.row);
+    };
+
+    return <Button onClick={() => onCellClick(props)}
+        variant="outlined"
+        color="primary"
+        startIcon={<DetailsIcon />}
+    >
+        {lstring("showdatabutton")}
+    </Button>
 }
 
 const ToolBar: FunctionComponent<GridComponentProps> = (props: GridComponentProps) => {
-    const { state, apiRef } = useGridSlotComponentProps();
     const t: IToolParams = (props as any).specprop;
 
-    const onCellClick = (t: IToolParams ) => {
-        const a = 0;
-    };
+    const customtool = (t.spec.tools == null) ? null :
+        t.spec.tools.map(e => (
+            <CustomTool toolparams={t} toolspec={e} />
+        ))
 
     return (
         <GridToolbarContainer>
@@ -66,14 +87,7 @@ const ToolBar: FunctionComponent<GridComponentProps> = (props: GridComponentProp
             <GridToolbarFilterButton />
             <GridToolbarDensitySelector />
             <GridToolbarExport />
-
-            <Button onClick={() => onCellClick(t)}
-                variant="outlined"
-                color="primary"
-                startIcon={<DetailsIcon />}
-            >
-                {lstring("showdatabutton")}
-            </Button>
+            {customtool}
 
         </GridToolbarContainer>
     )
@@ -215,7 +229,7 @@ const GridTable: FunctionComponent<I.IGridTable> = ({ list, coldef, spec }) => {
             density={GridDensityTypes.Compact}
             pagination
             //            page={1}
-            componentsProps={{ toolbar:  { specprop : toolprop}  }}
+            componentsProps={{ toolbar: { specprop: toolprop } }}
             components={{
                 Toolbar: ToolBar,
                 Pagination: CustomPagination

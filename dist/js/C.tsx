@@ -47,9 +47,9 @@ export function randomString(): string {
     return "" + Math.random();
 }
 
-export function callJSRowFunction(jsAction: string, row: object, vars : object|null): any {
+export function callJSRowFunction(jsAction: string, row: object, vars: object | null): any {
     const clickaction = new Function('p,vars', "return " + jsAction + "(p,vars)");
-    const res = clickaction(row,vars);
+    const res = clickaction(row, vars);
     return res;
 }
 
@@ -164,11 +164,11 @@ function isString(p: any): boolean {
     return typeof p === "string";
 }
 
-export function isArray(p : any) : boolean {
+export function isArray(p: any): boolean {
     return Array.isArray(p);
 }
 
-function checkArray(mess: string,p : any, alert: boolean) : boolean {
+function checkArray(mess: string, p: any, alert: boolean): boolean {
     if (isArray(p)) return true;
     internalerrorlog(mess, alert)
     return false;
@@ -177,11 +177,11 @@ function checkArray(mess: string,p : any, alert: boolean) : boolean {
 export function verifyTRow(p: I.TRowAction) {
     if (!notObjectProps("TRowAction", false, p, "field", "jsaction")) return false;
     if (isString(p.jsaction)) return true;
-    if (!checkArray("TRowAction, attribute jsaction, array or string is expected",p.jsaction,false)) return false;
+    if (!checkArray("TRowAction, attribute jsaction, array or string is expected", p.jsaction, false)) return false;
     return true;
 }
 
-export function isSingleCallTRow(p: I.TRowAction) : boolean {
+export function isSingleCallTRow(p: I.TRowAction): boolean {
     return isString(p.jsaction);
 }
 
@@ -243,4 +243,22 @@ export function modifDataUrl(id: string, restid: string): string {
 
 export function setModifUrl(fun: ModifDataUrl) {
     modifurlfun = fun;
+}
+
+// ============================
+// recognize resource
+// ============================
+
+export function ResourceDefType(res: any): I.RESOURCETYPE | null {
+    if (res.data.columns != undefined) return I.RESOURCETYPE.LIST;
+    erralert("Unrecognized resource")
+    return null;
+}
+
+// =============================
+// tool actions
+// =============================
+
+export function isStandardShow(actionid: string): boolean {
+    return actionid == I.STANDARDACTIONSHOW;
 }

@@ -17,12 +17,18 @@ export type TStringParam = {
 export enum RESOURCE {
     NOTHING, APPDATA, LEFTMENU, STRINGS,
 
-    LISTRES, LISTRESDEF,
-    LISTRESSLOT1, LISTRESDEFSLOT1,
-    LISTRESSLOT2, LISTRESDEFSLOT2,
+    COMPRES, COMPRESDEF,
+    COMPRESSLOT1, COMPRESDEFSLOT1,
+    COMPRESSLOT2, COMPRESDEFSLOT2,
 }
 
 // general data returned by REST/API resource call
+
+export const STANDARDACTIONSHOW: string = "SHOW"
+
+export type TClickButtonAction = {
+    readonly actionid: string
+}
 
 export interface IResourceAppData {
     readonly logo: string;
@@ -42,7 +48,7 @@ export interface IResourceResult {
     readonly data: IRestTable | IResourceListData | IResourceListMenu | IResourceAppData | null,
     readonly restid: string | null,
     readonly js: string | null,
-    readonly vars: object | null
+    readonly vars: object | null,
 }
 
 // column/cell definition passed to GridTable
@@ -94,6 +100,7 @@ export interface IRestTable {
     readonly celltitle?: TRowAction[],
     readonly click?: TRowAction[],
     readonly jstitle?: string
+    readonly tools: TClickButtonAction[] | null
 }
 
 export type TMenuElem = {
@@ -119,19 +126,27 @@ export type TDispatchRes = {
     readonly pars: object,
     readonly messid?: TMess,
     readonly vars: object | null
+    readonly tools: object | null
 }
 
 // GridTable attributes
 export interface IGridTableSpec {
+    readonly clickToolRow: (action: TClickButtonAction, row: any) => void;
     readonly className: string | null,
     readonly title?: string,
-    readonly onClose: () => void;
+    readonly onClose: () => void,
+    readonly tools: TClickButtonAction[] | null
 }
 
 export interface IGridTable {
     readonly list: any[],
     readonly coldef: ITableCol[],
     readonly spec: IGridTableSpec
+}
+
+// Resource type
+export enum RESOURCETYPE {
+    LIST, FORM
 }
 
 // ----------------
