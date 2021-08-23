@@ -8,7 +8,8 @@ import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 
 import * as I from '../js/I';
-import persstring from '../js/locale';
+import * as C from '../js/C';
+import jsstring from '../js/locale';
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -21,28 +22,22 @@ const useStyles = makeStyles((theme: Theme) =>
     }),
 );
 
-interface FunctionComponentParam {
-    spec: I.IFieldForm,
-    value: any,
-}
-
 interface IFunctionComponentElem extends I.IFieldItem {
     handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+    def: I.IFieldForm;
     value: any
 }
 
-const FormElem: FunctionComponent<IFunctionComponentElem> = ({ fieldname, fieldnamehelper, fieldtype, fieldrequired, handleChange, value }) => {
+const FormElem: FunctionComponent<IFunctionComponentElem> = ({ def, field, fieldname, fieldnamehelper, type, fieldrequired, fieldreadonly, handleChange, value }) => {
 
     const helper = fieldnamehelper == null ?
         null :
-        <FormHelperText id="component-helper-text">{persstring(fieldnamehelper)}</FormHelperText>
-
-    const ftype = (fieldtype == I.FieldType.INTEGER) ? "number" : "string";
+        <FormHelperText id="component-helper-text">{jsstring(fieldnamehelper)}</FormHelperText>
 
     return <FormControl>
-        <FormControl required={fieldrequired ? true : false} error >
-            <InputLabel htmlFor="component-simple">{persstring(fieldname)} </InputLabel>
-            <Input id="component-simple" value={value} type={ftype} onChange={handleChange} />
+        <FormControl required={fieldrequired ? true : false} error disabled={fieldreadonly || def.allreadonly ? true : false} >
+            <InputLabel htmlFor="component-simple">{C.compString(field, fieldname)} </InputLabel>
+            <Input id="component-simple" value={value} type={type} onChange={handleChange} />
             {helper}
         </FormControl>
 
@@ -51,10 +46,10 @@ const FormElem: FunctionComponent<IFunctionComponentElem> = ({ fieldname, fieldn
 }
 
 
-const FormDialog: FunctionComponent<FunctionComponentParam> = ({ spec, value }) => {
+const FormDialog: FunctionComponent<I.IFieldFormDialog> = ({ def, data }) => {
     const classes = useStyles();
 
-    const [values, setName] = React.useState(value);
+    const [values, setName] = React.useState(data);
 
     function createChangeValue(id: string): (event: React.ChangeEvent<HTMLInputElement>) => void {
         return (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -69,18 +64,18 @@ const FormDialog: FunctionComponent<FunctionComponentParam> = ({ spec, value }) 
         setName(values);
     };
 
-    const onClose  = () => {}
+    const onClose = () => { }
+
+    const title: string = "title"
 
     return (
-        <ModalDialog title={persstring(spec.title)} onClose={onClose}>
 
-            <form className={classes.root} noValidate autoComplete="off">
-                {spec.fields.map(e => (
-                    <FormElem {...e} handleChange={createChangeValue(e.fieldid)} value={values[e.fieldid]} />
-                ))
-                }
-            </form>
-        </ModalDialog>
+        <form className={classes.root} noValidate autoComplete="off">
+            {def.fields.map(e => (
+                <FormElem def={def} {...e} handleChange={createChangeValue(e.field)} value={values[e.field]} />
+            ))
+            }
+        </form>
 
     );
 }

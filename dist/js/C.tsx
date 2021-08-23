@@ -1,6 +1,7 @@
 import * as I from './I'
 import reststring from './locale'
 import { GRID_STRING_COLUMN_TYPE, GRID_NUMBER_COLUMN_TYPE, GRID_DATE_COLUMN_TYPE, GRID_DATETIME_COLUMN_TYPE } from '@material-ui/data-grid';
+import { isJSDocReadonlyTag } from 'typescript';
 
 
 export { }
@@ -203,6 +204,15 @@ export function verifyString(p: I.TMess): boolean {
     return true;
 }
 
+// ========================
+// localized strings
+// ========================
+
+export function compString(compid: string, messid: string | undefined): string {
+    if (messid != undefined) return reststring(messid)
+    return reststring(compid);
+}
+
 export function getString(pp: I.TMess): string | null {
     if (pp == null) return null;
     if (isString(pp)) return reststring(pp as string);
@@ -250,7 +260,11 @@ export function setModifUrl(fun: ModifDataUrl) {
 // ============================
 
 export function ResourceDefType(res: any): I.RESOURCETYPE | null {
-    if (res.data.columns != undefined) return I.RESOURCETYPE.LIST;
+    const data = res.data;
+    if (data != undefined) {
+        if (data.columns != undefined) return I.RESOURCETYPE.LIST;
+        if (data.fields != undefined) return I.RESOURCETYPE.FORM;
+    }
     erralert("Unrecognized resource")
     return null;
 }
@@ -261,4 +275,13 @@ export function ResourceDefType(res: any): I.RESOURCETYPE | null {
 
 export function isStandardShow(actionid: string): boolean {
     return actionid == I.STANDARDACTIONSHOW;
+}
+
+export function isStandardAdd(actionid: string): boolean {
+    return actionid == I.STANDARDACTIONADD;
+}
+
+export function isReadOnly(t: I.TClickButtonAction): boolean {
+    if (isStandardShow(t.actionid)) return true;
+    return false;
 }

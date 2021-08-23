@@ -20,14 +20,25 @@ export enum RESOURCE {
     COMPRES, COMPRESDEF,
     COMPRESSLOT1, COMPRESDEFSLOT1,
     COMPRESSLOT2, COMPRESDEFSLOT2,
+    COMPRESSLOT3, COMPRESDEFSLOT3,
 }
 
 // general data returned by REST/API resource call
 
 export const STANDARDACTIONSHOW: string = "SHOW"
+export const STANDARDACTIONADD: string = "ADD"
+export const STANDARDACTIONDELETE: string = "DEL"
+export const STANDARDACTIONMODIF: string = "MODIF"
+
+
+export const STANDARDOKBUTTON: string = "OK"
+export const STANDARDACCEPTBUTTON: string = "ACCEPT"
+export const STANDARDCANCELBUTTON: string = "CANCEL"
+
 
 export type TClickButtonAction = {
     readonly actionid: string
+    readonly rowchosen?: boolean
 }
 
 export interface IResourceAppData {
@@ -36,7 +47,7 @@ export interface IResourceAppData {
 }
 
 export interface IResourceListData {
-    readonly res: any[];
+    readonly res: object[];
 }
 
 export interface IResourceListMenu {
@@ -45,7 +56,7 @@ export interface IResourceListMenu {
 
 export interface IResourceResult {
     readonly type: RESOURCE,
-    readonly data: IRestTable | IResourceListData | IResourceListMenu | IResourceAppData | null,
+    readonly data: IRestTable | IResourceListData | IResourceListMenu | IResourceAppData | IFieldForm | null,
     readonly restid: string | null,
     readonly js: string | null,
     readonly vars: object | null,
@@ -58,7 +69,7 @@ export interface IResourceResult {
 //   valueCol : custom cell value
 
 export interface ITableCol extends GridColDef {
-    coltitle: string,
+    coltitle?: string,
     clickTRow: TRowAction | null,
     onCellClick: ((jsaction: string, param: GridCellParams) => void) | null,
     isCellClickable: (param: GridCellParams) => boolean,
@@ -105,6 +116,7 @@ export interface IRestTable {
 
 export type TMenuElem = {
     readonly id: string
+    readonly messid?: string
     readonly restid: string
 }
 
@@ -114,7 +126,7 @@ export const TDISPATCHWARNING: string = "WARNING"
 
 // popup dialog identifier to generate next
 export enum SLOT {
-    SLOTBASE, SLOT1, SLOT2
+    SLOTBASE, SLOT1, SLOT2, SLOT3
 };
 
 
@@ -123,10 +135,10 @@ export enum SLOT {
 export type TDispatchRes = {
     readonly action: string,
     readonly restid: string,
-    readonly pars: object,
+    readonly pars: object | null,
     readonly messid?: TMess,
-    readonly vars: object | null
-    readonly tools: object | null
+    readonly vars: object | null,
+    readonly datares?: IResourceListData
 }
 
 // GridTable attributes
@@ -144,6 +156,13 @@ export interface IGridTable {
     readonly spec: IGridTableSpec
 }
 
+// GridForm attributes
+
+export interface IGridForm {
+    readonly data: any[],
+    readonly fields: ITableCol[],
+}
+
 // Resource type
 export enum RESOURCETYPE {
     LIST, FORM
@@ -151,19 +170,23 @@ export enum RESOURCETYPE {
 
 // ----------------
 
-export enum FieldType {
-    STRING, INTEGER, DECIMAL
-}
-
 export interface IFieldItem {
-    readonly fieldid: string,
-    readonly fieldname: string,
+    readonly field: string,
+    readonly fieldname?: string,
     readonly fieldnamehelper?: string,
-    readonly fieldtype?: FieldType,
+    readonly type?: string,
     readonly fieldrequired?: boolean
+    readonly fieldreadonly?: boolean
 }
 
 export interface IFieldForm {
-    readonly title: string,
+    readonly title?: string,
     readonly fields: IFieldItem[],
+    readonly allreadonly?: boolean,
+    readonly buttons?: TClickButtonAction[]
+}
+
+export interface IFieldFormDialog {
+    def: IFieldForm,
+    data: any
 }

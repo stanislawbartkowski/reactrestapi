@@ -1,10 +1,14 @@
-import React, { FunctionComponent } from 'react';
+import React, { ReactElement, FunctionComponent } from 'react';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Dialog from '@material-ui/core/Dialog';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogActions from '@material-ui/core/DialogActions';
 import { makeStyles } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
+import Button from '@material-ui/core/Button';
 import * as I from '../js/I'
+import ToolButton from './ToolButton'
 
 const useStyles = makeStyles(theme => ({
 
@@ -20,18 +24,17 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-interface IPopUpDialog {
-    onClose: () => void,
-    getOpen: () => boolean,
-    title?: string
+interface IPopUpDialog extends IModalDialog {
+    getOpen: () => boolean
 }
 
 interface IModalDialog {
     title?: string;
-    onClose: () => void,
+    onClose?: () => void,
+    buttons?: I.TClickButtonAction[]
 }
 
-const PopUpDialog: FunctionComponent<IPopUpDialog> = ({ onClose, getOpen, title, children }) => {
+const PopUpDialog: FunctionComponent<IPopUpDialog> = ({ buttons, onClose, getOpen, title, children }) => {
 
     const [open, setOpen] = React.useState(false);
 
@@ -40,9 +43,17 @@ const PopUpDialog: FunctionComponent<IPopUpDialog> = ({ onClose, getOpen, title,
     if (getOpen() && !open) setOpen(true);
 
     const onCloseDial = () => {
-        onClose();
+        if (onClose != undefined) onClose();
         setOpen(false);
     };
+
+    const onClick = () => { }
+
+    const buttonsDialog: ReactElement | null = buttons == undefined ? null :
+        <DialogActions>
+            {buttons.map(e => (<ToolButton i={e} onClick={onClick}></ToolButton>))}
+        </DialogActions>
+
 
     return (
         <Dialog className={classes.root} onClose={onCloseDial} aria-labelledby="simple-dialog-title" open={open} maxWidth='lg' fullWidth >
@@ -51,19 +62,24 @@ const PopUpDialog: FunctionComponent<IPopUpDialog> = ({ onClose, getOpen, title,
                     <CloseIcon />
                 </IconButton>
             </DialogTitle>
-            {children}
+            <DialogContent>
+                {children}
+            </DialogContent>
+
+            {buttonsDialog}
+
         </Dialog>
 
     );
 }
 
 
-const ModialDialog: FunctionComponent<IModalDialog> = ({ title, children, onClose }) => {
+const ModialDialog: FunctionComponent<IModalDialog> = ({ buttons, title, children, onClose }) => {
 
     var open: boolean = true;
 
     const handleClose = () => {
-        onClose()
+        if (onClose != undefined) onClose()
         open = false;
     }
 
@@ -71,7 +87,7 @@ const ModialDialog: FunctionComponent<IModalDialog> = ({ title, children, onClos
         return open;
     }
 
-    return <PopUpDialog title={title} onClose={handleClose} getOpen={getOpen} children={children} />
+    return <PopUpDialog buttons={buttons} title={title} onClose={handleClose} getOpen={getOpen} children={children} />
 
 }
 

@@ -3,7 +3,15 @@ import LocalizedStrings from 'react-localization';
 
 const embedded = {
     pl: {
-        "showdatabutton": "Pokaż dane"
+        "showdatabutton": "Pokaż dane",
+        "pickrowalert": "Wskaż wiersz na liście wyświetlonych",
+        "adddatabutton": "Dodaj",
+        "deletedatabutton": "Usuń",
+        "changedatabutton": "Zmień",
+        "unrecognizedtoolid": "{0} - unrecognized tool id",
+        "ok": "Ok",
+        "cancel": "Rezygnujesz",
+        "accept" : "Akceptujesz"
     },
     en: {
 

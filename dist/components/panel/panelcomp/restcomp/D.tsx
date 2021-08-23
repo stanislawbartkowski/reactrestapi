@@ -1,5 +1,5 @@
 
-import React, { Dispatch } from 'react';
+import { Dispatch } from 'react';
 
 import * as I from '../../../../js/I';
 import * as C from '../../../../js/C';
@@ -7,9 +7,19 @@ import * as lactions from '../../../../store/getdata/actions'
 import * as dactions from '../../../../store/getcompres/actions'
 import * as pactions from '../../../../store/pushstring/actions'
 
-export { }
+interface ISLOTMAP {
+    sid: pactions.STRINGTYPE,
+    did: I.RESOURCE,
+    fid: I.RESOURCE
+}
 
-export function dAction(dispa: Dispatch<any>, slotid: I.SLOT, d: I.TDispatchRes) {
+const slotmap = new Map<I.SLOT, ISLOTMAP>([
+    [I.SLOT.SLOTBASE, { sid: pactions.STRINGTYPE.COMPSLOT1ID, did: I.RESOURCE.COMPRESSLOT1, fid: I.RESOURCE.COMPRESDEFSLOT1 }],
+    [I.SLOT.SLOT1, { sid: pactions.STRINGTYPE.COMPSLOT2ID, did: I.RESOURCE.COMPRESSLOT2, fid: I.RESOURCE.COMPRESDEFSLOT2 }],
+    [I.SLOT.SLOT2, { sid: pactions.STRINGTYPE.COMPSLOT3ID, did: I.RESOURCE.COMPRESSLOT3, fid: I.RESOURCE.COMPRESDEFSLOT3 }]
+])
+
+function dAction(dispa: Dispatch<any>, slotid: I.SLOT, d: I.TDispatchRes) {
     C.verifyDispatcher(d)
 
     if (d.action == I.TDISPATCHWARNING) {
@@ -17,23 +27,23 @@ export function dAction(dispa: Dispatch<any>, slotid: I.SLOT, d: I.TDispatchRes)
         C.infoAlert(mess as string);
         return;
     }
-    if (d.action == I.TDISPATCHPOPUP) {
-        switch (slotid) {
-            case I.SLOT.SLOTBASE:
-                dispa(pactions.pushstring(pactions.STRINGTYPE.COMPSLOT1ID, d.restid));
-                dispa(lactions.resourceRead(I.RESOURCE.COMPRESSLOT1, d.restid, d.restid, d.pars));
-                dispa(dactions.resourceCompDefRead(I.RESOURCE.COMPRESDEFSLOT1, d.restid, d.restid, d.vars));
-                break;
-            case I.SLOT.SLOT1:
-                dispa(pactions.pushstring(pactions.STRINGTYPE.COMPSLOT2ID, d.restid));
-                dispa(lactions.resourceRead(I.RESOURCE.COMPRESSLOT2, d.restid, d.restid, d.pars));
-                dispa(dactions.resourceCompDefRead(I.RESOURCE.COMPRESDEFSLOT2, d.restid, d.restid, d.vars));
-                break;
-            case I.SLOT.SLOT2:
-                C.infoAlert("Treshold reached, cannot popup next dialog");
-                break;
-        }
+
+    const sl: ISLOTMAP | undefined = slotmap.get(slotid);
+
+    if (sl == undefined) {
+        C.infoAlert("Treshold reached, cannot popup next dialog");
+        return;
     }
+
+    dispa(pactions.pushstring(sl.sid, d.restid));
+
+    if (d.datares != undefined) dispa(lactions.resourceReadReady(sl.did, d.restid, d.datares))
+    else dispa(lactions.resourceRead(sl.did, d.restid, d.restid, d.pars));
+
+    dispa(dactions.resourceCompDefRead(sl.fid, d.restid, d.restid, d.vars));
+
 }
+
+export default dAction;
 
 

@@ -42,7 +42,7 @@ const LeftMenu: FunctionComponent = () => {
     menu = (leftmenu.data as I.IResourceListMenu).menu;
 
     const menustring = (e: I.TMenuElem): string => {
-        return lstring("button_" + e.id);
+        return C.compString(e.id, e.messid);
     }
 
     const clickAction = (e: I.TMenuElem) => {

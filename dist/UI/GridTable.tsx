@@ -4,13 +4,10 @@ import { GridCellValue, DataGrid, GridToolbar, GridCellParams, useGridSlotCompon
 import { GridToolbarContainer, GridToolbarDensitySelector, GridComponentProps, GridToolbarColumnsButton, GridToolbarFilterButton, GridToolbarExport } from '@material-ui/data-grid';
 import { MuiEvent } from '@material-ui/data-grid';
 import Pagination from '@material-ui/lab/Pagination';
-import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 import Tooltip from '@material-ui/core/Tooltip'
 import Popover from '@material-ui/core/Popover';
-import Typography from '@material-ui/core/Typography'
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import FolderIcon from '@material-ui/icons/Folder';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import DetailsIcon from '@material-ui/icons/Details';
@@ -21,6 +18,7 @@ import * as I from '../js/I'
 import lstring from '../js/locale'
 
 import gridstrings from '../js/gridlocale';
+import ToolBotton, { ToolButton } from './ToolButton'
 
 const useStyles = makeStyles(theme => ({
     table: {
@@ -58,19 +56,26 @@ interface ICustomTool {
     readonly toolspec: I.TClickButtonAction
 }
 
+const rowchosenRequired = (p: I.TClickButtonAction): boolean => {
+
+    if (C.isStandardShow(p.actionid)) return true;
+    if (C.isStandardAdd(p.actionid)) return false;
+    if (p.rowchosen == undefined) return true;
+    return p.rowchosen;
+}
+
 const CustomTool: FunctionComponent<ICustomTool> = (props: ICustomTool) => {
 
     const onCellClick = (p: ICustomTool) => {
+        if (p.toolparams.row == undefined && rowchosenRequired(p.toolspec)) {
+            C.infoAlert(lstring("pickrowalert"));
+            return;
+        }
         p.toolparams.spec.clickToolRow(props.toolspec, p.toolparams.row);
     };
 
-    return <Button onClick={() => onCellClick(props)}
-        variant="outlined"
-        color="primary"
-        startIcon={<DetailsIcon />}
-    >
-        {lstring("showdatabutton")}
-    </Button>
+    return <ToolButton i={props.toolspec} onClick={() => onCellClick(props)} ></ToolButton>
+
 }
 
 const ToolBar: FunctionComponent<GridComponentProps> = (props: GridComponentProps) => {

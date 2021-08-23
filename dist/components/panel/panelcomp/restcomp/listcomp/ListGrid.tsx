@@ -8,7 +8,8 @@ import { useDispatch } from 'react-redux';
 import InLine from '../../../../../UI/InLine'
 import { GridCellParams } from '@material-ui/data-grid';
 import lstring from '../../../../../js/locale';
-import * as D from '../D'
+import D from '../D'
+import DTool from '../DToolAction'
 
 
 interface IListGrid {
@@ -86,7 +87,7 @@ const ListGrid: FunctionComponent<IListGrid> = ({ listdata, menuaction, listdefd
         if (a == null) return null;
         return (jsaction: string, param: GridCellParams) => {
             const res: I.TDispatchRes = jsColAction(jsaction, param);
-            if (res != null) D.dAction(dispatch, slotid, res);
+            if (res != null) D(dispatch, slotid, res);
         }
     }
 
@@ -132,7 +133,8 @@ const ListGrid: FunctionComponent<IListGrid> = ({ listdata, menuaction, listdefd
         if (ident != null && ident.field == e.field) e.identCol = getIdent
         e.cellClassName = produceCellStyle(cellstyles, e);
         e.valueCol = produceCellString(values, e);
-        e.headerName = (e.coltitle == null ? lstring(e.field + "_col") : C.getString(e.coltitle)) as string;
+        e.headerName = C.compString(e.field, e.coltitle);
+
     });
 
     const js = listdefdata.js;
@@ -149,7 +151,7 @@ const ListGrid: FunctionComponent<IListGrid> = ({ listdata, menuaction, listdefd
     }
 
     const toolOnRowAction = (action: I.TClickButtonAction, row: any) => {
-        C.infoAlert("Hello");
+        DTool(dispatch, slotid, actionid as string, cols, action, row);
     }
 
     const spec: I.IGridTableSpec = { title: dialtitle, onClose: onClose, className: null, clickToolRow: toolOnRowAction, tools: tools };

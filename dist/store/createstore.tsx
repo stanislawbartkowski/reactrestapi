@@ -16,11 +16,14 @@ const reducerGetListSlot1: Reducer = createReducer(I.RESOURCE.COMPRESSLOT1)
 const reducerGetListDefSlot1: Reducer = createReducer(I.RESOURCE.COMPRESDEFSLOT1)
 const reducerGetListSlot2: Reducer = createReducer(I.RESOURCE.COMPRESSLOT2)
 const reducerGetListDefSlot2: Reducer = createReducer(I.RESOURCE.COMPRESDEFSLOT2)
+const reducerGetListSlot3: Reducer = createReducer(I.RESOURCE.COMPRESSLOT3)
+const reducerGetListDefSlot3: Reducer = createReducer(I.RESOURCE.COMPRESDEFSLOT3)
 
 const reducerActionName: Reducer = createPushReducer(actions.STRINGTYPE.MENUACTIONNAME);
 const reducerActionList: Reducer = createPushReducer(actions.STRINGTYPE.COMPACTIONID);
 const reducerActionListSlot1: Reducer = createPushReducer(actions.STRINGTYPE.COMPSLOT1ID);
 const reducerActionListSlot2: Reducer = createPushReducer(actions.STRINGTYPE.COMPSLOT2ID);
+const reducerActionListSlot3: Reducer = createPushReducer(actions.STRINGTYPE.COMPSLOT3ID);
 const reducerForceMenu: Reducer = createPushReducer(actions.STRINGTYPE.FORCEMENU);
 const reducerDBName: Reducer = createPushReducer(actions.STRINGTYPE.DBNAME);
 
@@ -39,12 +42,15 @@ export function makeStore() {
         listactionid: reducerActionList,
         listactionslot1: reducerActionListSlot1,
         listactionslot2: reducerActionListSlot2,
+        listactionslot3: reducerActionListSlot3,
         readlistdata: reducerGetList,
         readlistdef: reducerGetListDef,
         readlistdataslot1: reducerGetListSlot1,
         readlistdefslot1: reducerGetListDefSlot1,
         readlistdataslot2: reducerGetListSlot2,
         readlistdefslot2: reducerGetListDefSlot2,
+        readlistdataslot3: reducerGetListSlot3,
+        readlistdefslot3: reducerGetListDefSlot3,
     })
 
     store = createStore(rootStore, composeEnhancer(applyMiddleware(thunk)));

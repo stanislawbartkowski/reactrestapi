@@ -19,3 +19,7 @@ export const resourceRead = (id: I.RESOURCE, menuid: string, restid: string, par
         });
     }
 }
+
+export const resourceReadReady = (id: I.RESOURCE, restid: string, data: I.IResourceListData): I.IResourceResult => {
+    return resourceresult(id, data, restid, null, null);
+}

@@ -23,3 +23,7 @@ export const resourceCompDefRead = (id: I.RESOURCE, compresource: string, restid
         });
     }
 }
+
+export const resourceCompDefReadReady = (id: I.RESOURCE, restid: string, restform: I.IFieldForm) => {
+    return resourceresult(id, restform, restid, null, null);
+}
