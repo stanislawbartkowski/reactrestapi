@@ -21,9 +21,9 @@ const mapTool = new Map<string, StandardTool>([
     [I.STANDARDACTIONADD, { desc: "adddatabutton", icon: AddIcon }],
     [I.STANDARDACTIONDELETE, { desc: "deletedatabutton", icon: DeleteIcon }],
     [I.STANDARDACTIONMODIF, { desc: "changedatabutton", icon: CreateIcon }],
-    [I.STANDARDOKBUTTON, { desc: "ok"}],
-    [I.STANDARDCANCELBUTTON, { desc: "cancel"}],
-    [I.STANDARDACCEPTBUTTON, { desc: "accept"}],
+    [I.STANDARDOKBUTTON, { desc: "ok" }],
+    [I.STANDARDCANCELBUTTON, { desc: "cancel" }],
+    [I.STANDARDACCEPTBUTTON, { desc: "accept" }],
 ])
 
 

@@ -1,4 +1,5 @@
-import { GridColDef, GridCellParams } from '@material-ui/data-grid';
+import { GridColDef, GridCellParams, GridComponentProps } from '@material-ui/data-grid';
+import { InputBaseProps } from '@material-ui/core/InputBase'
 
 
 export { }
@@ -68,7 +69,8 @@ export interface IResourceResult {
 //   identCol: column identation
 //   valueCol : custom cell value
 
-export interface ITableCol extends GridColDef {
+export interface ITableCol {
+    field: string,
     coltitle?: string,
     clickTRow: TRowAction | null,
     onCellClick: ((jsaction: string, param: GridCellParams) => void) | null,
@@ -76,6 +78,7 @@ export interface ITableCol extends GridColDef {
     cellTitle: ((param: GridCellParams) => string | null) | null,
     identCol: ((param: GridCellParams) => number) | null,
     valueCol: ((param: GridCellParams) => string | null) | null
+    props?: GridColDef
 }
 
 // action related to a single column/cell
@@ -112,6 +115,7 @@ export interface IRestTable {
     readonly click?: TRowAction[],
     readonly jstitle?: string
     readonly tools: TClickButtonAction[] | null
+    readonly props?: GridComponentProps
 }
 
 export type TMenuElem = {
@@ -154,6 +158,7 @@ export interface IGridTable {
     readonly list: any[],
     readonly coldef: ITableCol[],
     readonly spec: IGridTableSpec
+    readonly props?: GridComponentProps
 }
 
 // GridForm attributes
@@ -174,9 +179,7 @@ export interface IFieldItem {
     readonly field: string,
     readonly fieldname?: string,
     readonly fieldnamehelper?: string,
-    readonly type?: string,
-    readonly fieldrequired?: boolean
-    readonly fieldreadonly?: boolean
+    readonly props?: InputBaseProps
 }
 
 export interface IFieldForm {

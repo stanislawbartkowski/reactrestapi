@@ -22,29 +22,28 @@ const useStyles = makeStyles((theme: Theme) =>
     }),
 );
 
-interface IFunctionComponentElem extends I.IFieldItem {
+interface IFormElem extends I.IFieldItem {
     handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
     def: I.IFieldForm;
     value: any
 }
 
-const FormElem: FunctionComponent<IFunctionComponentElem> = ({ def, field, fieldname, fieldnamehelper, type, fieldrequired, fieldreadonly, handleChange, value }) => {
+const FormElem: FunctionComponent<IFormElem> = (props) => {
 
-    const helper = fieldnamehelper == null ?
+    const helper = props.fieldnamehelper == null ?
         null :
-        <FormHelperText id="component-helper-text">{jsstring(fieldnamehelper)}</FormHelperText>
+        <FormHelperText id="component-helper-text">{jsstring(props.fieldnamehelper)}</FormHelperText>
 
-    return <FormControl>
-        <FormControl required={fieldrequired ? true : false} error disabled={fieldreadonly || def.allreadonly ? true : false} >
-            <InputLabel htmlFor="component-simple">{C.compString(field, fieldname)} </InputLabel>
-            <Input id="component-simple" value={value} type={type} onChange={handleChange} />
-            {helper}
-        </FormControl>
+    const focus = (event: React.FocusEvent) => {
+        C.log(props.field + " " + event.type);
+    }
 
+    return <FormControl onFocus={focus} onBlur={focus}>
+        <InputLabel htmlFor="component-simple">{C.compString(props.field, props.fieldname)} </InputLabel>
+        <Input id={props.field} value={props.value} readOnly={props.def.allreadonly ? true : props.props?.readOnly}  {...props.props} onChange={props.handleChange} />
+        {helper}
     </FormControl>
-
 }
-
 
 const FormDialog: FunctionComponent<I.IFieldFormDialog> = ({ def, data }) => {
     const classes = useStyles();

@@ -126,15 +126,15 @@ const ListGrid: FunctionComponent<IListGrid> = ({ listdata, menuaction, listdefd
     if (ident != null) C.verifyTRow(ident);
 
     cols.forEach(e => {
+        if (e.props == undefined) e.props = { field: e.field }
         e.clickTRow = findElem(click, e.field);
         e.onCellClick = produceOnCellClick(click, e);
         e.isCellClickable = produceCellClickable(click, e);
         e.cellTitle = produceCellString(celltitle, e);
         if (ident != null && ident.field == e.field) e.identCol = getIdent
-        e.cellClassName = produceCellStyle(cellstyles, e);
+        e.props.cellClassName = produceCellStyle(cellstyles, e);
         e.valueCol = produceCellString(values, e);
-        e.headerName = C.compString(e.field, e.coltitle);
-
+        e.props.headerName = C.compString(e.field, e.coltitle);
     });
 
     const js = listdefdata.js;
@@ -155,9 +155,10 @@ const ListGrid: FunctionComponent<IListGrid> = ({ listdata, menuaction, listdefd
     }
 
     const spec: I.IGridTableSpec = { title: dialtitle, onClose: onClose, className: null, clickToolRow: toolOnRowAction, tools: tools };
+    const tabledef: I.IGridTable = { list: datalist, coldef: cols, spec: spec, props: listres.props }
 
-    const component = (slotid == I.SLOT.SLOTBASE) ? <GridTable list={datalist} coldef={cols} spec={spec} />
-        : <ListDokDialog list={datalist} coldef={cols} spec={spec} />
+    const component = (slotid == I.SLOT.SLOTBASE) ? <GridTable {...tabledef} />
+        : <ListDokDialog {...tabledef} />
 
     if (js == null)
         return component;

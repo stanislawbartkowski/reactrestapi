@@ -19,6 +19,7 @@ import lstring from '../js/locale'
 
 import gridstrings from '../js/gridlocale';
 import ToolBotton, { ToolButton } from './ToolButton'
+import FileFileDownload from 'material-ui/svg-icons/file/file-download';
 
 const useStyles = makeStyles(theme => ({
     table: {
@@ -177,7 +178,7 @@ const CellClickable: FunctionComponent<ICellClickable> = ({ col, params }) => {
     </div>
 }
 
-const GridTable: FunctionComponent<I.IGridTable> = ({ list, coldef, spec }) => {
+const GridTable: FunctionComponent<I.IGridTable> = ({ list, coldef, spec, props }) => {
 
     const classes = useStyles();
 
@@ -216,7 +217,7 @@ const GridTable: FunctionComponent<I.IGridTable> = ({ list, coldef, spec }) => {
         C.range(list.length).map(i => ({ id: i, ...list[i] }))
 
     // should be a copy of coldef
-    const columns: GridColDef[] = coldef;
+    const columns: GridColDef[] = coldef.map(e => ({ field: e.field, ...e.props }))
 
     columns.forEach(ele => {
         const e: I.ITableCol = coldef.find(e => e.field == ele.field) as I.ITableCol;
@@ -226,7 +227,7 @@ const GridTable: FunctionComponent<I.IGridTable> = ({ list, coldef, spec }) => {
     const toolprop: IToolParams = { spec: spec };
 
     return <div className={classes.table + ' ' + (spec != null ? spec.className : "")} >
-        <DataGrid rows={dlist} columns={columns} autoPageSize disableSelectionOnClick
+        <DataGrid {...props} rows={dlist} columns={columns} autoPageSize disableSelectionOnClick
 
             onCellClick={(params: GridCellParams, event: MuiEvent<React.MouseEvent>) => { toolprop.row = params.row }}
             // onCellOver={onCellOver}
