@@ -72,7 +72,7 @@ export interface IResourceResult {
 export interface ITableCol {
     field: string,
     coltitle?: string,
-    clickTRow: TRowAction | null,
+    clickTRow: IRowAction | null,
     onCellClick: ((jsaction: string, param: GridCellParams) => void) | null,
     isCellClickable: (param: GridCellParams) => boolean,
     cellTitle: ((param: GridCellParams) => string | null) | null,
@@ -86,17 +86,20 @@ export interface ITableCol {
 //   jsaction : js function to call
 //   isaction: actions is available for that cell
 
-export type TRowClickChoice = {
+export type ICallBackActionChoice = {
     readonly messid: TMess,
     readonly jsaction: string
 }
 
-export type TRowAction = {
-    readonly field: string,
-    readonly jsaction: string | TRowClickChoice[]
+
+export interface ICallBackAction {
+    readonly jsaction: string | ICallBackActionChoice[]
     readonly isaction?: string
 }
 
+export interface IRowAction extends ICallBackAction {
+    readonly field: string
+}
 
 // table list definition returned by rest/API getlist call
 //   columns: list of columns
@@ -107,12 +110,12 @@ export type TRowAction = {
 
 export interface IRestTable {
     readonly columns: ITableCol[],
-    readonly js?: TRowAction,
-    readonly ident?: TRowAction,
-    readonly style?: TRowAction[],
-    readonly value?: TRowAction[],
-    readonly celltitle?: TRowAction[],
-    readonly click?: TRowAction[],
+    readonly js?: IRowAction,
+    readonly ident?: IRowAction,
+    readonly style?: IRowAction[],
+    readonly value?: IRowAction[],
+    readonly celltitle?: IRowAction[],
+    readonly click?: IRowAction[],
     readonly jstitle?: string
     readonly tools: TClickButtonAction[] | null
     readonly props?: GridComponentProps
@@ -127,6 +130,8 @@ export type TMenuElem = {
 
 export const TDISPATCHPOPUP: string = "POPUP"
 export const TDISPATCHWARNING: string = "WARNING"
+export const TDISPATCHYESNO: string = "YESNO"
+export const TDISPATCHFORMACTION: string = "FORM"
 
 // popup dialog identifier to generate next
 export enum SLOT {
@@ -134,14 +139,17 @@ export enum SLOT {
 };
 
 
-// dispatcher dat
+// dispatcher data
 
-export type TDispatchRes = {
+export interface IDispatchBase {
     readonly action: string,
     readonly restid: string,
     readonly pars: object | null,
     readonly messid?: TMess,
     readonly vars: object | null,
+}
+
+export interface IDispatchRes extends IDispatchBase {
     readonly datares?: IResourceListData
 }
 
@@ -175,11 +183,32 @@ export enum RESOURCETYPE {
 
 // ----------------
 
+export const BEFOREFIELD = "beforefield"
+export const AFTERFIELD = "afterfield"
+
+export const FORMACTIONOK = "OK"
+export const FORMACTIONNO = "NO"
+
+export interface IFormStateActions {
+    focus? : string
+}
+
+export interface IDispatchFormRes extends IDispatchBase {
+    readonly formaction : string
+    readonly confirm? : IDispatchFormRes
+}
+
+export interface ActionCallBack {
+    (action: string, t: ICallBackAction, field: string, value: string, row: any, vars: any): any
+};
+
 export interface IFieldItem {
     readonly field: string,
     readonly fieldname?: string,
     readonly fieldnamehelper?: string,
-    readonly props?: InputBaseProps
+    readonly props?: InputBaseProps,
+    readonly beforefield?: ICallBackAction,
+    readonly afterfield?: ICallBackAction,
 }
 
 export interface IFieldForm {
@@ -191,5 +220,5 @@ export interface IFieldForm {
 
 export interface IFieldFormDialog {
     def: IFieldForm,
-    data: any
+    data: any,
 }

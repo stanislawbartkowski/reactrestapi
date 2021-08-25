@@ -11,7 +11,7 @@ import D from './D'
 function dToolAction(dispa: Dispatch<any>, slotid: I.SLOT, listactionid: string, cols: I.ITableCol[], action: I.TClickButtonAction, row: any) {
 
     const datares: I.IResourceListData = C.isStandardAdd(action.actionid) ? { res: {} } : { res: row };
-    const dispatchres: I.TDispatchRes = { action: I.TDISPATCHPOPUP, restid: listactionid + "_" + action.actionid.toLocaleLowerCase(), pars: null, vars: null, datares: datares }
+    const dispatchres: I.IDispatchRes = { action: I.TDISPATCHPOPUP, restid: listactionid + "_" + action.actionid.toLocaleLowerCase(), pars: null, vars: null, datares: datares }
     D(dispa, slotid, dispatchres);
 }
 

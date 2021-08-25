@@ -24,8 +24,15 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface IFormElem extends I.IFieldItem {
     handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-    def: I.IFieldForm;
+    def: IFormDialog
     value: any
+    values: any
+}
+
+interface IFormDialog extends I.IFieldFormDialog {
+    actioncallback: I.ActionCallBack,
+    istate: I.IFormStateActions
+
 }
 
 const FormElem: FunctionComponent<IFormElem> = (props) => {
@@ -34,21 +41,30 @@ const FormElem: FunctionComponent<IFormElem> = (props) => {
         null :
         <FormHelperText id="component-helper-text">{jsstring(props.fieldnamehelper)}</FormHelperText>
 
-    const focus = (event: React.FocusEvent) => {
-        C.log(props.field + " " + event.type);
+    const beforeafterfield = (props: IFormElem, action: string, i: I.ICallBackAction) => {
+        props.def.actioncallback(action, i, props.field, props.value, props.values, {})
     }
 
-    return <FormControl onFocus={focus} onBlur={focus}>
-        <InputLabel htmlFor="component-simple">{C.compString(props.field, props.fieldname)} </InputLabel>
-        <Input id={props.field} value={props.value} readOnly={props.def.allreadonly ? true : props.props?.readOnly}  {...props.props} onChange={props.handleChange} />
+    return <FormControl
+        onFocus={props.beforefield == undefined ? undefined : () => beforeafterfield(props, I.BEFOREFIELD, props.beforefield as I.ICallBackAction)}
+        onBlur={props.afterfield == undefined ? undefined : () => beforeafterfield(props, I.AFTERFIELD, props.afterfield as I.ICallBackAction)}
+    >
+        <InputLabel htmlFor={props.field}>{C.compString(props.field, props.fieldname)} </InputLabel>
+        <Input
+            inputRef={(input) => { if (input != null && props.def.istate.focus == props.field) input.focus(); }}
+            id={props.field}
+            value={props.value}
+            readOnly={props.def.def.allreadonly ? true : props.props?.readOnly}
+            {...props.props}
+            onChange={props.handleChange} />
         {helper}
     </FormControl>
 }
 
-const FormDialog: FunctionComponent<I.IFieldFormDialog> = ({ def, data }) => {
+const FormDialog: FunctionComponent<IFormDialog> = (props) => {
     const classes = useStyles();
 
-    const [values, setName] = React.useState(data);
+    const [values, setName] = React.useState(props.data);
 
     function createChangeValue(id: string): (event: React.ChangeEvent<HTMLInputElement>) => void {
         return (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -70,8 +86,8 @@ const FormDialog: FunctionComponent<I.IFieldFormDialog> = ({ def, data }) => {
     return (
 
         <form className={classes.root} noValidate autoComplete="off">
-            {def.fields.map(e => (
-                <FormElem def={def} {...e} handleChange={createChangeValue(e.field)} value={values[e.field]} />
+            {props.def.fields.map(e => (
+                <FormElem def={props} {...e} handleChange={createChangeValue(e.field)} value={values[e.field]} values={values} />
             ))
             }
         </form>

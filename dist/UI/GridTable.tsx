@@ -119,12 +119,12 @@ const getCellValue = (col: I.ITableCol, params: GridCellParams): GridCellValue =
 
 const ListOfChoices: FunctionComponent<ICellClickable> = ({ col, params }) => {
 
-    const onCellClick = (e: I.TRowClickChoice) => {
+    const onCellClick = (e: I.ICallBackActionChoice) => {
         if (col.onCellClick != null) col.onCellClick(e.jsaction, params);
     }
 
     return <List component="nav" > {
-        ((col.clickTRow as I.TRowAction).jsaction as I.TRowClickChoice[]).map(e => (
+        ((col.clickTRow as I.IRowAction).jsaction as I.ICallBackActionChoice[]).map(e => (
             <ListItem button key={e.jsaction} onClick={(event) => onCellClick(e)}>
                 <ListItemIcon>
                     <DetailsIcon />
@@ -145,11 +145,11 @@ const CellClickable: FunctionComponent<ICellClickable> = ({ col, params }) => {
     const open = Boolean(anchorEl);
 
     const onCellClick = () => {
-        if (col.onCellClick != null) col.onCellClick((col.clickTRow as I.TRowAction).jsaction as string, params);
+        if (col.onCellClick != null) col.onCellClick((col.clickTRow as I.IRowAction).jsaction as string, params);
     }
 
     const handleClick = (event: any) => {
-        if (C.isSingleCallTRow(col.clickTRow as I.TRowAction)) onCellClick()
+        if (C.isSingleCallTRow(col.clickTRow as I.IRowAction)) onCellClick()
         else setAnchorEl(event.currentTarget);
     };
 

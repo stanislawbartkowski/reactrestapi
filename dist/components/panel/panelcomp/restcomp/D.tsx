@@ -19,7 +19,7 @@ const slotmap = new Map<I.SLOT, ISLOTMAP>([
     [I.SLOT.SLOT2, { sid: pactions.STRINGTYPE.COMPSLOT3ID, did: I.RESOURCE.COMPRESSLOT3, fid: I.RESOURCE.COMPRESDEFSLOT3 }]
 ])
 
-function dAction(dispa: Dispatch<any>, slotid: I.SLOT, d: I.TDispatchRes) {
+function dAction(dispa: Dispatch<any>, slotid: I.SLOT, d: I.IDispatchRes) {
     C.verifyDispatcher(d)
 
     if (d.action == I.TDISPATCHWARNING) {

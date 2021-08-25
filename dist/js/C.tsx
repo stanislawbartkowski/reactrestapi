@@ -1,7 +1,6 @@
 import * as I from './I'
 import reststring from './locale'
 import { GRID_STRING_COLUMN_TYPE, GRID_NUMBER_COLUMN_TYPE, GRID_DATE_COLUMN_TYPE, GRID_DATETIME_COLUMN_TYPE } from '@material-ui/data-grid';
-import { isJSDocReadonlyTag } from 'typescript';
 
 
 export { }
@@ -131,32 +130,63 @@ function notObjectProps(mess: string, alert: boolean, o: object, ...args: string
     })
     if (errmess != null) {
         internalerrorlog(errmess, alert);
-        return false;
+        return true;
     }
-    return true;
+    return false;
 }
 
 // =======================
 // verify dispatcher
 // =======================
 
-const actionlist: string[] = [I.TDISPATCHPOPUP, I.TDISPATCHWARNING]
+const actionlist: string[] = [I.TDISPATCHPOPUP, I.TDISPATCHWARNING, I.TDISPATCHYESNO, I.TDISPATCHFORMACTION]
 
-export function verifyDispatcher(t: I.TDispatchRes) {
-
-    if (!(actionlist.includes(t.action))) {
+function verifyNameOnList(mess: string, name: string, allowedlist: string[]) {
+    if (!(allowedlist.includes(name))) {
         let listmess: string | null = null;
-        actionlist.forEach(s => { listmess = (listmess == null) ? s : listmess + "," + s });
-        internalerrorlog("action:" + t.action + " " + listmess + " expected")
+        allowedlist.forEach(s => { listmess = (listmess == null) ? s : listmess + "," + s });
+        internalerrorlog(mess + " " + name + " " + listmess + " expected")
         return false;
     }
-    if (t.action == I.TDISPATCHWARNING) {
-        if (notObjectProps(t.action, true, t, "title")) return false;
-    } else {
-        if (notObjectProps(t.action, true, t, "restid", "pars")) return false;
+    return true
+}
+
+export function verifyDispatcher(t: I.IDispatchRes): boolean {
+
+    if (!verifyNameOnList("Action ", t.action, actionlist)) return false;
+    switch (t.action) {
+        case I.TDISPATCHWARNING:
+        case I.TDISPATCHYESNO:
+            if (notObjectProps(t.action, true, t, "messid")) return false;
+            if (t.action == I.TDISPATCHYESNO) {
+                if (notObjectProps(t.action, true, t, "confirm")) return false;
+            }
+            break;
+        case I.TDISPATCHPOPUP:
+            if (notObjectProps(t.action, true, t, "restid", "pars")) return false;
+            break;
     }
     if (t.messid != null) return verifyString(t.messid as I.TMess);
     return true;
+}
+
+const formactionlist: string[] = [I.FORMACTIONNO, I.FORMACTIONOK]
+
+
+export function verifyFormDispatcher(t: I.IDispatchFormRes): boolean {
+
+    if (!verifyDispatcher(t)) return false
+    if (t.hasOwnProperty("formaction")) {
+        if (!verifyNameOnList("Form action ", t.formaction, formactionlist)) return false;
+    }
+    switch (t.action) {
+        case I.TDISPATCHWARNING:
+        case I.TDISPATCHYESNO:
+            if (notObjectProps(t.action, true, t, "confirm")) return false;
+            if (!verifyFormDispatcher(t.confirm as I.IDispatchFormRes)) return false;
+            break;
+    }
+    return true;   
 }
 
 // ==========================
@@ -177,14 +207,14 @@ function checkArray(mess: string, p: any, alert: boolean): boolean {
     return false;
 }
 
-export function verifyTRow(p: I.TRowAction) {
+export function verifyTRow(p: I.IRowAction) {
     if (!notObjectProps("TRowAction", false, p, "field", "jsaction")) return false;
     if (isString(p.jsaction)) return true;
     if (!checkArray("TRowAction, attribute jsaction, array or string is expected", p.jsaction, false)) return false;
     return true;
 }
 
-export function isSingleCallTRow(p: I.TRowAction): boolean {
+export function isSingleCallTRow(p: I.IRowAction): boolean {
     return isString(p.jsaction);
 }
 
@@ -286,4 +316,22 @@ export function isStandardAdd(actionid: string): boolean {
 export function isReadOnly(t: I.TClickButtonAction): boolean {
     if (isStandardShow(t.actionid)) return true;
     return false;
+}
+
+
+// =============================
+// form action
+// =============================
+
+const FIELD: string = "FIELD"
+const VALUE: string = "VALUE"
+const ACTION: string = "ACTION"
+
+export const ActionCallBack: I.ActionCallBack = (action: string, t: I.ICallBackAction, field: string, value: string, row: any, vars: any): any => {
+    const a = 1;
+    vars[FIELD] = field
+    vars[VALUE] = value
+    vars[ACTION] = action
+
+    return callJSRowFunction(t.jsaction as string, row, vars)
 }
