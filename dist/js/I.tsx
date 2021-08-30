@@ -1,7 +1,6 @@
 import { GridColDef, GridCellParams, GridComponentProps } from '@material-ui/data-grid';
 import { InputBaseProps } from '@material-ui/core/InputBase'
 
-
 export { }
 
 // string: either string only which means localize id or object
@@ -36,11 +35,6 @@ export const STANDARDOKBUTTON: string = "OK"
 export const STANDARDACCEPTBUTTON: string = "ACCEPT"
 export const STANDARDCANCELBUTTON: string = "CANCEL"
 
-
-export type TClickButtonAction = {
-    readonly actionid: string
-    readonly rowchosen?: boolean
-}
 
 export interface IResourceAppData {
     readonly logo: string;
@@ -92,14 +86,22 @@ export type ICallBackActionChoice = {
 }
 
 
-export interface ICallBackAction {
+export interface ICallBackActionDef {
     readonly jsaction: string | ICallBackActionChoice[]
     readonly isaction?: string
+    readonly notempty?: boolean
 }
 
-export interface IRowAction extends ICallBackAction {
+export interface IRowAction extends ICallBackActionDef {
     readonly field: string
 }
+
+export interface IClickButtonActionDef extends ICallBackActionDef {
+    readonly actionid: string
+    readonly rowchosen?: boolean
+    readonly close?: boolean
+}
+
 
 // table list definition returned by rest/API getlist call
 //   columns: list of columns
@@ -117,7 +119,7 @@ export interface IRestTable {
     readonly celltitle?: IRowAction[],
     readonly click?: IRowAction[],
     readonly jstitle?: string
-    readonly tools: TClickButtonAction[] | null
+    readonly tools: IClickButtonActionDef[] | null
     readonly props?: GridComponentProps
 }
 
@@ -155,11 +157,11 @@ export interface IDispatchRes extends IDispatchBase {
 
 // GridTable attributes
 export interface IGridTableSpec {
-    readonly clickToolRow: (action: TClickButtonAction, row: any) => void;
+    readonly clickToolRow: (action: IClickButtonActionDef, row: any) => void;
     readonly className: string | null,
     readonly title?: string,
     readonly onClose: () => void,
-    readonly tools: TClickButtonAction[] | null
+    readonly tools: IClickButtonActionDef[] | null
 }
 
 export interface IGridTable {
@@ -188,34 +190,92 @@ export const AFTERFIELD = "afterfield"
 
 export const FORMACTIONOK = "OK"
 export const FORMACTIONNO = "NO"
+export const FORMATRESTGET = "RESTGET"
+export const FORMATRESTPOST = "RESTPOST"
+
+export class CActionData {
+
+    private static FIELD: string = "FIELD"
+    private static VALUE: string = "VALUE"
+    private static ACTION: string = "ACTION"
+
+    private field?: string
+    private action?: string
+    private value?: string
+    private row: any
+    private vars: any
+
+    constructor(row: any, vars?: any, field?: string, action?: string, value?: string) {
+        this.field = field;
+        this.action = action;
+        this.value = value;
+        this.row = row;
+        this.vars = vars == undefined ? {} : vars;
+    }
+
+    getField(): string {
+        return this.field as string
+    }
+
+    getRow(): any {
+        return this.row
+    }
+
+    getVars(): any {
+        const cvars: any = { ...this.vars }
+        if (this.field != undefined) cvars[CActionData.FIELD] = this.field
+        if (this.value != undefined) cvars[CActionData.VALUE] = this.value
+        if (this.action != undefined) cvars[CActionData.ACTION] = this.action
+        return cvars;
+    }
+
+    getData(): any {
+        return { row: this.row, vars: this.getVars() }
+    }
+
+}
 
 export interface IFormStateActions {
-    focus? : string
+    focus?: string
+}
+
+export interface IRestDataWrapped {
+    row: any,
+    vars: any
 }
 
 export interface IDispatchFormRes extends IDispatchBase {
-    readonly formaction : string
-    readonly confirm? : IDispatchFormRes
+    readonly formaction: string
+    readonly confirm?: IDispatchFormRes
 }
 
-export interface ActionCallBack {
-    (action: string, t: ICallBackAction, field: string, value: string, row: any, vars: any): any
+export interface IActionCallBack {
+    (t: ICallBackActionDef, c: CActionData): any
 };
+
+export interface IDispatchActionCallBack {
+    (res: IDispatchFormRes, c: CActionData): void
+};
+
+export interface IOnClickButtonAction {
+    (i: IClickButtonActionDef, c: CActionData): void
+};
+
 
 export interface IFieldItem {
     readonly field: string,
     readonly fieldname?: string,
     readonly fieldnamehelper?: string,
     readonly props?: InputBaseProps,
-    readonly beforefield?: ICallBackAction,
-    readonly afterfield?: ICallBackAction,
+    readonly beforefield?: ICallBackActionDef,
+    readonly afterfield?: ICallBackActionDef,
 }
 
 export interface IFieldForm {
     readonly title?: string,
     readonly fields: IFieldItem[],
     readonly allreadonly?: boolean,
-    readonly buttons?: TClickButtonAction[]
+    readonly buttons?: IClickButtonActionDef[]
 }
 
 export interface IFieldFormDialog {

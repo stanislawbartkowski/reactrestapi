@@ -47,7 +47,7 @@ const ListGrid: FunctionComponent<IListGrid> = ({ listdata, menuaction, listdefd
     const cols: I.ITableCol[] = listres.columns;
     const ident: I.IRowAction | undefined = listres.ident;
     const jstitle: string | undefined = listres.jstitle;
-    const tools: I.TClickButtonAction[] | null = listres.tools;
+    const tools: I.IClickButtonActionDef[] | null = listres.tools;
 
     const getRow = (param: GridCellParams): object => {
         const i = param.row.rowIndex;
@@ -136,7 +136,7 @@ const ListGrid: FunctionComponent<IListGrid> = ({ listdata, menuaction, listdefd
         e.props.headerName = C.compString(e.field, e.coltitle);
     });
 
-    const js  = listdefdata.js;
+    const js = listdefdata.js;
 
     var dialtitle: string | undefined;
 
@@ -149,7 +149,7 @@ const ListGrid: FunctionComponent<IListGrid> = ({ listdata, menuaction, listdefd
     const onClose = () => {
     }
 
-    const toolOnRowAction = (action: I.TClickButtonAction, row: any) => {
+    const toolOnRowAction = (action: I.IClickButtonActionDef, row: any) => {
         DTool(dispatch, slotid, actionid as string, cols, action, row);
     }
 

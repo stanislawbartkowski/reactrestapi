@@ -1,5 +1,4 @@
 import React, { FunctionComponent } from 'react';
-import ModalDialog from './ModalDialog'
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 
 import FormControl from '@material-ui/core/FormControl';
@@ -30,9 +29,9 @@ interface IFormElem extends I.IFieldItem {
 }
 
 interface IFormDialog extends I.IFieldFormDialog {
-    actioncallback: I.ActionCallBack,
+    actioncallback: I.IActionCallBack,
     istate: I.IFormStateActions
-
+    setvalues: (values: any) => void;
 }
 
 const FormElem: FunctionComponent<IFormElem> = (props) => {
@@ -41,13 +40,14 @@ const FormElem: FunctionComponent<IFormElem> = (props) => {
         null :
         <FormHelperText id="component-helper-text">{jsstring(props.fieldnamehelper)}</FormHelperText>
 
-    const beforeafterfield = (props: IFormElem, action: string, i: I.ICallBackAction) => {
-        props.def.actioncallback(action, i, props.field, props.value, props.values, {})
+    const beforeafterfield = (props: IFormElem, action: string, i: I.ICallBackActionDef) => {
+        if (i.notempty && C.isEmpty(props.value)) return;
+        props.def.actioncallback(i, new I.CActionData(props.values, undefined,props.field, action, props.value));
     }
 
     return <FormControl
-        onFocus={props.beforefield == undefined ? undefined : () => beforeafterfield(props, I.BEFOREFIELD, props.beforefield as I.ICallBackAction)}
-        onBlur={props.afterfield == undefined ? undefined : () => beforeafterfield(props, I.AFTERFIELD, props.afterfield as I.ICallBackAction)}
+        onFocus={props.beforefield == undefined ? undefined : () => beforeafterfield(props, I.BEFOREFIELD, props.beforefield as I.ICallBackActionDef)}
+        onBlur={props.afterfield == undefined ? undefined : () => beforeafterfield(props, I.AFTERFIELD, props.afterfield as I.ICallBackActionDef)}
     >
         <InputLabel htmlFor={props.field}>{C.compString(props.field, props.fieldname)} </InputLabel>
         <Input
@@ -64,23 +64,16 @@ const FormElem: FunctionComponent<IFormElem> = (props) => {
 const FormDialog: FunctionComponent<IFormDialog> = (props) => {
     const classes = useStyles();
 
-    const [values, setName] = React.useState(props.data);
+    const [values, setValues]: [any, React.Dispatch<any>] = React.useState(props.data);
 
     function createChangeValue(id: string): (event: React.ChangeEvent<HTMLInputElement>) => void {
         return (event: React.ChangeEvent<HTMLInputElement>) => {
             const nvalues = { ...values };
             nvalues[id] = event.target.value;
-            setName(nvalues);
+            setValues(nvalues);
+            props.setvalues(values);
         }
-
     }
-
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setName(values);
-    };
-
-    const onClose = () => { }
-
     const title: string = "title"
 
     return (

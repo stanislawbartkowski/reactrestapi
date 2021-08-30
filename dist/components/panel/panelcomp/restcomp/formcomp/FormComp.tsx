@@ -23,7 +23,7 @@ const FormComp: FunctionComponent<IFormComp> = ({ listdata, listdefdata, slotid,
 
     const js = listdefdata.js;
 
-    const component = <FormDokDialog data={data} def={formdef}></FormDokDialog>
+    const component = <FormDokDialog data={data} def={formdef} ></FormDokDialog>
 
     if (js == null)
         return component;

@@ -13,7 +13,9 @@ const ListDokDialog: FunctionComponent<I.IGridTable> = ({ list, coldef, spec }) 
 
     const title: string | undefined = (spec != null ? spec.title : undefined);
 
-    return <ModalDialog title={title} onClose={onClose} >
+    const onClickButton = (i: I.IClickButtonActionDef) => { }
+
+    return <ModalDialog title={title} onClose={onClose} onClickButton={onClickButton}>
         <GridTable list={list} coldef={coldef} spec={spec} />
     </ModalDialog>
 

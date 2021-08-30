@@ -6,7 +6,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import { makeStyles } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
-import Button from '@material-ui/core/Button';
+
 import * as I from '../js/I'
 import ToolButton from './ToolButton'
 
@@ -26,15 +26,17 @@ const useStyles = makeStyles(theme => ({
 
 interface IPopUpDialog extends IModalDialog {
     getOpen: () => boolean
+    onClickButton: (i: I.IClickButtonActionDef) => void;
 }
 
 interface IModalDialog {
     title?: string;
     onClose?: () => void,
-    buttons?: I.TClickButtonAction[]
+    buttons?: I.IClickButtonActionDef[]
+    onClickButton: (i: I.IClickButtonActionDef) => void;
 }
 
-const PopUpDialog: FunctionComponent<IPopUpDialog> = ({ buttons, onClose, getOpen, title, children }) => {
+const PopUpDialog: FunctionComponent<IPopUpDialog> = ({ buttons, onClose, getOpen, onClickButton, title, children }) => {
 
     const [open, setOpen] = React.useState(false);
 
@@ -47,11 +49,9 @@ const PopUpDialog: FunctionComponent<IPopUpDialog> = ({ buttons, onClose, getOpe
         setOpen(false);
     };
 
-    const onClick = () => { }
-
     const buttonsDialog: ReactElement | null = buttons == undefined ? null :
         <DialogActions>
-            {buttons.map(e => (<ToolButton i={e} onClick={onClick}></ToolButton>))}
+            {buttons.map(e => (<ToolButton i={e} onClick={onClickButton} ></ToolButton>))}
         </DialogActions>
 
 
@@ -74,7 +74,7 @@ const PopUpDialog: FunctionComponent<IPopUpDialog> = ({ buttons, onClose, getOpe
 }
 
 
-const ModialDialog: FunctionComponent<IModalDialog> = ({ buttons, title, children, onClose }) => {
+const ModialDialog: FunctionComponent<IModalDialog> = ({ buttons, title, children, onClose, onClickButton }) => {
 
     var open: boolean = true;
 
@@ -87,7 +87,7 @@ const ModialDialog: FunctionComponent<IModalDialog> = ({ buttons, title, childre
         return open;
     }
 
-    return <PopUpDialog buttons={buttons} title={title} onClose={handleClose} getOpen={getOpen} children={children} />
+    return <PopUpDialog onClickButton={onClickButton} buttons={buttons} title={title} onClose={handleClose} getOpen={getOpen} children={children} />
 
 }
 

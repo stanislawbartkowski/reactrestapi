@@ -1,7 +1,8 @@
-import * as I from './I'
-import reststring from './locale'
 import { GRID_STRING_COLUMN_TYPE, GRID_NUMBER_COLUMN_TYPE, GRID_DATE_COLUMN_TYPE, GRID_DATETIME_COLUMN_TYPE } from '@material-ui/data-grid';
 
+import * as I from './I'
+import reststring from './locale'
+import axios from '../axios'
 
 export { }
 
@@ -145,7 +146,7 @@ function verifyNameOnList(mess: string, name: string, allowedlist: string[]) {
     if (!(allowedlist.includes(name))) {
         let listmess: string | null = null;
         allowedlist.forEach(s => { listmess = (listmess == null) ? s : listmess + "," + s });
-        internalerrorlog(mess + " " + name + " " + listmess + " expected")
+        internalerrorlog(mess + " found: " + name + ". Expected " + listmess)
         return false;
     }
     return true
@@ -153,6 +154,10 @@ function verifyNameOnList(mess: string, name: string, allowedlist: string[]) {
 
 export function verifyDispatcher(t: I.IDispatchRes): boolean {
 
+    if (t == undefined || t == null) {
+        internalerrorlog("Return data cannot be null or undefined");
+        return false;
+    }
     if (!verifyNameOnList("Action ", t.action, actionlist)) return false;
     switch (t.action) {
         case I.TDISPATCHWARNING:
@@ -170,7 +175,7 @@ export function verifyDispatcher(t: I.IDispatchRes): boolean {
     return true;
 }
 
-const formactionlist: string[] = [I.FORMACTIONNO, I.FORMACTIONOK]
+const formactionlist: string[] = [I.FORMACTIONNO, I.FORMACTIONOK, I.FORMATRESTGET, I.FORMATRESTPOST]
 
 
 export function verifyFormDispatcher(t: I.IDispatchFormRes): boolean {
@@ -186,7 +191,7 @@ export function verifyFormDispatcher(t: I.IDispatchFormRes): boolean {
             if (!verifyFormDispatcher(t.confirm as I.IDispatchFormRes)) return false;
             break;
     }
-    return true;   
+    return true;
 }
 
 // ==========================
@@ -313,7 +318,7 @@ export function isStandardAdd(actionid: string): boolean {
     return actionid == I.STANDARDACTIONADD;
 }
 
-export function isReadOnly(t: I.TClickButtonAction): boolean {
+export function isReadOnly(t: I.IClickButtonActionDef): boolean {
     if (isStandardShow(t.actionid)) return true;
     return false;
 }
@@ -323,15 +328,39 @@ export function isReadOnly(t: I.TClickButtonAction): boolean {
 // form action
 // =============================
 
-const FIELD: string = "FIELD"
-const VALUE: string = "VALUE"
-const ACTION: string = "ACTION"
+export function ActionCallBack(t: I.ICallBackActionDef, c: I.CActionData): any {
 
-export const ActionCallBack: I.ActionCallBack = (action: string, t: I.ICallBackAction, field: string, value: string, row: any, vars: any): any => {
-    const a = 1;
-    vars[FIELD] = field
-    vars[VALUE] = value
-    vars[ACTION] = action
+    return callJSRowFunction(t.jsaction as string, c.getRow(), c.getVars())
+}
 
-    return callJSRowFunction(t.jsaction as string, row, vars)
+export function callRest(i: I.IDispatchFormRes, c: I.CActionData, fun: I.IDispatchActionCallBack) {
+    const url: string = i.restid;
+    switch (i.formaction) {
+
+        case I.FORMATRESTGET:
+            axios.get(url).then(res => {
+                fun(res.data as I.IDispatchFormRes, c);
+            });
+            break;
+
+        case I.FORMATRESTPOST:
+            axios.post(url, c.getData()).then(res => {
+                fun(res.data as I.IDispatchFormRes, c);
+            })
+            break;
+    }
+}
+
+// ===============
+// isempty
+// ===============
+
+export function isEmpty(f?: string): boolean {
+    if (f == undefined || f == null) return true;
+    if (f == "") return true;
+    return false;
+}
+
+export function isEmptyObject(obj: any): boolean {
+    return Object.keys(obj).length === 0;
 }

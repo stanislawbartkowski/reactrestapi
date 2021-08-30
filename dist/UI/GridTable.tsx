@@ -54,10 +54,10 @@ interface IToolParams {
 
 interface ICustomTool {
     readonly toolparams: IToolParams,
-    readonly toolspec: I.TClickButtonAction
+    readonly toolspec: I.IClickButtonActionDef
 }
 
-const rowchosenRequired = (p: I.TClickButtonAction): boolean => {
+const rowchosenRequired = (p: I.IClickButtonActionDef): boolean => {
 
     if (C.isStandardShow(p.actionid)) return true;
     if (C.isStandardAdd(p.actionid)) return false;

@@ -28,8 +28,8 @@ const mapTool = new Map<string, StandardTool>([
 
 
 type TToolButton = {
-    i: I.TClickButtonAction,
-    onClick: () => void;
+    i: I.IClickButtonActionDef,
+    onClick: (i: I.IClickButtonActionDef) => void;
 }
 
 
@@ -49,7 +49,7 @@ export const ToolButton: FunctionComponent<TToolButton> = ({ i, onClick }) => {
     const startIcon: ReactElement | null = Icon == undefined ? null : <Icon></Icon>
 
 
-    return <Button onClick={onClick}
+    return <Button onClick={ () => onClick(i) }
         variant="outlined"
         color="primary"
         startIcon={startIcon}
