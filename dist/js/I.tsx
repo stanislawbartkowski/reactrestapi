@@ -1,5 +1,6 @@
 import { GridColDef, GridCellParams, GridComponentProps } from '@material-ui/data-grid';
 import { InputBaseProps } from '@material-ui/core/InputBase'
+import { InputLabelProps } from '@material-ui/core/InputLabel'
 
 export { }
 
@@ -75,19 +76,30 @@ export interface ITableCol {
     props?: GridColDef
 }
 
-// action related to a single column/cell
-//   field: field identifier
-//   jsaction : js function to call
-//   isaction: actions is available for that cell
+// =====================================
+// actions definition
+// =====================================
+
+
+// choice on column, more then one action
 
 export type ICallBackActionChoice = {
     readonly messid: TMess,
     readonly jsaction: string
 }
 
+// action related to a single column/cell
+//   field: field identifier
+//   jsaction : js function to call
+//   isaction: actions is available for that cell
+
+export enum ActionType {
+    JSACTION, CHOICE, RES
+}
+
 
 export interface ICallBackActionDef {
-    readonly jsaction: string | ICallBackActionChoice[]
+    readonly jsaction: string | ICallBackActionChoice[] | IDispatchFormRes
     readonly isaction?: string
     readonly notempty?: boolean
 }
@@ -100,6 +112,7 @@ export interface IClickButtonActionDef extends ICallBackActionDef {
     readonly actionid: string
     readonly rowchosen?: boolean
     readonly close?: boolean
+    readonly checkrequired?: boolean
 }
 
 
@@ -193,6 +206,8 @@ export const FORMACTIONNO = "NO"
 export const FORMATRESTGET = "RESTGET"
 export const FORMATRESTPOST = "RESTPOST"
 
+export const FIELDREQUIREDFIELD = "fieldrequired"
+
 export class CActionData {
 
     private static FIELD: string = "FIELD"
@@ -211,6 +226,10 @@ export class CActionData {
         this.value = value;
         this.row = row;
         this.vars = vars == undefined ? {} : vars;
+    }
+
+    setField(s: string) {
+        this.field = s;
     }
 
     getField(): string {
@@ -235,18 +254,20 @@ export class CActionData {
 
 }
 
-export interface IFormStateActions {
-    focus?: string
+export interface IFieldMessage {
+    field: string,
+    mess: TMess
 }
 
-export interface IRestDataWrapped {
-    row: any,
-    vars: any
+export interface IFormStateActions {
+    focus?: string
+    error?: IFieldMessage[]
 }
 
 export interface IDispatchFormRes extends IDispatchBase {
     readonly formaction: string
     readonly confirm?: IDispatchFormRes
+    readonly error?: IFieldMessage[]
 }
 
 export interface IActionCallBack {
@@ -261,15 +282,23 @@ export interface IOnClickButtonAction {
     (i: IClickButtonActionDef, c: CActionData): void
 };
 
+// =====================================
+// form data definition
+// =====================================
+
+// single item
 
 export interface IFieldItem {
     readonly field: string,
     readonly fieldname?: string,
-    readonly fieldnamehelper?: string,
+    readonly fieldnamehelper?: TMess,
     readonly props?: InputBaseProps,
+    readonly labelprops?: InputLabelProps,
     readonly beforefield?: ICallBackActionDef,
     readonly afterfield?: ICallBackActionDef,
 }
+
+// the whole form
 
 export interface IFieldForm {
     readonly title?: string,
@@ -278,7 +307,11 @@ export interface IFieldForm {
     readonly buttons?: IClickButtonActionDef[]
 }
 
+// form and current data
+
 export interface IFieldFormDialog {
     def: IFieldForm,
     data: any,
 }
+
+// =====================================

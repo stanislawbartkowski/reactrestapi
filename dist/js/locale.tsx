@@ -11,7 +11,8 @@ const embedded = {
         "unrecognizedtoolid": "{0} - unrecognized tool id",
         "ok": "Ok",
         "cancel": "Rezygnujesz",
-        "accept" : "Akceptujesz"
+        "accept" : "Akceptujesz",
+        "fieldrequired" : "Pole jest wymagane"
     },
     en: {
 

@@ -45,8 +45,8 @@ const PopUpDialog: FunctionComponent<IPopUpDialog> = ({ buttons, onClose, getOpe
     if (getOpen() && !open) setOpen(true);
 
     const onCloseDial = () => {
-        if (onClose != undefined) onClose();
         setOpen(false);
+        if (onClose != undefined) onClose();
     };
 
     const buttonsDialog: ReactElement | null = buttons == undefined ? null :
@@ -79,8 +79,8 @@ const ModialDialog: FunctionComponent<IModalDialog> = ({ buttons, title, childre
     var open: boolean = true;
 
     const handleClose = () => {
-        if (onClose != undefined) onClose()
         open = false;
+        if (onClose != undefined) onClose()
     }
 
     const getOpen = (): boolean => {

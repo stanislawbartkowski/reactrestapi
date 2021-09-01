@@ -149,7 +149,7 @@ const CellClickable: FunctionComponent<ICellClickable> = ({ col, params }) => {
     }
 
     const handleClick = (event: any) => {
-        if (C.isSingleCallTRow(col.clickTRow as I.IRowAction)) onCellClick()
+        if (C.ActionCallType(col.clickTRow as I.IRowAction) == I.ActionType.JSACTION) onCellClick()
         else setAnchorEl(event.currentTarget);
     };
 

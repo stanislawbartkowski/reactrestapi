@@ -1,4 +1,5 @@
-import { FunctionComponent, useState } from 'react';
+import { FunctionComponent, useState, useRef } from 'react';
+import { MutableRefObject } from 'react';
 import * as I from '../js/I'
 import * as C from '../js/C'
 import FormDialog from './FormDialog'
@@ -11,9 +12,11 @@ const FormDokDialog: FunctionComponent<I.IFieldFormDialog> = (props) => {
 
     const title: string | undefined = props.def.title == undefined ? undefined : jsstring(props.def.title);
 
-    const [istate, setIState] = useState({})
+    const [istate, setIState]: [I.IFormStateActions, React.Dispatch<I.IFormStateActions>] = useState({})
 
-    let values = { ...props.data };
+    const ref: MutableRefObject<any> = useRef({});
+
+    //    let values = { ...props.data };
 
     const dispatch: I.IDispatchActionCallBack = (res: I.IDispatchFormRes, c: I.CActionData) => {
 
@@ -39,6 +42,13 @@ const FormDokDialog: FunctionComponent<I.IFieldFormDialog> = (props) => {
 
             case I.TDISPATCHFORMACTION:
 
+                if (res.formaction == undefined) return
+
+                if (res.error != undefined) {
+                    setIState({ error: res.error })
+                    return
+                }
+
                 switch (res.formaction) {
                     case I.FORMACTIONNO:
                         setIState({ focus: c.getField() })
@@ -52,16 +62,54 @@ const FormDokDialog: FunctionComponent<I.IFieldFormDialog> = (props) => {
     }
 
     const actioncall: I.IActionCallBack = (t: I.ICallBackActionDef, c: I.CActionData) => {
-        const res: I.IDispatchFormRes = C.ActionCallBack(t, c);
+        const res: I.IDispatchFormRes = C.ActionCallType(t) == I.ActionType.JSACTION ? C.ActionCallBack(t, c) : t.jsaction as I.IDispatchFormRes
         dispatch(res, c);
     }
 
-    const onClickButton = (i: I.IClickButtonActionDef) => {
-        actioncall(i, new I.CActionData(values));
+    const verifyRequired = (c: I.CActionData): I.IDispatchFormRes | null => {
+        const errorlist: I.IFieldMessage[] = [];
+        props.def.fields.forEach(f => {
+            if (f.props?.required) {
+                const value: string = c.getRow()[f.field]
+                if (C.isEmpty(value)) {
+                    errorlist.push({ field: f.field, mess: { messid: I.FIELDREQUIREDFIELD } })
+                }
+            }
+        })
+        if (errorlist.length == 0) return null;
+        c.setField(errorlist[0].field);
+        return {
+            action: I.TDISPATCHFORMACTION,
+            error: errorlist,
+            formaction: I.FORMACTIONNO,
+            vars: c.getVars(),
+            restid: "",
+            pars: null
+        }
     }
 
-    return <ModalDialog title={title} buttons={props.def.buttons} onClickButton={onClickButton}>
-        <FormDialog setvalues={(v) => { values = v }} {...props} actioncallback={actioncall} istate={istate}> se </FormDialog>
+    const onClickButton = (i: I.IClickButtonActionDef) => {
+        const c: I.CActionData = new I.CActionData(ref.current);
+        if (i.checkrequired) {
+            const res: I.IDispatchFormRes | null = verifyRequired(c);
+            if (res != null) {
+                dispatch(res, c);
+                return;
+            }
+        }
+        actioncall(i, c);
+    }
+
+    const onClose = () => {
+        // nothing
+    }
+
+    const changeValues = () => {
+        setIState({});
+    }
+
+    return <ModalDialog title={title} buttons={props.def.buttons} onClickButton={onClickButton} onClose={onClose}>
+        <FormDialog changeValues={changeValues} refe={ref} {...props} actioncallback={actioncall} istate={istate}> </FormDialog>
     </ModalDialog>
 
 }

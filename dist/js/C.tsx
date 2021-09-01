@@ -202,7 +202,7 @@ function isString(p: any): boolean {
     return typeof p === "string";
 }
 
-export function isArray(p: any): boolean {
+function isArray(p: any): boolean {
     return Array.isArray(p);
 }
 
@@ -217,10 +217,6 @@ export function verifyTRow(p: I.IRowAction) {
     if (isString(p.jsaction)) return true;
     if (!checkArray("TRowAction, attribute jsaction, array or string is expected", p.jsaction, false)) return false;
     return true;
-}
-
-export function isSingleCallTRow(p: I.IRowAction): boolean {
-    return isString(p.jsaction);
 }
 
 export function verifyString(p: I.TMess): boolean {
@@ -327,6 +323,12 @@ export function isReadOnly(t: I.IClickButtonActionDef): boolean {
 // =============================
 // form action
 // =============================
+
+export function ActionCallType(t: I.ICallBackActionDef): I.ActionType {
+    if (isArray(t.jsaction)) return I.ActionType.CHOICE
+    if (isString(t.jsaction)) return I.ActionType.JSACTION
+    return I.ActionType.RES
+}
 
 export function ActionCallBack(t: I.ICallBackActionDef, c: I.CActionData): any {
 
