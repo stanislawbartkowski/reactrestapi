@@ -7,6 +7,14 @@ import jsstring from '../js/locale';
 
 import ModalDialog from './ModalDialog'
 
+const resclose: I.IDispatchFormRes = {
+    action: I.TDISPATCHFORMACTION,
+    formaction: I.FORMACTIONOK,
+    vars: {},
+    restid: "",
+    pars: null,
+    close: true
+}
 
 const FormDokDialog: FunctionComponent<I.IFieldFormDialog> = (props) => {
 
@@ -14,14 +22,16 @@ const FormDokDialog: FunctionComponent<I.IFieldFormDialog> = (props) => {
 
     const [istate, setIState]: [I.IFormStateActions, React.Dispatch<I.IFormStateActions>] = useState({})
 
-    const ref: MutableRefObject<any> = useRef({});
-
-    //    let values = { ...props.data };
+    const ref: MutableRefObject<any> = useRef();
+    const modalref: MutableRefObject<any> = useRef();
 
     const dispatch: I.IDispatchActionCallBack = (res: I.IDispatchFormRes, c: I.CActionData) => {
 
         // empty object, do nothing
-        if (C.isEmptyObject(res)) return;
+        if (C.isEmptyObject(res)) {
+            if (!c.isemptyClose()) return;
+            res = resclose;
+        }
 
         C.verifyFormDispatcher(res)
         const mess: string | null = res.messid != undefined ? C.getString(res.messid as I.TMess) as string : null;
@@ -44,14 +54,20 @@ const FormDokDialog: FunctionComponent<I.IFieldFormDialog> = (props) => {
 
                 if (res.formaction == undefined) return
 
-                if (res.error != undefined) {
-                    setIState({ error: res.error })
+                let state: I.IFormStateActions = {}
+
+                if (res.error != undefined) state = { ...state, error: res.error }
+                if (res.focus != undefined) state = { ...state, focus: res.focus }
+
+                if (res.close) {
+                    modalref.current.closeDialog();
                     return
                 }
 
                 switch (res.formaction) {
                     case I.FORMACTIONNO:
-                        setIState({ focus: c.getField() })
+                        if (res.focus == undefined) state = { ...state, focus: c.getField() }
+                        setIState(state)
                         break;
                     case I.FORMATRESTGET:
                     case I.FORMATRESTPOST:
@@ -72,7 +88,7 @@ const FormDokDialog: FunctionComponent<I.IFieldFormDialog> = (props) => {
             if (f.props?.required) {
                 const value: string = c.getRow()[f.field]
                 if (C.isEmpty(value)) {
-                    errorlist.push({ field: f.field, mess: { messid: I.FIELDREQUIREDFIELD } })
+                    errorlist.push({ field: f.field, mess: I.FIELDREQUIREDFIELD })
                 }
             }
         })
@@ -89,7 +105,7 @@ const FormDokDialog: FunctionComponent<I.IFieldFormDialog> = (props) => {
     }
 
     const onClickButton = (i: I.IClickButtonActionDef) => {
-        const c: I.CActionData = new I.CActionData(ref.current);
+        const c: I.CActionData = new I.CActionData(ref.current.getVars());
         if (i.checkrequired) {
             const res: I.IDispatchFormRes | null = verifyRequired(c);
             if (res != null) {
@@ -97,19 +113,23 @@ const FormDokDialog: FunctionComponent<I.IFieldFormDialog> = (props) => {
                 return;
             }
         }
+        if (i.close) {
+            dispatch(resclose, c);
+            return;
+        }
+        c.setemptyClose();
         actioncall(i, c);
     }
 
     const onClose = () => {
-        // nothing
     }
 
     const changeValues = () => {
         setIState({});
     }
 
-    return <ModalDialog title={title} buttons={props.def.buttons} onClickButton={onClickButton} onClose={onClose}>
-        <FormDialog changeValues={changeValues} refe={ref} {...props} actioncallback={actioncall} istate={istate}> </FormDialog>
+    return <ModalDialog ref={modalref} title={title} buttons={props.def.buttons} onClickButton={onClickButton} onClose={onClose}>
+        <FormDialog ref={ref} changeValues={changeValues} {...props} actioncallback={actioncall} istate={istate}> </FormDialog>
     </ModalDialog>
 
 }

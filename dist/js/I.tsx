@@ -219,6 +219,7 @@ export class CActionData {
     private value?: string
     private row: any
     private vars: any
+    private emptyclose?: boolean
 
     constructor(row: any, vars?: any, field?: string, action?: string, value?: string) {
         this.field = field;
@@ -226,6 +227,14 @@ export class CActionData {
         this.value = value;
         this.row = row;
         this.vars = vars == undefined ? {} : vars;
+    }
+
+    setemptyClose() {
+        this.emptyclose = true;
+    }
+
+    isemptyClose() {
+        return this.emptyclose
     }
 
     setField(s: string) {
@@ -268,6 +277,8 @@ export interface IDispatchFormRes extends IDispatchBase {
     readonly formaction: string
     readonly confirm?: IDispatchFormRes
     readonly error?: IFieldMessage[]
+    readonly close?: boolean
+    readonly focus?: string
 }
 
 export interface IActionCallBack {

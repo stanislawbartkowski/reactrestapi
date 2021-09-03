@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent,forwardRef, useImperativeHandle } from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 
 import FormControl from '@material-ui/core/FormControl';
@@ -32,8 +32,8 @@ interface IFormElem extends I.IFieldItem {
 interface IFormDialog extends I.IFieldFormDialog {
     actioncallback: I.IActionCallBack,
     istate: I.IFormStateActions
-    refe: MutableRefObject<any>
     changeValues: () => void
+    children?: React.ReactNode
 }
 
 const FormElem: FunctionComponent<IFormElem> = (props) => {
@@ -67,22 +67,33 @@ const FormElem: FunctionComponent<IFormElem> = (props) => {
     </FormControl>
 }
 
-const FormDialog: FunctionComponent<IFormDialog> = (props) => {
-    const classes = useStyles();
+interface IRefCall {
+    getVars: () => any;
+}
+
+
+
+//const FormDialog: FunctionComponent<IFormDialog> = (props) => {
+
+ const FormDialog = forwardRef<IRefCall,IFormDialog> ((props,ref) => {
+        const classes = useStyles();
 
     const [values, setValues]: [any, React.Dispatch<any>] = React.useState(props.data);
-    props.refe.current = values;
 
     function createChangeValue(id: string): (event: React.ChangeEvent<HTMLInputElement>) => void {
         return (event: React.ChangeEvent<HTMLInputElement>) => {
             const nvalues = { ...values };
             nvalues[id] = event.target.value;
             setValues(nvalues);
-            props.refe.current = nvalues;
             props.changeValues();
         }
     }
     const title: string = "title"
+
+    useImperativeHandle(ref, () => ({
+        getVars: () => { return values }
+    }));
+
 
     return (
 
@@ -94,6 +105,6 @@ const FormDialog: FunctionComponent<IFormDialog> = (props) => {
         </form>
 
     );
-}
+})
 
 export default FormDialog;
