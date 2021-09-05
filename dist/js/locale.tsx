@@ -33,7 +33,7 @@ export function setStrings(s: any) {
     strings.setContent(o);
 }
 
-const lstring = (id: string, ...args: string[]): string => {
+const lstring = (id: string, ...args: any[]): string => {
     const s = strings.getString(id)
     const ss: string = strings.formatString(s, ...args).toString()
     return ss;

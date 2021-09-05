@@ -7,6 +7,7 @@ import Button from '@material-ui/core/Button';
 
 
 import * as I from '../js/I';
+import * as II from '../js/II';
 import * as C from '../js/C';
 import lstring from '../js/locale'
 
@@ -28,8 +29,8 @@ const mapTool = new Map<string, StandardTool>([
 
 
 type TToolButton = {
-    i: I.IClickButtonActionDef,
-    onClick: (i: I.IClickButtonActionDef) => void;
+    i: II.IClickButtonActionDef,
+    onClick: (i: II.IClickButtonActionDef) => void;
 }
 
 

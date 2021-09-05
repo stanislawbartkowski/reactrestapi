@@ -8,6 +8,7 @@ import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 
 import * as I from '../js/I'
+import * as II from '../js/II'
 import ToolButton from './ToolButton'
 
 const useStyles = makeStyles(theme => ({
@@ -31,8 +32,8 @@ interface IPopUpDialog extends IModalDialog {
 interface IModalDialog {
     title?: string;
     onClose?: () => void,
-    buttons?: I.IClickButtonActionDef[]
-    onClickButton: (i: I.IClickButtonActionDef) => void;
+    buttons?: II.IClickButtonActionDef[]
+    onClickButton: (i: II.IClickButtonActionDef) => void;
     children?: ReactNode
 }
 

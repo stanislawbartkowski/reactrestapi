@@ -1,18 +1,9 @@
 import { GridColDef, GridCellParams, GridComponentProps } from '@material-ui/data-grid';
 import { InputBaseProps } from '@material-ui/core/InputBase'
 import { InputLabelProps } from '@material-ui/core/InputLabel'
+import * as II from './II'
 
 export { }
-
-// string: either string only which means localize id or object
-
-export type TMess = string | TStringParam | null;
-
-export type TStringParam = {
-    readonly localize?: boolean,
-    readonly messid: string,
-    readonly params?: string[]
-}
 
 // important: enum different than any other enums
 export enum RESOURCE {
@@ -35,15 +26,12 @@ export const STANDARDACTIONMODIF: string = "MODIF"
 export const STANDARDOKBUTTON: string = "OK"
 export const STANDARDACCEPTBUTTON: string = "ACCEPT"
 export const STANDARDCANCELBUTTON: string = "CANCEL"
+export const STANDARDDELETEBUTTON: string = "DELETE"
 
 
 export interface IResourceAppData {
     readonly logo: string;
     readonly appname: string;
-}
-
-export interface IResourceListData {
-    readonly res: object[];
 }
 
 export interface IResourceListMenu {
@@ -52,10 +40,10 @@ export interface IResourceListMenu {
 
 export interface IResourceResult {
     readonly type: RESOURCE,
-    readonly data: IRestTable | IResourceListData | IResourceListMenu | IResourceAppData | IFieldForm | null,
+    readonly data: IRestTable | II.IResourceListData | IResourceListMenu | IResourceAppData | IFieldForm | null,
     readonly restid: string | null,
     readonly js: string | null,
-    readonly vars: object | null,
+    readonly vars?: object
 }
 
 // column/cell definition passed to GridTable
@@ -67,52 +55,13 @@ export interface IResourceResult {
 export interface ITableCol {
     field: string,
     coltitle?: string,
-    clickTRow: IRowAction | null,
+    clickTRow: II.IRowAction | null,
     onCellClick: ((jsaction: string, param: GridCellParams) => void) | null,
     isCellClickable: (param: GridCellParams) => boolean,
     cellTitle: ((param: GridCellParams) => string | null) | null,
     identCol: ((param: GridCellParams) => number) | null,
     valueCol: ((param: GridCellParams) => string | null) | null
     props?: GridColDef
-}
-
-// =====================================
-// actions definition
-// =====================================
-
-
-// choice on column, more then one action
-
-export type ICallBackActionChoice = {
-    readonly messid: TMess,
-    readonly jsaction: string
-}
-
-// action related to a single column/cell
-//   field: field identifier
-//   jsaction : js function to call
-//   isaction: actions is available for that cell
-
-export enum ActionType {
-    JSACTION, CHOICE, RES
-}
-
-
-export interface ICallBackActionDef {
-    readonly jsaction: string | ICallBackActionChoice[] | IDispatchFormRes
-    readonly isaction?: string
-    readonly notempty?: boolean
-}
-
-export interface IRowAction extends ICallBackActionDef {
-    readonly field: string
-}
-
-export interface IClickButtonActionDef extends ICallBackActionDef {
-    readonly actionid: string
-    readonly rowchosen?: boolean
-    readonly close?: boolean
-    readonly checkrequired?: boolean
 }
 
 
@@ -125,14 +74,14 @@ export interface IClickButtonActionDef extends ICallBackActionDef {
 
 export interface IRestTable {
     readonly columns: ITableCol[],
-    readonly js?: IRowAction,
-    readonly ident?: IRowAction,
-    readonly style?: IRowAction[],
-    readonly value?: IRowAction[],
-    readonly celltitle?: IRowAction[],
-    readonly click?: IRowAction[],
+    readonly js?: string,
+    readonly ident?: II.IRowAction,
+    readonly style?: II.IRowAction[],
+    readonly value?: II.IRowAction[],
+    readonly celltitle?: II.IRowAction[],
+    readonly click?: II.IRowAction[],
     readonly jstitle?: string
-    readonly tools: IClickButtonActionDef[] | null
+    readonly tools: II.IClickButtonActionDef[] | null
     readonly props?: GridComponentProps
 }
 
@@ -146,7 +95,6 @@ export type TMenuElem = {
 export const TDISPATCHPOPUP: string = "POPUP"
 export const TDISPATCHWARNING: string = "WARNING"
 export const TDISPATCHYESNO: string = "YESNO"
-export const TDISPATCHFORMACTION: string = "FORM"
 
 // popup dialog identifier to generate next
 export enum SLOT {
@@ -156,25 +104,14 @@ export enum SLOT {
 
 // dispatcher data
 
-export interface IDispatchBase {
-    readonly action: string,
-    readonly restid: string,
-    readonly pars: object | null,
-    readonly messid?: TMess,
-    readonly vars: object | null,
-}
-
-export interface IDispatchRes extends IDispatchBase {
-    readonly datares?: IResourceListData
-}
 
 // GridTable attributes
 export interface IGridTableSpec {
-    readonly clickToolRow: (action: IClickButtonActionDef, row: any) => void;
+    readonly clickToolRow: (action: II.IClickButtonActionDef, row: any) => void;
     readonly className: string | null,
     readonly title?: string,
     readonly onClose: () => void,
-    readonly tools: IClickButtonActionDef[] | null
+    readonly tools: II.IClickButtonActionDef[] | null
 }
 
 export interface IGridTable {
@@ -263,34 +200,22 @@ export class CActionData {
 
 }
 
-export interface IFieldMessage {
-    field: string,
-    mess: TMess
-}
-
 export interface IFormStateActions {
     focus?: string
-    error?: IFieldMessage[]
+    error?: II.IFieldMessage[]
 }
 
-export interface IDispatchFormRes extends IDispatchBase {
-    readonly formaction: string
-    readonly confirm?: IDispatchFormRes
-    readonly error?: IFieldMessage[]
-    readonly close?: boolean
-    readonly focus?: string
-}
 
 export interface IActionCallBack {
-    (t: ICallBackActionDef, c: CActionData): any
+    (t: II.ICallBackActionDef, c: CActionData): any
 };
 
 export interface IDispatchActionCallBack {
-    (res: IDispatchFormRes, c: CActionData): void
+    (res: II.IDispatchFormRes, c: CActionData): void
 };
 
 export interface IOnClickButtonAction {
-    (i: IClickButtonActionDef, c: CActionData): void
+    (i: II.IClickButtonActionDef, c: CActionData): void
 };
 
 // =====================================
@@ -302,11 +227,11 @@ export interface IOnClickButtonAction {
 export interface IFieldItem {
     readonly field: string,
     readonly fieldname?: string,
-    readonly fieldnamehelper?: TMess,
+    readonly fieldnamehelper?: II.TMess,
     readonly props?: InputBaseProps,
     readonly labelprops?: InputLabelProps,
-    readonly beforefield?: ICallBackActionDef,
-    readonly afterfield?: ICallBackActionDef,
+    readonly beforefield?: II.ICallBackActionDef,
+    readonly afterfield?: II.ICallBackActionDef,
 }
 
 // the whole form
@@ -315,7 +240,7 @@ export interface IFieldForm {
     readonly title?: string,
     readonly fields: IFieldItem[],
     readonly allreadonly?: boolean,
-    readonly buttons?: IClickButtonActionDef[]
+    readonly buttons?: II.IClickButtonActionDef[]
 }
 
 // form and current data

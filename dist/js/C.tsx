@@ -1,10 +1,89 @@
 import { GRID_STRING_COLUMN_TYPE, GRID_NUMBER_COLUMN_TYPE, GRID_DATE_COLUMN_TYPE, GRID_DATETIME_COLUMN_TYPE } from '@material-ui/data-grid';
 
 import * as I from './I'
+import * as II from './II'
 import reststring from './locale'
 import axios from '../axios'
+import { createCheckers, CheckerT } from "ts-interface-checker";
+import IITypeChecker from './II-ti'
+
+// `npm bin`/ts-interface-builder src/reactrestapi/dist/js/II.tsx
 
 export { }
+
+// ============================================
+// type checkers
+// ============================================
+
+
+const IIChecker = createCheckers(IITypeChecker)
+
+
+function TMessChecker(t: II.TMess): boolean {
+    try {
+        IIChecker.TMess.strictCheck(t)
+    } catch (e: any) {
+        internalinfoerrorlog("TMess", e)
+        return false;
+    }
+    return true;
+}
+
+function IDispatchFormResChecker(t: II.IDispatchFormRes): boolean {
+    try {
+        IIChecker.IDispatchFormRes.strictCheck(t)
+    } catch (e: any) {
+        internalinfoerrorlog("IDispatchFormRes", e)
+        return false;
+    }
+    return true;
+}
+
+
+function IDispatchListResChecker(t: II.IDispatchListRes): boolean {
+    try {
+        IIChecker.IDispatchListRes.strictCheck(t)
+    } catch (e: any) {
+        internalinfoerrorlog("IDispatchListRes", e)
+        return false;
+    }
+    return true;
+}
+
+function IClickButtonActionDefChecker(t: II.IClickButtonActionDef): boolean {
+    try {
+        IIChecker.IClickButtonActionDef.strictCheck(t)
+    } catch (e: any) {
+        internalinfoerrorlog("IClickButtonActionDef", e)
+        return false;
+    }
+    return true;
+}
+
+// IRowAction
+
+function IRowActionChecker(t: II.IRowAction): boolean {
+    try {
+        IIChecker.IRowAction.strictCheck(t)
+    } catch (e: any) {
+        internalinfoerrorlog("IRowAction", e)
+        return false;
+    }
+    return true;
+}
+
+// ICallBackActionDef
+
+function ICallBackActionDefChecker(t: II.ICallBackActionDef): boolean {
+    try {
+        IIChecker.ICallBackActionDef.strictCheck(t)
+    } catch (e: any) {
+        internalinfoerrorlog("ICallBackActionDef", e)
+        return false;
+    }
+    return true;
+}
+
 
 // ===================================
 // Some simple command procedures
@@ -33,6 +112,12 @@ export function internalerrorlog(mess: string, alert: boolean = true) {
     if (alert) erralert(emess);
 }
 
+export function internalinfoerrorlog(info: string, errmess: string, alert: boolean = true) {
+    const emess: string = info + "   Internal error :" + errmess;
+    log(emess);
+    if (alert) erralert(emess);
+}
+
 
 // transform number to range
 
@@ -48,7 +133,7 @@ export function randomString(): string {
     return "" + Math.random();
 }
 
-export function callJSRowFunction(jsAction: string, row: object, vars: object | null): any {
+export function callJSRowFunction(jsAction: string, row: object, vars?: object): any {
     const clickaction = new Function('p,vars', "return " + jsAction + "(p,vars)");
     const res = clickaction(row, vars);
     return res;
@@ -140,7 +225,7 @@ function notObjectProps(mess: string, alert: boolean, o: object, ...args: string
 // verify dispatcher
 // =======================
 
-const actionlist: string[] = [I.TDISPATCHPOPUP, I.TDISPATCHWARNING, I.TDISPATCHYESNO, I.TDISPATCHFORMACTION]
+const actionlist: string[] = [I.TDISPATCHPOPUP, I.TDISPATCHWARNING, I.TDISPATCHYESNO, I.FORMACTIONNO, I.FORMACTIONOK, I.FORMATRESTGET, I.FORMATRESTPOST]
 
 function verifyNameOnList(mess: string, name: string, allowedlist: string[]) {
     if (!(allowedlist.includes(name))) {
@@ -152,13 +237,13 @@ function verifyNameOnList(mess: string, name: string, allowedlist: string[]) {
     return true
 }
 
-export function verifyDispatcher(t: I.IDispatchRes): boolean {
+export function verifyDispatcherList(t: II.IDispatchListRes): boolean {
 
     if (t == undefined || t == null) {
         internalerrorlog("Return data cannot be null or undefined");
         return false;
     }
-    if (!verifyNameOnList("Action ", t.action, actionlist)) return false;
+    if (!IDispatchListResChecker(t)) return false;
     switch (t.action) {
         case I.TDISPATCHWARNING:
         case I.TDISPATCHYESNO:
@@ -171,24 +256,16 @@ export function verifyDispatcher(t: I.IDispatchRes): boolean {
             if (notObjectProps(t.action, true, t, "restid", "pars")) return false;
             break;
     }
-    if (t.messid != null) return verifyString(t.messid as I.TMess);
     return true;
 }
 
-const formactionlist: string[] = [I.FORMACTIONNO, I.FORMACTIONOK, I.FORMATRESTGET, I.FORMATRESTPOST]
+export function verifyFormDispatcher(t: II.IDispatchFormRes): boolean {
 
-
-export function verifyFormDispatcher(t: I.IDispatchFormRes): boolean {
-
-    if (!verifyDispatcher(t)) return false
-    if (t.hasOwnProperty("formaction")) {
-        if (!verifyNameOnList("Form action ", t.formaction, formactionlist)) return false;
-    }
+    if (!IDispatchFormResChecker(t)) return false
     switch (t.action) {
         case I.TDISPATCHWARNING:
         case I.TDISPATCHYESNO:
             if (notObjectProps(t.action, true, t, "confirm")) return false;
-            if (!verifyFormDispatcher(t.confirm as I.IDispatchFormRes)) return false;
             break;
     }
     return true;
@@ -212,29 +289,12 @@ function checkArray(mess: string, p: any, alert: boolean): boolean {
     return false;
 }
 
-export function verifyTRow(p: I.IRowAction) {
-    if (!notObjectProps("TRowAction", false, p, "field", "jsaction")) return false;
-    if (isString(p.jsaction)) return true;
-    if (!checkArray("TRowAction, attribute jsaction, array or string is expected", p.jsaction, false)) return false;
-    return true;
+export function verifyTRow(p: II.IRowAction) {
+    return IRowActionChecker(p);
 }
 
-export function verifyString(p: I.TMess): boolean {
-    if (p == null) return true;
-    if (isString(p)) return true;
-    const pp: I.TStringParam = p as I.TStringParam;
-    if (pp.messid == null) {
-        internalerrorlog("p.messid cannot be null", false);
-        return false;
-    }
-    if (pp.params == null) return true;
-    var isnull: boolean = false;
-    pp.params.forEach(s => { if (s == null) isnull = true; });
-    if (isnull) {
-        internalerrorlog("p.params element cannot be null", false);
-        return false;
-    }
-    return true;
+export function verifyString(p: II.TMess): boolean {
+    return TMessChecker(p);
 }
 
 // ========================
@@ -246,12 +306,12 @@ export function compString(compid: string, messid: string | undefined): string {
     return reststring(compid);
 }
 
-export function getString(pp: I.TMess): string | null {
+export function getString(pp: II.TMess): string | null {
     if (pp == null) return null;
     if (isString(pp)) return reststring(pp as string);
-    const p: I.TStringParam = pp as I.TStringParam;
+    const p: II.TStringParam = pp as II.TStringParam;
     if (p.localize != null && !p.localize) return p.messid;
-    const pars: string[] = (p.params == null) ? [] : p.params;
+    const pars: II.TMessParam[] = (p.params == null) ? [] : p.params;
     return reststring(p.messid, ...pars)
 }
 
@@ -314,7 +374,7 @@ export function isStandardAdd(actionid: string): boolean {
     return actionid == I.STANDARDACTIONADD;
 }
 
-export function isReadOnly(t: I.IClickButtonActionDef): boolean {
+export function isReadOnly(t: II.IClickButtonActionDef): boolean {
     if (isStandardShow(t.actionid)) return true;
     return false;
 }
@@ -324,30 +384,34 @@ export function isReadOnly(t: I.IClickButtonActionDef): boolean {
 // form action
 // =============================
 
-export function ActionCallType(t: I.ICallBackActionDef): I.ActionType {
-    if (isArray(t.jsaction)) return I.ActionType.CHOICE
-    if (isString(t.jsaction)) return I.ActionType.JSACTION
-    return I.ActionType.RES
+export function ActionCallType(t: II.ICallBackActionDef): II.ActionType {
+    if (isArray(t.jsaction)) return II.ActionType.CHOICE
+    if (isString(t.jsaction)) return II.ActionType.JSACTION
+    return II.ActionType.RES
 }
 
-export function ActionCallBack(t: I.ICallBackActionDef, c: I.CActionData): any {
+export function ActionCallBack(t: II.ICallBackActionDef, c: I.CActionData): any {
 
     return callJSRowFunction(t.jsaction as string, c.getRow(), c.getVars())
 }
 
-export function callRest(i: I.IDispatchFormRes, c: I.CActionData, fun: I.IDispatchActionCallBack) {
-    const url: string = i.restid;
-    switch (i.formaction) {
+export function callRest(i: II.IDispatchFormRes, c: I.CActionData, fun: I.IDispatchActionCallBack) {
+    if (i.restid == undefined) {
+        infoAlert("restid property is undefined")
+        return;
+    }
+    const url: string = i.restid
+    switch (i.action) {
 
         case I.FORMATRESTGET:
             axios.get(url).then(res => {
-                fun(res.data as I.IDispatchFormRes, c);
+                fun(res.data as II.IDispatchFormRes, c);
             });
             break;
 
         case I.FORMATRESTPOST:
             axios.post(url, c.getData()).then(res => {
-                fun(res.data as I.IDispatchFormRes, c);
+                fun(res.data as II.IDispatchFormRes, c);
             })
             break;
     }
@@ -365,4 +429,75 @@ export function isEmpty(f?: string): boolean {
 
 export function isEmptyObject(obj: any): boolean {
     return Object.keys(obj).length === 0;
+}
+
+// =========================
+// verify Table and Form
+// =========================
+
+function verifyCallBackAction(t: II.ICallBackActionDef) : boolean {
+    if (!ICallBackActionDefChecker(t)) return false;
+    return true;
+}
+
+function verifyClickButtonAction(t: II.IClickButtonActionDef) : boolean {
+    if (!IClickButtonActionDefChecker(t)) return false;
+    return true;
+}
+
+
+function checkPropArray(info: string, t: any, prop: string): any | undefined | null {
+    if (!t.hasOwnProperty(prop)) return undefined
+    const a = t[prop]
+    if (!checkArray(info + " " + prop + " array expected", a, true)) return null
+    return a
+}
+
+function verifyRowActionTable(info: string, t: any, prop: string): boolean {
+    const a: any | null | undefined = checkPropArray(info, t, prop);
+    if (a == undefined) return true;
+    if (a == null) return false;
+    const arow: II.IRowAction[] = a
+    arow.forEach(e => { if (!verifyTRow(e)) return false; })
+    return true;
+}
+
+function verifyRowAction(t: any, prop: string): boolean {
+    if (!t.hasOwnProperty(prop)) return true;
+    const a = t[prop] as II.IRowAction
+    return verifyTRow(a);
+}
+
+function verifyButtonActionTable(info: string, t: any, prop: string): boolean {
+    const a: any | null | undefined = checkPropArray(info, t, prop);
+    if (a == undefined) return true;
+    if (a == null) return false;
+    const arow: II.IClickButtonActionDef[] = a
+    arow.forEach(e => { if (!verifyClickButtonAction(e)) return false; })
+    return true;
+}
+
+export function verifyITableDef(t: I.IRestTable): boolean {
+    if (!verifyRowActionTable("IRestTable", t, "style")) return false;
+    if (!verifyRowActionTable("IRestTable", t, "value")) return false;
+    if (!verifyRowActionTable("IRestTable", t, "celltitle")) return false;
+    if (!verifyRowActionTable("IRestTable", t, "click")) return false;
+    if (!verifyRowAction(t, "ident")) return false;
+    if (!verifyButtonActionTable("IRestTable", t, "tools")) return false;
+    t.columns.forEach(e => {
+        if (e.clickTRow != null)
+            if (!verifyTRow(e.clickTRow)) return false;
+    })
+    return true;
+}
+
+export function verifyIFormDef(t: I.IFieldForm): boolean {
+    if (!verifyButtonActionTable("IFieldForm", t, "buttons")) return false;
+    t.fields.forEach(e => {
+        if (e.afterfield != undefined && !verifyCallBackAction(e.afterfield)) return false;
+        if (e.beforefield != undefined && !verifyCallBackAction(e.beforefield)) return false;
+        if (e.fieldnamehelper != undefined && !verifyString(e.fieldnamehelper)) return false;
+    })
+
+    return true;
 }

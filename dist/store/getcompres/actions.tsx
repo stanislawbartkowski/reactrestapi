@@ -3,7 +3,7 @@ import * as C from '../../js/C'
 import * as I from '../../js/I'
 import { resourceresult } from '../getresource/actions'
 
-export const resourceCompDefRead = (id: I.RESOURCE, compresource: string, restid: string, vars: object | null) => {
+export const resourceCompDefRead = (id: I.RESOURCE, compresource: string, restid: string, vars?: object) => {
 
     return (dispatch: any) => {
 
@@ -25,5 +25,5 @@ export const resourceCompDefRead = (id: I.RESOURCE, compresource: string, restid
 }
 
 export const resourceCompDefReadReady = (id: I.RESOURCE, restid: string, restform: I.IFieldForm) => {
-    return resourceresult(id, restform, restid, null, null);
+    return resourceresult(id, restform, restid, null, undefined);
 }

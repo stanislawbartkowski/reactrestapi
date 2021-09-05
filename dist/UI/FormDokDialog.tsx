@@ -1,18 +1,16 @@
 import { FunctionComponent, useState, useRef } from 'react';
 import { MutableRefObject } from 'react';
 import * as I from '../js/I'
+import * as II from '../js/II'
 import * as C from '../js/C'
 import FormDialog from './FormDialog'
 import jsstring from '../js/locale';
 
 import ModalDialog from './ModalDialog'
 
-const resclose: I.IDispatchFormRes = {
-    action: I.TDISPATCHFORMACTION,
-    formaction: I.FORMACTIONOK,
+const resclose: II.IDispatchFormRes = {
+    action: I.FORMACTIONNO,
     vars: {},
-    restid: "",
-    pars: null,
     close: true
 }
 
@@ -25,7 +23,7 @@ const FormDokDialog: FunctionComponent<I.IFieldFormDialog> = (props) => {
     const ref: MutableRefObject<any> = useRef();
     const modalref: MutableRefObject<any> = useRef();
 
-    const dispatch: I.IDispatchActionCallBack = (res: I.IDispatchFormRes, c: I.CActionData) => {
+    const dispatch: I.IDispatchActionCallBack = (res: II.IDispatchFormRes, c: I.CActionData) => {
 
         // empty object, do nothing
         if (C.isEmptyObject(res)) {
@@ -34,7 +32,7 @@ const FormDokDialog: FunctionComponent<I.IFieldFormDialog> = (props) => {
         }
 
         C.verifyFormDispatcher(res)
-        const mess: string | null = res.messid != undefined ? C.getString(res.messid as I.TMess) as string : null;
+        const mess: string | null = res.messid != undefined ? C.getString(res.messid as II.TMess) as string : null;
         switch (res.action) {
 
             case I.TDISPATCHWARNING:
@@ -50,9 +48,9 @@ const FormDokDialog: FunctionComponent<I.IFieldFormDialog> = (props) => {
                 });
                 break;
 
-            case I.TDISPATCHFORMACTION:
-
-                if (res.formaction == undefined) return
+            case I.FORMACTIONNO:
+            case I.FORMATRESTGET:
+            case I.FORMATRESTPOST:
 
                 let state: I.IFormStateActions = {}
 
@@ -64,7 +62,7 @@ const FormDokDialog: FunctionComponent<I.IFieldFormDialog> = (props) => {
                     return
                 }
 
-                switch (res.formaction) {
+                switch (res.action) {
                     case I.FORMACTIONNO:
                         if (res.focus == undefined) state = { ...state, focus: c.getField() }
                         setIState(state)
@@ -77,13 +75,13 @@ const FormDokDialog: FunctionComponent<I.IFieldFormDialog> = (props) => {
         }
     }
 
-    const actioncall: I.IActionCallBack = (t: I.ICallBackActionDef, c: I.CActionData) => {
-        const res: I.IDispatchFormRes = C.ActionCallType(t) == I.ActionType.JSACTION ? C.ActionCallBack(t, c) : t.jsaction as I.IDispatchFormRes
+    const actioncall: I.IActionCallBack = (t: II.ICallBackActionDef, c: I.CActionData) => {
+        const res: II.IDispatchFormRes = C.ActionCallType(t) == II.ActionType.JSACTION ? C.ActionCallBack(t, c) : t.jsaction as II.IDispatchFormRes
         dispatch(res, c);
     }
 
-    const verifyRequired = (c: I.CActionData): I.IDispatchFormRes | null => {
-        const errorlist: I.IFieldMessage[] = [];
+    const verifyRequired = (c: I.CActionData): II.IDispatchFormRes | null => {
+        const errorlist: II.IFieldMessage[] = [];
         props.def.fields.forEach(f => {
             if (f.props?.required) {
                 const value: string = c.getRow()[f.field]
@@ -95,19 +93,16 @@ const FormDokDialog: FunctionComponent<I.IFieldFormDialog> = (props) => {
         if (errorlist.length == 0) return null;
         c.setField(errorlist[0].field);
         return {
-            action: I.TDISPATCHFORMACTION,
+            action: I.FORMACTIONNO,
             error: errorlist,
-            formaction: I.FORMACTIONNO,
-            vars: c.getVars(),
-            restid: "",
-            pars: null
+            vars: c.getVars()
         }
     }
 
-    const onClickButton = (i: I.IClickButtonActionDef) => {
+    const onClickButton = (i: II.IClickButtonActionDef) => {
         const c: I.CActionData = new I.CActionData(ref.current.getVars());
         if (i.checkrequired) {
-            const res: I.IDispatchFormRes | null = verifyRequired(c);
+            const res: II.IDispatchFormRes | null = verifyRequired(c);
             if (res != null) {
                 dispatch(res, c);
                 return;

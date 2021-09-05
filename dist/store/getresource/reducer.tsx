@@ -6,8 +6,7 @@ const startAction: I.IResourceResult = {
     type: I.RESOURCE.NOTHING,
     data: null,
     restid: null,
-    js: null,
-    vars: null
+    js: null
 };
 
 function createReducer(act: I.RESOURCE): Reducer {
@@ -25,8 +24,7 @@ function createReducer(act: I.RESOURCE): Reducer {
                 type: action.type,
                 data: null,
                 restid: null,
-                js: null,
-                vars: null
+                js: null
             };
 
             default: return state;

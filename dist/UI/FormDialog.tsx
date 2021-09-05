@@ -5,11 +5,10 @@ import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
-import { MutableRefObject } from 'react';
 
 import * as I from '../js/I';
+import * as II from '../js/II';
 import * as C from '../js/C';
-import jsstring from '../js/locale';
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -38,21 +37,21 @@ interface IFormDialog extends I.IFieldFormDialog {
 
 const FormElem: FunctionComponent<IFormElem> = (props) => {
 
-    const error: I.IFieldMessage | undefined = props.def.istate.error == undefined ? undefined : props.def.istate.error.find(e => e.field == props.field);
+    const error: II.IFieldMessage | undefined = props.def.istate.error == undefined ? undefined : props.def.istate.error.find(e => e.field == props.field);
 
     const helper = props.fieldnamehelper == null && error == undefined ?
         null :
-        <FormHelperText id="component-helper-text">{C.getString(error != undefined ? error.mess : props.fieldnamehelper as I.TMess)}</FormHelperText>
+        <FormHelperText id="component-helper-text">{C.getString(error != undefined ? error.mess : props.fieldnamehelper as II.TMess)}</FormHelperText>
 
-    const beforeafterfield = (props: IFormElem, action: string, i: I.ICallBackActionDef) => {
+    const beforeafterfield = (props: IFormElem, action: string, i: II.ICallBackActionDef) => {
         if (i.notempty && C.isEmpty(props.value)) return;
         props.def.actioncallback(i, new I.CActionData(props.values, undefined, props.field, action, props.value));
     }
 
 
     return <FormControl
-        onFocus={props.beforefield == undefined ? undefined : () => beforeafterfield(props, I.BEFOREFIELD, props.beforefield as I.ICallBackActionDef)}
-        onBlur={props.afterfield == undefined ? undefined : () => beforeafterfield(props, I.AFTERFIELD, props.afterfield as I.ICallBackActionDef)}
+        onFocus={props.beforefield == undefined ? undefined : () => beforeafterfield(props, I.BEFOREFIELD, props.beforefield as II.ICallBackActionDef)}
+        onBlur={props.afterfield == undefined ? undefined : () => beforeafterfield(props, I.AFTERFIELD, props.afterfield as II.ICallBackActionDef)}
     >
         <InputLabel htmlFor={props.field} {...props.labelprops} error={error != undefined}>{C.compString(props.field, props.fieldname)}</InputLabel>
         <Input

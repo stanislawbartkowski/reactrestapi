@@ -49,8 +49,8 @@ const LeftMenu: FunctionComponent = () => {
         if (!C.CanCallMenu(e.id)) return;
         dispatch(pactions.pushstring(pactions.STRINGTYPE.MENUACTIONNAME, menustring(e)));
         dispatch(pactions.pushstring(pactions.STRINGTYPE.COMPACTIONID, e.restid));
-        dispatch(lactions.resourceRead(I.RESOURCE.COMPRES, e.id, e.restid, null));
-        dispatch(dactions.resourceCompDefRead(I.RESOURCE.COMPRESDEF, e.restid, e.restid, null));
+        dispatch(lactions.resourceRead(I.RESOURCE.COMPRES, e.id, e.restid, undefined));
+        dispatch(dactions.resourceCompDefRead(I.RESOURCE.COMPRESDEF, e.restid, e.restid, undefined));
         const path: string = getPath(e.id);
         history.replace(path);
     }
