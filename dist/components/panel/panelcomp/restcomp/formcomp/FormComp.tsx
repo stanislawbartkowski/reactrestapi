@@ -15,17 +15,17 @@ interface IFormComp {
 }
 
 
-const FormComp: FunctionComponent<IFormComp> = ({ listdata, listdefdata, slotid, vars }) => {
+const FormComp: FunctionComponent<IFormComp> = (props) => {
 
-    if (listdata == null) return null;
-    if (listdefdata == null) return null;
+    if (props.listdata == null) return null;
+    if (props.listdefdata == null) return null;
 
-    const data: object[] = (listdata.data as II.IResourceListData).res as object[] ;
-    const formdef: I.IFieldForm = listdefdata.data as I.IFieldForm
+    const data: object[] = (props.listdata.data as II.IResourceListData).res as object[];
+    const formdef: I.IFieldForm = props.listdefdata.data as I.IFieldForm
 
     if (!C.verifyIFormDef(formdef)) return <div>Format error</div>
 
-    const js = listdefdata.js;
+    const js = props.listdefdata.js;
 
     const component = <FormDokDialog data={data} def={formdef} ></FormDokDialog>
 

@@ -1,6 +1,6 @@
 import React, { FunctionComponent, ReactElement } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { GridCellValue, DataGrid, GridToolbar, GridCellParams, useGridSlotComponentProps, GridDensityTypes, GridColDef } from '@material-ui/data-grid';
+import { GridCellValue, DataGrid, GridCellParams, useGridSlotComponentProps, GridDensityTypes, GridColDef } from '@material-ui/data-grid';
 import { GridToolbarContainer, GridToolbarDensitySelector, GridComponentProps, GridToolbarColumnsButton, GridToolbarFilterButton, GridToolbarExport } from '@material-ui/data-grid';
 import { MuiEvent } from '@material-ui/data-grid';
 import Pagination from '@material-ui/lab/Pagination';
@@ -19,8 +19,7 @@ import * as II from '../js/II'
 import lstring from '../js/locale'
 
 import gridstrings from '../js/gridlocale';
-import ToolBotton, { ToolButton } from './ToolButton'
-import FileFileDownload from 'material-ui/svg-icons/file/file-download';
+import ToolButton from './ToolButton'
 
 const useStyles = makeStyles(theme => ({
     table: {
@@ -189,11 +188,6 @@ const GridTable: FunctionComponent<I.IGridTable> = ({ list, coldef, spec, props 
         if (col == null || col.cellTitle == null) return null;
         return col.cellTitle(params);
     };
-
-    const onCellClick = (params: GridCellParams, event: MuiEvent<React.MouseEvent>) => {
-        const a = 0;
-    }
-
 
     const constructRenderCell = (col: I.ITableCol) => {
         return (params: GridCellParams): ReactElement => {

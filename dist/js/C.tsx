@@ -195,7 +195,7 @@ export function partoQuery(pars: Object): string {
     var res = ""
     for (const [key, value] of Object.entries(pars)) {
         const p = key + "=" + value;
-        if (res != "") res = res + "?";
+        if (res != "") res = res + "&";
         res = res + p;
     }
     return res;
@@ -336,11 +336,11 @@ export function CanCallMenu(id: string): boolean {
 // customer modifiers for getting data
 // ====================================
 
-export type ModifDataUrl = (id: string, restid: string) => string;
+export type ModifDataUrl = (id: string | undefined, restid: string) => string;
 
-let modifurlfun: ModifDataUrl = (id: string, restid: string) => { return restid; }
+let modifurlfun: ModifDataUrl = (id: string | undefined, restid: string) => { return restid; }
 
-export function modifDataUrl(id: string, restid: string): string {
+export function modifDataUrl(id: string | undefined, restid: string): string {
     return modifurlfun(id, restid);
 }
 
@@ -400,7 +400,11 @@ export function callRest(i: II.IDispatchFormRes, c: I.CActionData, fun: I.IDispa
         infoAlert("restid property is undefined")
         return;
     }
-    const url: string = i.restid
+    let url = modifDataUrl(undefined, i.restid);
+    if (i.pars != undefined) {
+        const pars: string = partoQuery(i.pars)
+        url = addQuery(url, pars)
+    }
     switch (i.action) {
 
         case I.FORMATRESTGET:
@@ -435,13 +439,18 @@ export function isEmptyObject(obj: any): boolean {
 // verify Table and Form
 // =========================
 
-function verifyCallBackAction(t: II.ICallBackActionDef) : boolean {
+function verifyCallBackAction(t: II.ICallBackActionDef): boolean {
     if (!ICallBackActionDefChecker(t)) return false;
     return true;
 }
 
-function verifyClickButtonAction(t: II.IClickButtonActionDef) : boolean {
+function verifyClickButtonAction(t: II.IClickButtonActionDef, tools: boolean): boolean {
     if (!IClickButtonActionDefChecker(t)) return false;
+    if (tools) return true;
+    if (t.jsaction == undefined && !t.close) {
+        internalinfoerrorlog("IClickButtonActionDef", t.actionid + " either close or jsaction should be defined")
+        return false;
+    }
     return true;
 }
 
@@ -468,12 +477,14 @@ function verifyRowAction(t: any, prop: string): boolean {
     return verifyTRow(a);
 }
 
-function verifyButtonActionTable(info: string, t: any, prop: string): boolean {
+function verifyButtonActionTable(info: string, t: any, prop: string, tools: boolean): boolean {
     const a: any | null | undefined = checkPropArray(info, t, prop);
     if (a == undefined) return true;
     if (a == null) return false;
     const arow: II.IClickButtonActionDef[] = a
-    arow.forEach(e => { if (!verifyClickButtonAction(e)) return false; })
+    arow.forEach(e => {
+        if (!verifyClickButtonAction(e, tools)) return false;
+    })
     return true;
 }
 
@@ -483,7 +494,7 @@ export function verifyITableDef(t: I.IRestTable): boolean {
     if (!verifyRowActionTable("IRestTable", t, "celltitle")) return false;
     if (!verifyRowActionTable("IRestTable", t, "click")) return false;
     if (!verifyRowAction(t, "ident")) return false;
-    if (!verifyButtonActionTable("IRestTable", t, "tools")) return false;
+    if (!verifyButtonActionTable("IRestTable", t, "tools", true)) return false;
     t.columns.forEach(e => {
         if (e.clickTRow != null)
             if (!verifyTRow(e.clickTRow)) return false;
@@ -492,7 +503,7 @@ export function verifyITableDef(t: I.IRestTable): boolean {
 }
 
 export function verifyIFormDef(t: I.IFieldForm): boolean {
-    if (!verifyButtonActionTable("IFieldForm", t, "buttons")) return false;
+    if (!verifyButtonActionTable("IFieldForm", t, "buttons", false)) return false;
     t.fields.forEach(e => {
         if (e.afterfield != undefined && !verifyCallBackAction(e.afterfield)) return false;
         if (e.beforefield != undefined && !verifyCallBackAction(e.beforefield)) return false;
