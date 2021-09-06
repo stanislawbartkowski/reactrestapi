@@ -157,7 +157,7 @@ const CellClickable: FunctionComponent<ICellClickable> = ({ col, params }) => {
         setAnchorEl(null);
     };
 
-    return <div><Button variant="outlined" className={classes.rendercell} onClick={handleClick} >
+    return <React.Fragment><Button variant="outlined" className={classes.rendercell} onClick={handleClick} >
         {getCellValue(col, params)}
     </Button>
         <Popover
@@ -175,7 +175,8 @@ const CellClickable: FunctionComponent<ICellClickable> = ({ col, params }) => {
         >
             <ListOfChoices col={col} params={params} />
         </Popover>
-    </div>
+    </React.Fragment>
+
 }
 
 const GridTable: FunctionComponent<I.IGridTable> = ({ list, coldef, spec, props }) => {
@@ -193,7 +194,7 @@ const GridTable: FunctionComponent<I.IGridTable> = ({ list, coldef, spec, props 
         return (params: GridCellParams): ReactElement => {
 
             const cells: ReactElement = (!col.isCellClickable(params)) ? <div>{getCellValue(col, params)}</div> :
-                <CellClickable col={col} params={params} />
+                <span><CellClickable col={col} params={params} /></span>
 
             const ident: number = col.identCol == null ? 0 : col.identCol(params);
             const cell: ReactElement = col.identCol == null ? cells :
@@ -202,9 +203,7 @@ const GridTable: FunctionComponent<I.IGridTable> = ({ list, coldef, spec, props 
 
             const title = getCellTitle(col, params);
             if (title == null) return <React.Fragment> {cell} </React.Fragment>
-            else
-                return <Tooltip title={title}>{cell}</Tooltip>
-
+            return <Tooltip title={title}>{cell}</Tooltip>
         }
     }
 

@@ -10,7 +10,7 @@ export const TMessParam = t.union("string", "number", "boolean");
 
 export const TStringParam = t.iface([], {
   "localize": t.opt("boolean"),
-  "messid": "string",
+  "messid": t.union("string", "number", "boolean"),
   "params": t.opt(t.array("TMessParam")),
 });
 

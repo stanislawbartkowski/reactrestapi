@@ -16,12 +16,32 @@ export { }
 // ============================================
 
 
+function isString(p: any): boolean {
+    return typeof p === "string";
+}
+
+function isArray(p: any): boolean {
+    return Array.isArray(p);
+}
+
+function isNumber(p: any): boolean {
+    return typeof p === "number";
+}
+
 const IIChecker = createCheckers(IITypeChecker)
 
 
 function TMessChecker(t: II.TMess): boolean {
     try {
+        if (t == null) return true;
         IIChecker.TMess.strictCheck(t)
+        if (isString(t)) return true;
+        const p: II.TStringParam = t as II.TStringParam;
+        if (!isString(p.messid) && p.localize) {
+            internalinfoerrorlog("TMess", "messid is not string, localized should be false");
+            return false;
+        }
+
     } catch (e: any) {
         internalinfoerrorlog("TMess", e)
         return false;
@@ -275,14 +295,6 @@ export function verifyFormDispatcher(t: II.IDispatchFormRes): boolean {
 // expand title
 // ==========================
 
-function isString(p: any): boolean {
-    return typeof p === "string";
-}
-
-function isArray(p: any): boolean {
-    return Array.isArray(p);
-}
-
 function checkArray(mess: string, p: any, alert: boolean): boolean {
     if (isArray(p)) return true;
     internalerrorlog(mess, alert)
@@ -310,9 +322,9 @@ export function getString(pp: II.TMess): string | null {
     if (pp == null) return null;
     if (isString(pp)) return reststring(pp as string);
     const p: II.TStringParam = pp as II.TStringParam;
-    if (p.localize != null && !p.localize) return p.messid;
+    if (p.localize != null && !p.localize) return p.messid.toString();
     const pars: II.TMessParam[] = (p.params == null) ? [] : p.params;
-    return reststring(p.messid, ...pars)
+    return reststring(p.messid as string, ...pars)
 }
 
 // ====================================

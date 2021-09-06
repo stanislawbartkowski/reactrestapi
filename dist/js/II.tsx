@@ -10,7 +10,7 @@ export type TMessParam = string | number | boolean
 
 export type TStringParam = {
     readonly localize?: boolean,
-    readonly messid: string,
+    readonly messid: string | number | boolean,
     readonly params?: TMessParam[]
 }
 
