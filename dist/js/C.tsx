@@ -382,6 +382,10 @@ export function isStandardShow(actionid: string): boolean {
     return actionid == I.STANDARDACTIONSHOW;
 }
 
+export function isStandardRefresh(actionid: string): boolean {
+    return actionid == I.STANDARDACTIONREFRESH;
+}
+
 export function isStandardAdd(actionid: string): boolean {
     return actionid == I.STANDARDACTIONADD;
 }

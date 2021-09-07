@@ -25,10 +25,14 @@ const FormDokDialog: FunctionComponent<I.IFieldFormDialog> = (props) => {
 
     const dispatch: I.IDispatchActionCallBack = (res: II.IDispatchFormRes, c: I.CActionData) => {
 
+        if (res.refresh) props.refresh();
+
         // empty object, do nothing
         if (C.isEmptyObject(res)) {
             if (!c.isemptyClose()) return;
             res = resclose;
+            // RISKY, requires attention, refresh every time is close as empty
+            props.refresh();
         }
 
         C.verifyFormDispatcher(res)

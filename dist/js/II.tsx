@@ -45,6 +45,7 @@ export interface IDispatchFormRes extends IDispatchBase {
     readonly error?: IFieldMessage[]
     readonly close?: boolean
     readonly focus?: string
+    readonly refresh?: boolean
 }
 
 export interface IDispatchListRes extends IDispatchBase {

@@ -61,6 +61,7 @@ const rowchosenRequired = (p: II.IClickButtonActionDef): boolean => {
 
     if (C.isStandardShow(p.actionid)) return true;
     if (C.isStandardAdd(p.actionid)) return false;
+    if (C.isStandardRefresh(p.actionid)) return false;
     if (p.rowchosen == undefined) return true;
     return p.rowchosen;
 }

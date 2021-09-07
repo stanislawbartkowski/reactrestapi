@@ -5,6 +5,7 @@ import InLine from '../../../../../UI/InLine'
 import * as I from '../../../../../js/I';
 import * as C from '../../../../../js/C';
 import * as II from '../../../../../js/II';
+import { decSlot, refreshTable } from '../D';
 
 
 interface IFormComp {
@@ -27,7 +28,12 @@ const FormComp: FunctionComponent<IFormComp> = (props) => {
 
     const js = props.listdefdata.js;
 
-    const component = <FormDokDialog data={data} def={formdef} ></FormDokDialog>
+    const refresh = () => {
+        const sl: I.SLOT | undefined = decSlot(props.slotid);
+        if (sl != undefined) refreshTable(sl);
+    }
+
+    const component = <FormDokDialog data={data} def={formdef} refresh={refresh}></FormDokDialog>
 
     if (js == null)
         return component;

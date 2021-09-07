@@ -41,6 +41,7 @@ export const IDispatchFormRes = t.iface(["IDispatchBase"], {
   "error": t.opt(t.array("IFieldMessage")),
   "close": t.opt("boolean"),
   "focus": t.opt("string"),
+  "refresh": t.opt("boolean"),
 });
 
 export const IDispatchListRes = t.iface(["IDispatchBase"], {

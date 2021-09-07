@@ -7,12 +7,11 @@ import LeftButton from '../../../UI/LeftMenu';
 import * as pactions from '../../../store/pushstring/actions';
 import * as C from '../../../js/C';
 import * as I from '../../../js/I';
-import * as lactions from '../../../store/getdata/actions'
-import * as dactions from '../../../store/getcompres/actions'
+import * as II from '../../../js/II';
 import { getPath } from './MenuConfig';
+import D from './restcomp/D'
 
 import { setStrings } from '../../../js/locale'
-import lstring from '../../../js/locale'
 
 var menu: I.TMenuElem[] = []
 
@@ -48,9 +47,10 @@ const LeftMenu: FunctionComponent = () => {
     const clickAction = (e: I.TMenuElem) => {
         if (!C.CanCallMenu(e.id)) return;
         dispatch(pactions.pushstring(pactions.STRINGTYPE.MENUACTIONNAME, menustring(e)));
-        dispatch(pactions.pushstring(pactions.STRINGTYPE.COMPACTIONID, e.restid));
-        dispatch(lactions.resourceRead(I.RESOURCE.COMPRES, e.id, e.restid, undefined));
-        dispatch(dactions.resourceCompDefRead(I.RESOURCE.COMPRESDEF, e.restid, e.restid, undefined));
+        const dres: II.IDispatchListRes = {
+            action: I.TDISPATCHPANEL, restid: e.restid
+        }
+        D(dispatch, I.SLOT.SLOTPANEL, dres);
         const path: string = getPath(e.id);
         history.replace(path);
     }

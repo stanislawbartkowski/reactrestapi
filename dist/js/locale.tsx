@@ -12,7 +12,8 @@ const embedded = {
         "ok": "Ok",
         "cancel": "Rezygnujesz",
         "accept" : "Akceptujesz",
-        "fieldrequired" : "Pole jest wymagane"
+        "fieldrequired" : "Pole jest wymagane",
+        "refreshbutton" : "Odśwież"
     },
     en: {
 

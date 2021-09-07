@@ -3,7 +3,7 @@ import * as C from '../../js/C'
 import * as I from '../../js/I'
 import { resourceresult } from '../getresource/actions'
 
-export const resourceCompDefRead = (id: I.RESOURCE, compresource: string, restid: string, vars?: object) => {
+export const resourceCompDefRead  = (id: I.RESOURCE, compresource: string, restid: string, vars?: object) => {
 
     return (dispatch: any) => {
 

@@ -8,7 +8,7 @@ import ListDokDialog from '../../../../../UI/ListDokDialog'
 import { useDispatch } from 'react-redux';
 import InLine from '../../../../../UI/InLine'
 import { GridCellParams } from '@material-ui/data-grid';
-import D from '../D'
+import D, { refreshTable } from '../D'
 import DTool from '../DToolAction'
 
 
@@ -153,6 +153,10 @@ const ListGrid: FunctionComponent<IListGrid> = ({ listdata, menuaction, listdefd
     }
 
     const toolOnRowAction = (action: II.IClickButtonActionDef, row: any) => {
+        if (C.isStandardRefresh(action.actionid)) {
+            refreshTable(slotid);
+            return;
+        }
         DTool(dispatch, slotid, actionid as string, cols, action, row);
     }
 

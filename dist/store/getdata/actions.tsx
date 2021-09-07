@@ -1,10 +1,14 @@
+import internal from 'stream';
 import axios from '../../axios';
 import * as C from '../../js/C'
 import * as I from '../../js/I'
 import * as II from '../../js/II'
 import { resourceresult } from '../getresource/actions'
 
-export const resourceRead = (id: I.RESOURCE, menuid: string, restid: string, pars: Object | undefined) => {
+
+export const resourceRead = (id: I.RESOURCE, menuid: string, restid: string, pars?: Object) : any => {
+
+//export const resourceRead = (id: I.RESOURCE, menuid: string, restid: string, pars: Object | undefined) : any => {
 
     return (dispatch: any) => {
 

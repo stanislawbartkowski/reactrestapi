@@ -21,7 +21,7 @@ export const STANDARDACTIONSHOW: string = "SHOW"
 export const STANDARDACTIONADD: string = "ADD"
 export const STANDARDACTIONDELETE: string = "DEL"
 export const STANDARDACTIONMODIF: string = "MODIF"
-
+export const STANDARDACTIONREFRESH: string = "REFRESH"
 
 export const STANDARDOKBUTTON: string = "OK"
 export const STANDARDACCEPTBUTTON: string = "ACCEPT"
@@ -92,13 +92,14 @@ export type TMenuElem = {
 }
 
 
+export const TDISPATCHPANEL: string = "PANEL"
 export const TDISPATCHPOPUP: string = "POPUP"
 export const TDISPATCHWARNING: string = "WARNING"
 export const TDISPATCHYESNO: string = "YESNO"
 
 // popup dialog identifier to generate next
 export enum SLOT {
-    SLOTBASE, SLOT1, SLOT2, SLOT3
+    SLOTPANEL, SLOTBASE, SLOT1, SLOT2, SLOT3
 };
 
 
@@ -248,6 +249,7 @@ export interface IFieldForm {
 export interface IFieldFormDialog {
     def: IFieldForm,
     data: any,
+    refresh: () => void
 }
 
 // =====================================

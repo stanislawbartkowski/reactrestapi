@@ -3,6 +3,7 @@ import DetailsIcon from '@material-ui/icons/Details';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
 import CreateIcon from '@material-ui/icons/Create';
+import RefreshIcon from '@material-ui/icons/Refresh';
 import Button from '@material-ui/core/Button';
 
 
@@ -22,6 +23,7 @@ const mapTool = new Map<string, StandardTool>([
     [I.STANDARDACTIONADD, { desc: "adddatabutton", icon: AddIcon }],
     [I.STANDARDACTIONDELETE, { desc: "deletedatabutton", icon: DeleteIcon }],
     [I.STANDARDACTIONMODIF, { desc: "changedatabutton", icon: CreateIcon }],
+    [I.STANDARDACTIONREFRESH, { desc: "refreshbutton", icon: RefreshIcon }],
     [I.STANDARDOKBUTTON, { desc: "ok" }],
     [I.STANDARDCANCELBUTTON, { desc: "cancel" }],
     [I.STANDARDACCEPTBUTTON, { desc: "accept" }],
@@ -50,7 +52,7 @@ export const ToolButton: FunctionComponent<TToolButton> = ({ i, onClick }) => {
     const startIcon: ReactElement | null = Icon == undefined ? null : <Icon></Icon>
 
 
-    return <Button onClick={ () => onClick(i) }
+    return <Button onClick={() => onClick(i)}
         variant="outlined"
         color="primary"
         startIcon={startIcon}
