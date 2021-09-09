@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from 'react';
 
-import FormDokDialog from '../../../../../UI/FormDokDialog'
+import FormDokDialog from '../../../../../UI/form/FormDokDialog'
 import InLine from '../../../../../UI/InLine'
 import * as I from '../../../../../js/I';
 import * as C from '../../../../../js/C';
@@ -14,7 +14,6 @@ interface IFormComp {
     slotid: I.SLOT,
     vars?: object
 }
-
 
 const FormComp: FunctionComponent<IFormComp> = (props) => {
 

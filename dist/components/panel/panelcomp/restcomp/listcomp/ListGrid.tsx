@@ -3,8 +3,8 @@ import * as C from '../../../../../js/C';
 import * as I from '../../../../../js/I';
 import * as II from '../../../../../js/II';
 import * as pactions from '../../../../../store/pushstring/actions'
-import GridTable from '../../../../../UI/GridTable'
-import ListDokDialog from '../../../../../UI/ListDokDialog'
+import GridTable from '../../../../../UI/list/GridTable'
+import ListDokDialog from '../../../../../UI/list/ListDokDialog'
 import { useDispatch } from 'react-redux';
 import InLine from '../../../../../UI/InLine'
 import { GridCellParams } from '@material-ui/data-grid';

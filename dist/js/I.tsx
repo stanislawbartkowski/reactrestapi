@@ -206,7 +206,6 @@ export interface IFormStateActions {
     error?: II.IFieldMessage[]
 }
 
-
 export interface IActionCallBack {
     (t: II.ICallBackActionDef, c: CActionData): any
 };
@@ -244,12 +243,5 @@ export interface IFieldForm {
     readonly buttons?: II.IClickButtonActionDef[]
 }
 
-// form and current data
-
-export interface IFieldFormDialog {
-    def: IFieldForm,
-    data: any,
-    refresh: () => void
-}
 
 // =====================================

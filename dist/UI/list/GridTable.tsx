@@ -13,13 +13,13 @@ import ListItemText from '@material-ui/core/ListItemText';
 import DetailsIcon from '@material-ui/icons/Details';
 import Button from '@material-ui/core/Button';
 
-import * as C from '../js/C'
-import * as I from '../js/I'
-import * as II from '../js/II'
-import lstring from '../js/locale'
+import * as C from '../../js/C'
+import * as I from '../../js/I'
+import * as II from '../../js/II'
+import lstring from '../../js/locale'
 
-import gridstrings from '../js/gridlocale';
-import ToolButton from './ToolButton'
+import gridstrings from '../../js/gridlocale';
+import ToolButton from '../ToolButton'
 
 const useStyles = makeStyles(theme => ({
     table: {

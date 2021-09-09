@@ -1,12 +1,13 @@
 import { FunctionComponent, useState, useRef } from 'react';
 import { MutableRefObject } from 'react';
-import * as I from '../js/I'
-import * as II from '../js/II'
-import * as C from '../js/C'
+import * as I from '../../js/I'
+import * as II from '../../js/II'
+import * as C from '../../js/C'
+import * as F from './F'
 import FormDialog from './FormDialog'
-import jsstring from '../js/locale';
+import jsstring from '../../js/locale';
 
-import ModalDialog from './ModalDialog'
+import ModalDialog from '../ModalDialog'
 
 const resclose: II.IDispatchFormRes = {
     action: I.FORMACTIONNO,
@@ -14,7 +15,7 @@ const resclose: II.IDispatchFormRes = {
     close: true
 }
 
-const FormDokDialog: FunctionComponent<I.IFieldFormDialog> = (props) => {
+const FormDokDialog: FunctionComponent<F.IFieldFormDialog> = (props) => {
 
     const title: string | undefined = props.def.title == undefined ? undefined : jsstring(props.def.title);
 
@@ -79,9 +80,14 @@ const FormDokDialog: FunctionComponent<I.IFieldFormDialog> = (props) => {
         }
     }
 
-    const actioncall: I.IActionCallBack = (t: II.ICallBackActionDef, c: I.CActionData) => {
+    const actioncall = (t: II.ICallBackActionDef, c: I.CActionData) => {
         const res: II.IDispatchFormRes = C.ActionCallType(t) == II.ActionType.JSACTION ? C.ActionCallBack(t, c) : t.jsaction as II.IDispatchFormRes
         dispatch(res, c);
+    }
+
+    const actionelembackcall: F.ICallBackFormElem = (t: II.ICallBackActionDef, field: string, action: string, value: any) => {
+        const c: I.CActionData = new I.CActionData(ref.current.getVars(), undefined, field, action, value);
+        actioncall(t, c);
     }
 
     const verifyRequired = (c: I.CActionData): II.IDispatchFormRes | null => {
@@ -128,7 +134,13 @@ const FormDokDialog: FunctionComponent<I.IFieldFormDialog> = (props) => {
     }
 
     return <ModalDialog ref={modalref} title={title} buttons={props.def.buttons} onClickButton={onClickButton} onClose={onClose}>
-        <FormDialog ref={ref} changeValues={changeValues} {...props} actioncallback={actioncall} istate={istate}> </FormDialog>
+        <FormDialog
+            ref={ref}
+            changeValues={changeValues}
+            {...props}
+            actioncallback={actionelembackcall}
+            istate={istate}>
+        </FormDialog>
     </ModalDialog>
 
 }
