@@ -20,6 +20,8 @@ const FormComp: FunctionComponent<IFormComp> = (props) => {
     if (props.listdata == null) return null;
     if (props.listdefdata == null) return null;
 
+    if (props.listdata.restid != props.listdefdata.restid) return null;
+
     const data: object[] = (props.listdata.data as II.IResourceListData).res as object[];
     const formdef: I.IFieldForm = props.listdefdata.data as I.IFieldForm
 

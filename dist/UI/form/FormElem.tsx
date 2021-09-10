@@ -12,11 +12,11 @@ import * as F from './F'
 
 const FormElem: FunctionComponent<F.IFormElem> = (props) => {
 
-    const error: II.IFieldMessage | undefined = props.istate.error == undefined ? undefined : props.istate.error.find(e => e.field == props.field);
+    const error: II.IFieldMessage | undefined = props.istate.error === undefined ? undefined : props.istate.error.find(e => e.field === props.field);
 
-    const helper = props.fieldnamehelper == null && error == undefined ?
+    const helper = props.fieldnamehelper == null && error === undefined ?
         null :
-        <FormHelperText id="component-helper-text">{C.getString(error != undefined ? error.mess : props.fieldnamehelper as II.TMess)}</FormHelperText>
+        <FormHelperText id="component-helper-text">{C.getString(error !== undefined ? error.mess : props.fieldnamehelper as II.TMess)}</FormHelperText>
 
     const beforeafterfield = (props: F.IFormElem, action: string, i: II.ICallBackActionDef) => {
         if (i.notempty && C.isEmpty(props.value)) return;
@@ -25,12 +25,12 @@ const FormElem: FunctionComponent<F.IFormElem> = (props) => {
 
 
     return <FormControl
-        onFocus={props.beforefield == undefined ? undefined : () => beforeafterfield(props, I.BEFOREFIELD, props.beforefield as II.ICallBackActionDef)}
-        onBlur={props.afterfield == undefined ? undefined : () => beforeafterfield(props, I.AFTERFIELD, props.afterfield as II.ICallBackActionDef)}
+        onFocus={props.beforefield === undefined ? undefined : () => beforeafterfield(props, I.BEFOREFIELD, props.beforefield as II.ICallBackActionDef)}
+        onBlur={props.afterfield === undefined ? undefined : () => beforeafterfield(props, I.AFTERFIELD, props.afterfield as II.ICallBackActionDef)}
     >
         <InputLabel htmlFor={props.field} {...props.labelprops} error={error != undefined}>{C.compString(props.field, props.fieldname)}</InputLabel>
         <Input
-            error={error != undefined}
+            error={error !== undefined}
             inputRef={(input) => { if (input != null && props.istate.focus == props.field) input.focus(); }}
             id={props.field}
             value={props.value}

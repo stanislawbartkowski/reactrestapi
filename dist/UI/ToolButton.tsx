@@ -42,14 +42,14 @@ export const ToolButton: FunctionComponent<TToolButton> = ({ i, onClick }) => {
 
     const stool = mapTool.get(i.actionid.toLocaleUpperCase());
 
-    if (stool == undefined) {
+    if (stool === undefined) {
         const mess = lstring("unrecognizedtoolid", i.actionid);
         C.erralert(mess);
         return null;
     }
 
     const Icon: FunctionComponent | undefined = stool.icon;
-    const startIcon: ReactElement | null = Icon == undefined ? null : <Icon></Icon>
+    const startIcon: ReactElement | null = Icon === undefined ? null : <Icon></Icon>
 
 
     return <Button onClick={() => onClick(i)}

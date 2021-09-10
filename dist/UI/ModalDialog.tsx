@@ -7,7 +7,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 
-import * as I from '../js/I'
 import * as II from '../js/II'
 import ToolButton from './ToolButton'
 
@@ -51,7 +50,7 @@ const PopUpDialog = forwardRef<IRefCall, IPopUpDialog>((props, ref) => {
     if (props.getOpen() && !open) setOpen(true);
 
     const onCloseDial = () => {
-        if (props.onClose != undefined) props.onClose();
+        if (props.onClose !== undefined) props.onClose();
         setOpen(false);
     };
 
@@ -60,7 +59,7 @@ const PopUpDialog = forwardRef<IRefCall, IPopUpDialog>((props, ref) => {
     }));
 
 
-    const buttonsDialog: ReactElement | null = props.buttons == undefined ? null :
+    const buttonsDialog: ReactElement | null = props.buttons === undefined ? null :
         <DialogActions>
             {props.buttons.map(e => (<ToolButton i={e} onClick={props.onClickButton} ></ToolButton>))}
         </DialogActions>
@@ -92,7 +91,7 @@ const ModialDialog = forwardRef<IRefCall, IModalDialog>((props, ref) => {
 
     const handleClose = () => {
         open = false;
-        if (props.onClose != undefined) props.onClose()
+        if (props.onClose !== undefined) props.onClose()
     }
 
     const getOpen = (): boolean => {

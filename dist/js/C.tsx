@@ -138,6 +138,9 @@ export function internalinfoerrorlog(info: string, errmess: string, alert: boole
     if (alert) erralert(emess);
 }
 
+export function noSec(starttime:number) {
+    return Math.round((Date.now() - starttime)/1000);
+}
 
 // transform number to range
 

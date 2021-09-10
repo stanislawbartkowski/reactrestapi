@@ -164,7 +164,7 @@ export class CActionData {
         this.action = action;
         this.value = value;
         this.row = row;
-        this.vars = vars == undefined ? {} : vars;
+        this.vars = vars === undefined ? {} : vars;
     }
 
     setemptyClose() {
@@ -189,9 +189,9 @@ export class CActionData {
 
     getVars(): any {
         const cvars: any = { ...this.vars }
-        if (this.field != undefined) cvars[CActionData.FIELD] = this.field
-        if (this.value != undefined) cvars[CActionData.VALUE] = this.value
-        if (this.action != undefined) cvars[CActionData.ACTION] = this.action
+        if (this.field !== undefined) cvars[CActionData.FIELD] = this.field
+        if (this.value !== undefined) cvars[CActionData.VALUE] = this.value
+        if (this.action !== undefined) cvars[CActionData.ACTION] = this.action
         return cvars;
     }
 

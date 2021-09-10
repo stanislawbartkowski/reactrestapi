@@ -16,8 +16,8 @@ import { setStrings } from '../../../js/locale'
 var menu: I.TMenuElem[] = []
 
 export const getRestId = (menuid: string): string | null => {
-    const emenu: I.TMenuElem | undefined = menu.find(e => e.id == menuid);
-    if (emenu == undefined) {
+    const emenu: I.TMenuElem | undefined = menu.find(e => e.id === menuid);
+    if (emenu === undefined) {
         C.erralert(menuid + " : cannot find such menu id");
         return null;
     }
@@ -33,8 +33,8 @@ const LeftMenu: FunctionComponent = () => {
     const dispatch = useDispatch();
     const history = useHistory();
 
-    if (leftmenu.type != I.RESOURCE.LEFTMENU) return null;
-    if (strings.type != I.RESOURCE.STRINGS) return null;
+    if (leftmenu.type !== I.RESOURCE.LEFTMENU) return null;
+    if (strings.type !== I.RESOURCE.STRINGS) return null;
 
     setStrings(strings.data);
 
@@ -55,9 +55,9 @@ const LeftMenu: FunctionComponent = () => {
         history.replace(path);
     }
 
-    if (forcemenu.type == pactions.STRINGTYPE.FORCEMENU) {
+    if (forcemenu.type === pactions.STRINGTYPE.FORCEMENU) {
         const menuid: string = forcemenu.vals as string;
-        const m: I.TMenuElem = menu.find(e => e.id == menuid) as I.TMenuElem;
+        const m: I.TMenuElem = menu.find(e => e.id === menuid) as I.TMenuElem;
         clickAction(m);
     }
 

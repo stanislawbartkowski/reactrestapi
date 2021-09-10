@@ -17,7 +17,7 @@ const resclose: II.IDispatchFormRes = {
 
 const FormDokDialog: FunctionComponent<F.IFieldFormDialog> = (props) => {
 
-    const title: string | undefined = props.def.title == undefined ? undefined : jsstring(props.def.title);
+    const title: string | undefined = props.def.title === undefined ? undefined : jsstring(props.def.title);
 
     const [istate, setIState]: [I.IFormStateActions, React.Dispatch<I.IFormStateActions>] = useState({})
 
@@ -37,19 +37,19 @@ const FormDokDialog: FunctionComponent<F.IFieldFormDialog> = (props) => {
         }
 
         C.verifyFormDispatcher(res)
-        const mess: string | null = res.messid != undefined ? C.getString(res.messid as II.TMess) as string : null;
+        const mess: string | null = res.messid !== undefined ? C.getString(res.messid as II.TMess) as string : null;
         switch (res.action) {
 
             case I.TDISPATCHWARNING:
                 C.infoAlert(mess as string).then((prop: any) => {
-                    if (res.confirm != undefined) dispatch(res.confirm, c)
+                    if (res.confirm !== undefined) dispatch(res.confirm, c)
                     return;
                 })
                 break;
 
             case I.TDISPATCHYESNO:
                 C.confirmAlert(mess as string).then((prop: any) => {
-                    if (res.confirm != undefined) dispatch(res.confirm, c)
+                    if (res.confirm !== undefined) dispatch(res.confirm, c)
                 });
                 break;
 
@@ -59,8 +59,8 @@ const FormDokDialog: FunctionComponent<F.IFieldFormDialog> = (props) => {
 
                 let state: I.IFormStateActions = {}
 
-                if (res.error != undefined) state = { ...state, error: res.error }
-                if (res.focus != undefined) state = { ...state, focus: res.focus }
+                if (res.error !== undefined) state = { ...state, error: res.error }
+                if (res.focus !== undefined) state = { ...state, focus: res.focus }
 
                 if (res.close) {
                     modalref.current.closeDialog();
@@ -69,7 +69,7 @@ const FormDokDialog: FunctionComponent<F.IFieldFormDialog> = (props) => {
 
                 switch (res.action) {
                     case I.FORMACTIONNO:
-                        if (res.focus == undefined) state = { ...state, focus: c.getField() }
+                        if (res.focus === undefined) state = { ...state, focus: c.getField() }
                         setIState(state)
                         break;
                     case I.FORMATRESTGET:
@@ -100,7 +100,7 @@ const FormDokDialog: FunctionComponent<F.IFieldFormDialog> = (props) => {
                 }
             }
         })
-        if (errorlist.length == 0) return null;
+        if (errorlist.length === 0) return null;
         c.setField(errorlist[0].field);
         return {
             action: I.FORMACTIONNO,
