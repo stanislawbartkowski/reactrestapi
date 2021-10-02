@@ -10,8 +10,8 @@ and only import instance in components that make
 requests to unique URL.
 */
 const instance = axios.create({
-//  baseURL: 'http://pers:7999/'
-  baseURL: 'http://localhost:7999/'
+  baseURL: 'http://pers:7999/'
+//  baseURL: 'http://localhost:7999/'
 });
 
 

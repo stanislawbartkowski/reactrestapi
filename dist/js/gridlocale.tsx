@@ -1,4 +1,4 @@
-import { GridLocaleText } from '@material-ui/data-grid';
+import { GridLocaleText } from '@mui/x-data-grid';
 
 const gridstrings: GridLocaleText = {
     // Root
@@ -92,7 +92,9 @@ const gridstrings: GridLocaleText = {
     filterOperatorIsEmpty: "Pole puste",
     filterOperatorIsNotEmpty: "Pole z wartością",
     footerTotalVisibleRows: (visibleCount: number, totalCount: number) => <div>XXX</div>,
-    MuiTablePagination: {}
+    MuiTablePagination: {},
+
+    actionsCellMore : 'vvvvvvvvv'
 
     // Pagination footer text
     //footerPaginationRowsPerPage: 'Rows per page:',

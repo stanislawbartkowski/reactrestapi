@@ -1,6 +1,7 @@
 import { FunctionComponent } from 'react';
-import Typography from '@material-ui/core/Typography';
 import { useSelector } from "react-redux";
+
+import Typography from '@mui/material/Typography';
 
 import * as C from '../../../../js/C'
 import * as actions from '../../../../store/pushstring/actions'
@@ -11,7 +12,7 @@ const ActionLabel: FunctionComponent = () => {
 
     if (menuaction.type != actions.STRINGTYPE.MENUACTIONNAME) return null;
 
-    const menuname: string|null = menuaction.vals;
+    const menuname: string | undefined = menuaction.vals;
 
     C.log("Menu action name " + menuname);
 
@@ -22,6 +23,5 @@ const ActionLabel: FunctionComponent = () => {
     )
 
 }
-
 
 export default ActionLabel;

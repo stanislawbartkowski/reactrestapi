@@ -1,13 +1,15 @@
-import React, { FunctionComponent, ReactElement} from 'react';
-import AppBar from '@material-ui/core/AppBar';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Divider from '@material-ui/core/Divider';
-import Drawer from '@material-ui/core/Drawer';
-import Hidden from '@material-ui/core/Hidden';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
-import Toolbar from '@material-ui/core/Toolbar';
-import { makeStyles, useTheme, Theme, createStyles } from '@material-ui/core/styles';
+import React, { FunctionComponent, ReactElement } from 'react';
+
+import AppBar from '@mui/material/AppBar';
+import CssBaseline from '@mui/material/CssBaseline';
+import Divider from '@mui/material/Divider';
+import Drawer from '@mui/material/Drawer';
+import Hidden from '@mui/material/Hidden';
+import IconButton from '@mui/material/IconButton';
+import MenuIcon from '@mui/icons-material/Menu';
+import Toolbar from '@mui/material/Toolbar';
+import { makeStyles, useTheme, createStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 
 import PerseusLogo from '../components/panel/panelcomp/AppLogo'
 
@@ -50,15 +52,16 @@ const useStyles = makeStyles((theme: Theme) =>
 
 type TDrawerProps = {
   main: ReactElement,
-  leftmenu : ReactElement,
-  toplabel : ReactElement
+  leftmenu: ReactElement,
+  toplabel: ReactElement
 }
 
 
-const ResponsiveDrawer : FunctionComponent<TDrawerProps> = ( {main, leftmenu, toplabel}) =>  {
-  const classes = useStyles();
+const ResponsiveDrawer: FunctionComponent<TDrawerProps> = ({ main, leftmenu, toplabel }) => {
   const theme = useTheme();
+  const classes = useStyles();
   const [mobileOpen, setMobileOpen] = React.useState(false);
+
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -70,7 +73,7 @@ const ResponsiveDrawer : FunctionComponent<TDrawerProps> = ( {main, leftmenu, to
         <PerseusLogo />
       </div>
       <Divider />
-        {leftmenu}
+      {leftmenu}
     </div>
   );
 
@@ -88,7 +91,7 @@ const ResponsiveDrawer : FunctionComponent<TDrawerProps> = ( {main, leftmenu, to
           >
             <MenuIcon />
           </IconButton>
-          { toplabel}
+          {toplabel}
         </Toolbar>
       </AppBar>
       <nav className={classes.drawer} aria-label="mailbox folders">
@@ -96,7 +99,7 @@ const ResponsiveDrawer : FunctionComponent<TDrawerProps> = ( {main, leftmenu, to
         <Hidden smUp implementation="css">
           <Drawer
             variant="temporary"
-            anchor={theme.direction === 'rtl' ? 'right' : 'left'}
+            anchor={'right'}
             open={mobileOpen}
             onClose={handleDrawerToggle}
             classes={{

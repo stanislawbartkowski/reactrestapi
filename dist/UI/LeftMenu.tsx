@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from 'react';
 
-import Button from '@material-ui/core/Button'
+import Button from '@mui/material/Button';
 
 type TLeftButton = {
     text: string,

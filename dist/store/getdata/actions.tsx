@@ -3,7 +3,11 @@ import * as C from '../../js/C'
 import * as I from '../../js/I'
 import * as II from '../../js/II'
 import { resourceresult } from '../getresource/actions'
+import { useDispatch } from 'react-redux';
+import * as pactions from '../pushstring/actions'
 
+
+// TODO: remove
 function createDownloadProgress() {
 
     const starttime: number = Date.now();
@@ -18,9 +22,15 @@ function createDownloadProgress() {
 
 export const resourceRead = (id: I.RESOURCE, menuid: string, restid: string, pars?: Object): any => {
 
-    //export const resourceRead = (id: I.RESOURCE, menuid: string, restid: string, pars: Object | undefined) : any => {
-
     return (dispatch: any) => {
+
+        let wastimeout: boolean = false;
+
+        function timeOut() {
+            wastimeout = true;
+            C.log("timeout");
+            dispatch(pactions.pushstring(pactions.STRINGTYPE.BUSYINDICATOR,pactions.BUSYSTART));
+        }
 
         const config = {
             onDownloadProgress: createDownloadProgress()
@@ -32,7 +42,12 @@ export const resourceRead = (id: I.RESOURCE, menuid: string, restid: string, par
         }
         C.log("REST API call " + url);
 
+        const timevar = setTimeout(timeOut, 3000);
         axios.get(url, config).then(res => {
+            clearTimeout(timevar);
+            if (wastimeout) {
+                dispatch(pactions.pushstring(pactions.STRINGTYPE.BUSYINDICATOR,pactions.BUSYSTOP));
+            }
             dispatch(resourceresult(id, res.data, restid, null, undefined));
         });
     }

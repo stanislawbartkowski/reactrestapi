@@ -1,16 +1,18 @@
 import React, { ReactNode, forwardRef, ReactElement, useImperativeHandle } from 'react';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogActions from '@material-ui/core/DialogActions';
-import { makeStyles } from '@material-ui/core/styles';
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
+
+import DialogTitle from '@mui/material/DialogTitle';
+import Dialog from '@mui/material/Dialog';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+import { makeStyles} from '@mui/styles';
+import { Theme } from '@mui/material/styles';
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/AccessAlarm';
 
 import * as II from '../js/II'
 import ToolButton from './ToolButton'
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme: Theme)  => ({
 
     root: {
         margin: 0,
@@ -98,7 +100,7 @@ const ModialDialog = forwardRef<IRefCall, IModalDialog>((props, ref) => {
         return open;
     }
 
-    return <PopUpDialog {...props} onClose={handleClose} getOpen={getOpen} ref={ref}/>
+    return <PopUpDialog {...props} onClose={handleClose} getOpen={getOpen} ref={ref} />
 });
 
 export default ModialDialog;

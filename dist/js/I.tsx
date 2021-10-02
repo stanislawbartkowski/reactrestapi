@@ -1,6 +1,6 @@
-import { GridColDef, GridCellParams, GridComponentProps } from '@material-ui/data-grid';
-import { InputBaseProps } from '@material-ui/core/InputBase'
-import { InputLabelProps } from '@material-ui/core/InputLabel'
+import { GridColDef, GridCellParams, GridComponentProps } from '@mui/x-data-grid';
+import { InputBaseProps } from '@mui/material/InputBase'
+import { InputLabelProps } from '@mui/material/InputLabel'
 import * as II from './II'
 
 export { }

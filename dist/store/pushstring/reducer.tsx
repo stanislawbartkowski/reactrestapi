@@ -3,7 +3,7 @@ import { Reducer } from 'redux';
 
 const startAction: actions.IPushString = {
     type: actions.STRINGTYPE.STRINGEMPTY,
-    vals: null
+    vals: undefined
 };
 
 function createPushReducer(act: actions.STRINGTYPE): Reducer {
@@ -16,7 +16,7 @@ function createPushReducer(act: actions.STRINGTYPE): Reducer {
             case actions.STRINGTYPE.STRINGEMPTY:
                 return {
                     type: action.type,
-                    vals: null
+                    vals: undefined
                 };
 
             default: return state;

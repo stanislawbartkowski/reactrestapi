@@ -1,5 +1,4 @@
 import { FunctionComponent } from 'react';
-import { getDefaultLibFilePath } from 'typescript';
 
 type TRouterElem = {
     path: string,

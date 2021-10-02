@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Portal from '@material-ui/core/Portal';
+import Portal from '@mui/core/Portal';
 
 import CompGridSlot1 from './panel/panelcomp/restcomp/CompGridSlot1'
 import CompGridSlot2 from './panel/panelcomp/restcomp/CompGridSlot2'

@@ -1,10 +1,11 @@
 import { FunctionComponent, ReactElement } from 'react';
-import DetailsIcon from '@material-ui/icons/Details';
-import AddIcon from '@material-ui/icons/Add';
-import DeleteIcon from '@material-ui/icons/Delete';
-import CreateIcon from '@material-ui/icons/Create';
-import RefreshIcon from '@material-ui/icons/Refresh';
-import Button from '@material-ui/core/Button';
+
+import DetailsIcon from '@mui/icons-material/Details';
+import AddIcon from '@mui/icons-material/Add';
+import DeleteIcon from '@mui/icons-material/Delete';
+import CreateIcon from '@mui/icons-material/Create';
+import RefreshIcon from '@mui/icons-material/Refresh';
+import Button from '@mui/material/Button';
 
 
 import * as I from '../js/I';
@@ -35,8 +36,6 @@ type TToolButton = {
     onClick: (i: II.IClickButtonActionDef) => void;
 }
 
-
-// onClick?: MouseEventHandler<T> | undefined;
 
 export const ToolButton: FunctionComponent<TToolButton> = ({ i, onClick }) => {
 

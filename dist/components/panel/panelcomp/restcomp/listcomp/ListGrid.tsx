@@ -1,13 +1,15 @@
 import React, { FunctionComponent } from 'react';
+import { useDispatch } from 'react-redux';
+
+import { GridCellParams } from '@mui/x-data-grid';
+
 import * as C from '../../../../../js/C';
 import * as I from '../../../../../js/I';
 import * as II from '../../../../../js/II';
 import * as pactions from '../../../../../store/pushstring/actions'
 import GridTable from '../../../../../UI/list/GridTable'
 import ListDokDialog from '../../../../../UI/list/ListDokDialog'
-import { useDispatch } from 'react-redux';
 import InLine from '../../../../../UI/InLine'
-import { GridCellParams } from '@material-ui/data-grid';
 import D, { refreshTable } from '../D'
 import DTool from '../DToolAction'
 
@@ -33,7 +35,7 @@ const ListGrid: FunctionComponent<IListGrid> = ({ listdata, menuaction, listdefd
 
     const dispatch = useDispatch();
 
-    var actionid: string | null = menuaction.vals;
+    var actionid: string | undefined = menuaction.vals;
 
     if (actionid == null) return null;
 

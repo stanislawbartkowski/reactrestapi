@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from 'react';
+import { FunctionComponent } from 'react';
 import GridTable from './GridTable'
 import * as I from '../../js/I'
 import * as II from '../../js/II'

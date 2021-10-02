@@ -1,7 +1,6 @@
 import React, { ReactElement } from 'react';
 import { Route, Switch } from 'react-router-dom';
 
-
 import ResponsiveDashboard from '../../UI/ResponsiveDashboard'
 import MainPanel from './panelcomp/MainPanel'
 import LeftMenu from './panelcomp/LeftMenu'

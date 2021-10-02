@@ -26,6 +26,7 @@ const reducerActionListSlot2: Reducer = createPushReducer(actions.STRINGTYPE.COM
 const reducerActionListSlot3: Reducer = createPushReducer(actions.STRINGTYPE.COMPSLOT3ID);
 const reducerForceMenu: Reducer = createPushReducer(actions.STRINGTYPE.FORCEMENU);
 const reducerDBName: Reducer = createPushReducer(actions.STRINGTYPE.DBNAME);
+const reduceBusyIndication: Reducer = createPushReducer(actions.STRINGTYPE.BUSYINDICATOR);
 
 var store: Store;
 
@@ -39,6 +40,7 @@ export function makeStore() {
         menuactionname: reducerActionName,
         forcemenu: reducerForceMenu,
         dbname: reducerDBName,
+        busyindicator: reduceBusyIndication,
         listactionid: reducerActionList,
         listactionslot1: reducerActionListSlot1,
         listactionslot2: reducerActionListSlot2,

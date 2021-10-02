@@ -1,4 +1,4 @@
-import { GRID_STRING_COLUMN_TYPE, GRID_NUMBER_COLUMN_TYPE, GRID_DATE_COLUMN_TYPE, GRID_DATETIME_COLUMN_TYPE } from '@material-ui/data-grid';
+import { GRID_STRING_COLUMN_TYPE, GRID_NUMBER_COLUMN_TYPE, GRID_DATE_COLUMN_TYPE, GRID_DATETIME_COLUMN_TYPE } from '@mui/x-data-grid';
 
 import * as I from './I'
 import * as II from './II'
@@ -138,8 +138,8 @@ export function internalinfoerrorlog(info: string, errmess: string, alert: boole
     if (alert) erralert(emess);
 }
 
-export function noSec(starttime:number) {
-    return Math.round((Date.now() - starttime)/1000);
+export function noSec(starttime: number) {
+    return Math.round((Date.now() - starttime) / 1000);
 }
 
 // transform number to range

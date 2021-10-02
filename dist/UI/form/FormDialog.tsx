@@ -1,9 +1,10 @@
 import React, { forwardRef, useImperativeHandle } from 'react';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+
+import { createStyles, makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 
 import FormElem from './FormElem';
 import * as F from './F'
-
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({

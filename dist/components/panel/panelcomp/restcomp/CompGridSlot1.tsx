@@ -1,7 +1,8 @@
 import { FunctionComponent } from 'react';
+import { useSelector } from "react-redux";
+
 import * as I from '../../../../js/I';
 import * as C from '../../../../js/C';
-import { useSelector } from "react-redux";
 import ListGrid from './listcomp/ListGrid'
 import FormComp from './formcomp/FormComp'
 import * as pactions from '../../../../store/pushstring/actions';

@@ -1,17 +1,19 @@
 import React, { FunctionComponent, ReactElement } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import { GridCellValue, DataGrid, GridCellParams, useGridSlotComponentProps, GridDensityTypes, GridColDef } from '@material-ui/data-grid';
-import { GridToolbarContainer, GridToolbarDensitySelector, GridComponentProps, GridToolbarColumnsButton, GridToolbarFilterButton, GridToolbarExport } from '@material-ui/data-grid';
-import { MuiEvent } from '@material-ui/data-grid';
-import Pagination from '@material-ui/lab/Pagination';
-import Tooltip from '@material-ui/core/Tooltip'
-import Popover from '@material-ui/core/Popover';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import DetailsIcon from '@material-ui/icons/Details';
-import Button from '@material-ui/core/Button';
+
+import { makeStyles } from '@mui/styles';
+import { GridCellValue, DataGrid, GridCellParams, useGridSlotComponentProps, GridDensityTypes, GridColDef } from '@mui/x-data-grid';
+import { GridToolbarContainer, GridToolbarDensitySelector, GridComponentProps, GridToolbarColumnsButton, GridToolbarFilterButton, GridToolbarExport } from '@mui/x-data-grid';
+import { MuiEvent } from '@mui/x-data-grid';
+import Pagination from '@mui/material/Pagination';
+import Tooltip from '@mui/material/Tooltip';
+import Popover from '@mui/material/Popover';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import DetailsIcon from '@mui/icons-material/Details';
+import Button from '@mui/material/Button';
+import { Theme } from '@mui/material/styles'
 
 import * as C from '../../js/C'
 import * as I from '../../js/I'
@@ -21,7 +23,7 @@ import lstring from '../../js/locale'
 import gridstrings from '../../js/gridlocale';
 import ToolButton from '../ToolButton'
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme: Theme) => ({
     table: {
         minWidth: 650,
         height: 750, width: '100%',
