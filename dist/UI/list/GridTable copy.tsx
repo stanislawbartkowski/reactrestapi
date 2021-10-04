@@ -1,6 +1,6 @@
 import React, { FunctionComponent, ReactElement } from 'react';
 
-//import { makeStyles } from '@mui/styles';
+import { makeStyles } from '@mui/styles';
 import { GridCellValue, DataGrid, GridCellParams, useGridSlotComponentProps, GridDensityTypes, GridColDef } from '@mui/x-data-grid';
 import { GridToolbarContainer, GridToolbarDensitySelector, GridComponentProps, GridToolbarColumnsButton, GridToolbarFilterButton, GridToolbarExport } from '@mui/x-data-grid';
 import { MuiEvent } from '@mui/x-data-grid';
@@ -22,6 +22,26 @@ import lstring from '../../js/locale'
 
 import gridstrings from '../../js/gridlocale';
 import ToolButton from '../ToolButton'
+
+const useStyles = makeStyles((theme: Theme) => ({
+    table: {
+        minWidth: 650,
+        height: 750, width: '100%',
+        '& .stylebold': {
+            fontSize: theme.typography.fontSize * 1.3,
+            fontWeight: theme.typography.fontWeightBold,
+        },
+
+    },
+    rendercell: {
+        width: '110%',
+    },
+    downicon: {
+        float: 'right',
+        paddingBottom: '0px'
+    }
+}
+));
 
 interface ICellClickable {
     readonly col: I.ITableCol,
@@ -123,6 +143,7 @@ const ListOfChoices: FunctionComponent<ICellClickable> = ({ col, params }) => {
 }
 
 const CellClickable: FunctionComponent<ICellClickable> = ({ col, params }) => {
+    const classes = useStyles();
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
 
@@ -139,7 +160,7 @@ const CellClickable: FunctionComponent<ICellClickable> = ({ col, params }) => {
         setAnchorEl(null);
     };
 
-    return <React.Fragment><Button variant="outlined" sx={{ width: '110%' }} onClick={handleClick} >
+    return <React.Fragment><Button variant="outlined" className={classes.rendercell} onClick={handleClick} >
         {getCellValue(col, params)}
     </Button>
         <Popover
@@ -162,6 +183,8 @@ const CellClickable: FunctionComponent<ICellClickable> = ({ col, params }) => {
 }
 
 const GridTable: FunctionComponent<I.IGridTable> = ({ list, coldef, spec, props }) => {
+
+    const classes = useStyles();
 
     C.verifyColumns(coldef);
 
@@ -200,8 +223,9 @@ const GridTable: FunctionComponent<I.IGridTable> = ({ list, coldef, spec, props 
 
     const toolprop: IToolParams = { spec: spec };
 
-    return <div style={{ minWidth: 650, height: 750, width: '100%' }}>
+    return <div className={classes.table + ' ' + (spec != null ? spec.className : "")} >
         <DataGrid {...props} rows={dlist} columns={columns} autoPageSize disableSelectionOnClick
+
             onCellClick={(params: GridCellParams, event: MuiEvent<React.MouseEvent>) => { toolprop.row = params.row }}
             // onCellOver={onCellOver}
             localeText={gridstrings}

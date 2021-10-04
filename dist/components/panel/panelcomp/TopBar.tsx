@@ -10,7 +10,7 @@ import BusyIndication from './topbar/BusyIndication';
 const TopBar: FunctionComponent = () => {
 
     return (
-        <React.Fragment>`
+        <React.Fragment>
             <Grid container spacing={8}>
                 <Grid item> <TopLabel /> </Grid>
                 <Grid item>  <DBName /> </Grid>

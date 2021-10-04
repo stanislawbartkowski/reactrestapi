@@ -12,7 +12,7 @@ const BusyIndication: FunctionComponent = () => {
 
     C.log("Busyinfocator " + menuaction.type);
 
-    if (menuaction.type != actions.STRINGTYPE.BUSYINDICATOR) return (<div>aaaaa</div>);
+    if (menuaction.type != actions.STRINGTYPE.BUSYINDICATOR) return (<span>aaaaa</span>);
     const btype: string = menuaction.vals as string;
 
 
