@@ -1,7 +1,7 @@
 import React, { FunctionComponent, ReactElement } from 'react';
 
 //import { makeStyles } from '@mui/styles';
-import { GridCellValue, DataGrid, GridCellParams, useGridSlotComponentProps, GridDensityTypes, GridColDef } from '@mui/x-data-grid';
+import { GridCellValue, DataGrid, GridCellParams, useGridApiContext, GridDensityTypes, GridColDef, useGridSelector,gridPaginationSelector, GridPaginationState } from '@mui/x-data-grid';
 import { GridToolbarContainer, GridToolbarDensitySelector, GridComponentProps, GridToolbarColumnsButton, GridToolbarFilterButton, GridToolbarExport } from '@mui/x-data-grid';
 import { MuiEvent } from '@mui/x-data-grid';
 import Pagination from '@mui/material/Pagination';
@@ -82,6 +82,7 @@ const ToolBar: FunctionComponent<GridComponentProps> = (props: GridComponentProp
     )
 }
 
+/*
 function CustomPagination() {
     const { state, apiRef } = useGridSlotComponentProps();
 
@@ -94,6 +95,22 @@ function CustomPagination() {
         />
     );
 }
+*/
+
+function CustomPagination() {
+    const apiRef = useGridApiContext();
+//    apiRef.current.state
+    const state : GridPaginationState = gridPaginationSelector(apiRef.current.state);
+//    const paginationState = useGridSelector(apiRef, state);
+  
+    return (
+      <Pagination
+        count={state.pageCount}
+        page={state.page + 1}
+        onChange={(event, value) => apiRef.current.setPage(value - 1)}
+      />
+    );
+  }
 
 const getCellValue = (col: I.ITableCol, params: GridCellParams): GridCellValue => {
     if (col.valueCol == null) return params.value;

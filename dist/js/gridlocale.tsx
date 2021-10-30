@@ -94,7 +94,9 @@ const gridstrings: GridLocaleText = {
     footerTotalVisibleRows: (visibleCount: number, totalCount: number) => <div>XXX</div>,
     MuiTablePagination: {},
 
-    actionsCellMore : 'vvvvvvvvv'
+    actionsCellMore : 'vvvvvvvvv',
+
+    toolbarExportPrint : "Drukuj"
 
     // Pagination footer text
     //footerPaginationRowsPerPage: 'Rows per page:',

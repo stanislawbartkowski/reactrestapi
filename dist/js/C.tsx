@@ -1,4 +1,4 @@
-import { GRID_STRING_COLUMN_TYPE, GRID_NUMBER_COLUMN_TYPE, GRID_DATE_COLUMN_TYPE, GRID_DATETIME_COLUMN_TYPE } from '@mui/x-data-grid';
+import { GRID_STRING_COL_DEF, GRID_NUMERIC_COL_DEF, GRID_DATE_COL_DEF, GRID_DATETIME_COL_DEF } from '@mui/x-data-grid';
 
 import * as I from './I'
 import * as II from './II'
@@ -188,11 +188,26 @@ export function infoAlert(mess: string, title: string = "") {
     })
 }
 
+function verifyNameOnList(mess: string, name: string, allowedlist: string[]) {
+    if (!(allowedlist.includes(name))) {
+        let listmess: string | null = null;
+        allowedlist.forEach(s => { listmess = (listmess == null) ? s : listmess + "," + s });
+        internalerrorlog(mess + " found: " + name + ". Expected " + listmess)
+        return false;
+    }
+    return true
+}
+
+
 // ======================
 // find error in column
 // ======================
 
+const typelist: string[] = [GRID_DATETIME_COL_DEF.type as string, GRID_DATE_COL_DEF.type as string, GRID_NUMERIC_COL_DEF.type as string, GRID_STRING_COL_DEF.type as string];
+
+
 export function verifyColumns(cols: I.ITableCol[]) {
+
 
     cols.forEach(e => {
         if (e.field == null) {
@@ -200,12 +215,7 @@ export function verifyColumns(cols: I.ITableCol[]) {
         }
         if (e.props != undefined) {
             const t = e.props.type;
-            if (t != null) {
-                if ((t != GRID_DATETIME_COLUMN_TYPE && t != GRID_DATE_COLUMN_TYPE && t != GRID_NUMBER_COLUMN_TYPE && t != GRID_STRING_COLUMN_TYPE)) {
-                    const mess = e.field + " type: " + t + " incorrect. Expected: " + GRID_DATETIME_COLUMN_TYPE + "," + GRID_DATE_COLUMN_TYPE + "," + GRID_NUMBER_COLUMN_TYPE + " or " + GRID_NUMBER_COLUMN_TYPE;
-                    internalerrorlog(mess);
-                }
-            }
+            if (t != null) verifyNameOnList("Incorred column type", t,typelist);
         }
     })
 }
@@ -247,18 +257,6 @@ function notObjectProps(mess: string, alert: boolean, o: object, ...args: string
 // =======================
 // verify dispatcher
 // =======================
-
-const actionlist: string[] = [I.TDISPATCHPOPUP, I.TDISPATCHWARNING, I.TDISPATCHYESNO, I.FORMACTIONNO, I.FORMACTIONOK, I.FORMATRESTGET, I.FORMATRESTPOST]
-
-function verifyNameOnList(mess: string, name: string, allowedlist: string[]) {
-    if (!(allowedlist.includes(name))) {
-        let listmess: string | null = null;
-        allowedlist.forEach(s => { listmess = (listmess == null) ? s : listmess + "," + s });
-        internalerrorlog(mess + " found: " + name + ". Expected " + listmess)
-        return false;
-    }
-    return true
-}
 
 export function verifyDispatcherList(t: II.IDispatchListRes): boolean {
 
