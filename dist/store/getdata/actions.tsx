@@ -7,18 +7,6 @@ import { useDispatch } from 'react-redux';
 import * as pactions from '../pushstring/actions'
 
 
-// TODO: remove
-function createDownloadProgress() {
-
-    const starttime: number = Date.now();
-
-    return (progressEvent: any) => {
-        const loaded = progressEvent.loaded;
-        const sec = C.noSec(starttime);
-        C.log("Loaded: " + loaded + " " + sec + " secs");
-    }
-
-}
 
 export const resourceRead = (id: I.RESOURCE, menuid: string, restid: string, pars?: Object): any => {
 
@@ -28,13 +16,10 @@ export const resourceRead = (id: I.RESOURCE, menuid: string, restid: string, par
 
         function timeOut() {
             wastimeout = true;
-            C.log("timeout");
+            C.log("Display busy");
             dispatch(pactions.pushstring(pactions.STRINGTYPE.BUSYINDICATOR,pactions.BUSYSTART));
         }
 
-        const config = {
-            onDownloadProgress: createDownloadProgress()
-        }
         var url = C.modifDataUrl(menuid, restid);
         if (pars) {
             const querypars = C.partoQuery(pars);
@@ -43,9 +28,10 @@ export const resourceRead = (id: I.RESOURCE, menuid: string, restid: string, par
         C.log("REST API call " + url);
 
         const timevar = setTimeout(timeOut, 3000);
-        axios.get(url, config).then(res => {
+        axios.get(url).then(res => {
             clearTimeout(timevar);
             if (wastimeout) {
+                C.log("Remove busy")
                 dispatch(pactions.pushstring(pactions.STRINGTYPE.BUSYINDICATOR,pactions.BUSYSTOP));
             }
             dispatch(resourceresult(id, res.data, restid, null, undefined));
