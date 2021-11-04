@@ -13,6 +13,7 @@ export const resourceRead = (id: I.RESOURCE, menuid: string, restid: string, par
     return (dispatch: any) => {
 
         let wastimeout: boolean = false;
+        dispatch(pactions.pushstring(pactions.STRINGTYPE.BUSYINDICATOR,pactions.BUSYSTOP));
 
         function timeOut() {
             wastimeout = true;
